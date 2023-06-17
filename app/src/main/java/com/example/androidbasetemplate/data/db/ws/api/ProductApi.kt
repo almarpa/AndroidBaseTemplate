@@ -11,5 +11,5 @@ interface ProductApi {
     fun getProducts(): Call<List<ProductResponse>>
 
     @GET("products/api/v2/product/{productId}")
-    fun getProduct(@Path("productId") warehouseId: String): Call<ProductResponse>
+    fun getProduct(@Path("productId") productId: Int): Call<ProductResponse>
 }
