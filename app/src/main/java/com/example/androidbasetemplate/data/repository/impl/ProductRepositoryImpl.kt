@@ -13,7 +13,7 @@ class ProductRepositoryImpl(private val productApi: ProductApi) : ProductReposit
         return withContext(Dispatchers.IO) {
             try {
                 with(
-                    productApi.getProducts().execute()
+                    productApi.getProducts().execute(),
                 ) {
                     body()?.let { body ->
                         return@let body.map { innerProduct -> innerProduct.map() }
@@ -31,7 +31,7 @@ class ProductRepositoryImpl(private val productApi: ProductApi) : ProductReposit
         return withContext(Dispatchers.IO) {
             try {
                 with(
-                    productApi.getProduct(productId).execute()
+                    productApi.getProduct(productId).execute(),
                 ) {
                     body()?.let { body ->
                         return@let body.map()
