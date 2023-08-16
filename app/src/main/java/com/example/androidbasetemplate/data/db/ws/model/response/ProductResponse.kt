@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName
 
 class ProductResponse(
     @SerializedName("productId")
-    var productId: String?,
+    var productId: String,
     @SerializedName("denomination")
-    var denomination: String?
+    var denomination: String?,
 ) {
     fun map(): Product {
         return Product(
-            productId,
-            denomination
+            productId = productId,
+            denomination = denomination ?: "",
         )
     }
 }

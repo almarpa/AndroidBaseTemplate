@@ -1,6 +1,13 @@
 package com.example.androidbasetemplate.entity
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "product")
 class Product(
-    var productId: String?,
-    var denomination: String?
+    @PrimaryKey
+    @ColumnInfo(name = "productId")
+    var productId: String,
+    @ColumnInfo(name = "denomination") var denomination: String,
 )
