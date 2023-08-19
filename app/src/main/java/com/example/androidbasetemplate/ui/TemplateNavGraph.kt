@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.MainActivity
 import com.example.androidbasetemplate.ui.home.Home
 import com.example.androidbasetemplate.ui.home.HomeViewModel
+import com.example.androidbasetemplate.ui.productlist.ProductList
+import com.example.androidbasetemplate.ui.productlist.ProductListViewModel
 
 @Composable
 fun TemplateNavGraph(
@@ -29,7 +31,9 @@ fun TemplateNavGraph(
             )
         }
         composable(TemplateDestinations.PRODUCT_LIST) {
-            /* TODO: implement product list */
+            ProductList(
+                productListViewModel = ViewModelProvider(LocalContext.current as MainActivity)[ProductListViewModel::class.java],
+            )
         }
         composable(TemplateDestinations.PRODUCT_DETAIL) { navBackStackEntry ->
             /* TODO: implement product detail */
