@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "product")
-class Product(
+data class Product(
     @PrimaryKey
     @ColumnInfo(name = "productId")
     var productId: String,
