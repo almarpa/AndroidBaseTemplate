@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">AndroidBaseTemplate</string>
+    <string name="app_name">TemplateApp</string>
+    <string name="toolbar_title">TemplateApp</string>
+    <string name="home_title">Menú principal</string>
+    <string name="product_list_title">Listado de productos</string>
 </resources>
