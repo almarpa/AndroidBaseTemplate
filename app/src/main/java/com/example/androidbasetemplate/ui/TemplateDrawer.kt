@@ -27,6 +27,7 @@ fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToProductList: () -> Unit,
+    closeDrawer: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     ModalDrawerSheet(modifier) {
@@ -37,14 +38,14 @@ fun AppDrawer(
             label = { Text(stringResource(id = R.string.home_title)) },
             icon = { Icon(Icons.Filled.Home, null) },
             selected = currentRoute == TemplateDestinations.HOME_ROUTE,
-            onClick = { navigateToHome() },
+            onClick = { navigateToHome(); closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         NavigationDrawerItem(
             label = { Text(stringResource(id = R.string.product_list_title)) },
             icon = { Icon(Icons.Filled.List, null) },
             selected = currentRoute == TemplateDestinations.PRODUCT_LIST,
-            onClick = { navigateToProductList() },
+            onClick = { navigateToProductList(); closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
     }

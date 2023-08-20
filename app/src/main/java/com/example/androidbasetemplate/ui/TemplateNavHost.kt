@@ -1,5 +1,7 @@
 package com.example.androidbasetemplate.ui
 
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -14,11 +16,13 @@ import com.example.androidbasetemplate.ui.home.HomeViewModel
 import com.example.androidbasetemplate.ui.productlist.ProductList
 import com.example.androidbasetemplate.ui.productlist.ProductListViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TemplateNavGraph(
+fun TemplateNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = TemplateDestinations.HOME_ROUTE,
+    drawerState: DrawerState,
 ) {
     NavHost(
         navController = navController,
@@ -28,11 +32,13 @@ fun TemplateNavGraph(
         composable(TemplateDestinations.HOME_ROUTE) {
             Home(
                 homeViewModel = ViewModelProvider(LocalContext.current as MainActivity)[HomeViewModel::class.java],
+                drawerState = drawerState,
             )
         }
         composable(TemplateDestinations.PRODUCT_LIST) {
             ProductList(
                 productListViewModel = ViewModelProvider(LocalContext.current as MainActivity)[ProductListViewModel::class.java],
+                drawerState = drawerState,
             )
         }
         composable(TemplateDestinations.PRODUCT_DETAIL) { navBackStackEntry ->

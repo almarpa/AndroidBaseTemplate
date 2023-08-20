@@ -3,4 +3,6 @@
     <string name="toolbar_title">TemplateApp</string>
     <string name="home_title">Menú principal</string>
     <string name="product_list_title">Listado de productos</string>
+    <string name="search_title">Buscar</string>
+    <string name="menu_drawer_btn">Menú drawer</string>
 </resources>
