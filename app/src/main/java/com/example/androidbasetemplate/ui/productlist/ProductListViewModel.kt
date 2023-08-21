@@ -15,7 +15,7 @@ class ProductListViewModel @Inject constructor(
     private val productUseCase: ProductUseCase,
 ) : ViewModel() {
 
-    private lateinit var productList: List<Product>
+    lateinit var productList: List<Product>
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

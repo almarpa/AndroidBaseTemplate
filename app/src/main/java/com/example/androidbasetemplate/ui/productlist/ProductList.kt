@@ -1,8 +1,20 @@
 package com.example.androidbasetemplate.ui.productlist
 
+import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -12,6 +24,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -20,22 +34,73 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.androidbasetemplate.R
+import com.example.androidbasetemplate.entity.Product
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductList(productListViewModel: ProductListViewModel, drawerState: DrawerState) {
-    ProductListTopAppBar(drawerState = drawerState)
-    FullScreenLoading()
+    ProductList(drawerState = drawerState)
+}
+
+@Composable
+@Preview("Product List", uiMode = Configuration.UI_MODE_NIGHT_YES)
+private fun ProductList(productList: List<Product> = listOf(Product("1", "Denom 1", imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png"), Product("2", "Denom 2", imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png"))) {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(16.dp),
+    ) {
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(vertical = 25.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    stringResource(id = R.string.product_list_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+            }
+        }
+        items(productList) { product ->
+            Product(product.productId, product.denomination)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductListTopAppBar(
-    modifier: Modifier = Modifier,
+private fun ProductList(
     drawerState: DrawerState,
 ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(drawerState)
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.background),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // TODO: show FullScreenLoading() while loading data
+                ProductList()
+            }
+        },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopAppBar(drawerState: DrawerState) {
     val coroutineScope = rememberCoroutineScope()
 
     CenterAlignedTopAppBar(
@@ -58,7 +123,6 @@ private fun ProductListTopAppBar(
             }
         },
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState()),
-        modifier = modifier,
     )
 }
 
