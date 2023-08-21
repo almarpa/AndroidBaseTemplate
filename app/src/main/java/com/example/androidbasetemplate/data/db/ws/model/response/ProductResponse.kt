@@ -8,11 +8,14 @@ class ProductResponse(
     var productId: String,
     @SerializedName("denomination")
     var denomination: String?,
+    @SerializedName("imageUrl")
+    var imageUrl: String?,
 ) {
     fun map(): Product {
         return Product(
             productId = productId,
             denomination = denomination ?: "",
+            imageUrl = imageUrl ?: "",
         )
     }
 }

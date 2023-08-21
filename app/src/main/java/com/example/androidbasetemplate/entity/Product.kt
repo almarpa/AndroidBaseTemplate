@@ -10,4 +10,5 @@ data class Product(
     @ColumnInfo(name = "productId")
     var productId: String,
     @ColumnInfo(name = "denomination") var denomination: String,
+    @ColumnInfo(name = "imageUrl") var imageUrl: String,
 )
