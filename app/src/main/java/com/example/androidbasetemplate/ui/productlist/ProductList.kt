@@ -1,10 +1,13 @@
 package com.example.androidbasetemplate.ui.productlist
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -39,9 +43,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductList(productListViewModel: ProductListViewModel, drawerState: DrawerState) {
-    ProductListTopAppBar(drawerState = drawerState)
-    // TODO: show FullScreenLoading() while loading data
-    ProductList()
+    ProductList(drawerState = drawerState)
 }
 
 @Composable
@@ -73,10 +75,32 @@ private fun ProductList(productList: List<Product> = listOf(Product("1", "Denom 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductListTopAppBar(
-    modifier: Modifier = Modifier,
+private fun ProductList(
     drawerState: DrawerState,
 ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(drawerState)
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.background),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // TODO: show FullScreenLoading() while loading data
+                ProductList()
+            }
+        },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopAppBar(drawerState: DrawerState) {
     val coroutineScope = rememberCoroutineScope()
 
     CenterAlignedTopAppBar(
@@ -99,7 +123,6 @@ private fun ProductListTopAppBar(
             }
         },
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState()),
-        modifier = modifier,
     )
 }
 
