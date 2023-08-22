@@ -11,9 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.MainActivity
-import com.example.androidbasetemplate.ui.home.Home
+import com.example.androidbasetemplate.ui.home.HomeScreen
 import com.example.androidbasetemplate.ui.home.HomeViewModel
-import com.example.androidbasetemplate.ui.productlist.ProductList
+import com.example.androidbasetemplate.ui.productlist.ProductListScreen
 import com.example.androidbasetemplate.ui.productlist.ProductListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,13 +30,13 @@ fun TemplateNavHost(
         modifier = modifier,
     ) {
         composable(TemplateDestinations.HOME_ROUTE) {
-            Home(
+            HomeScreen(
                 homeViewModel = ViewModelProvider(LocalContext.current as MainActivity)[HomeViewModel::class.java],
                 drawerState = drawerState,
             )
         }
         composable(TemplateDestinations.PRODUCT_LIST) {
-            ProductList(
+            ProductListScreen(
                 productListViewModel = ViewModelProvider(LocalContext.current as MainActivity)[ProductListViewModel::class.java],
                 drawerState = drawerState,
             )

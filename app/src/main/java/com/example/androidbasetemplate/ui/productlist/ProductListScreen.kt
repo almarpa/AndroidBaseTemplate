@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,12 +18,14 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -42,42 +42,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductList(productListViewModel: ProductListViewModel, drawerState: DrawerState) {
-    ProductList(drawerState = drawerState)
-}
-
-@Composable
-@Preview("Product List", uiMode = Configuration.UI_MODE_NIGHT_YES)
-private fun ProductList(productList: List<Product> = listOf(Product("1", "Denom 1", imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png"), Product("2", "Denom 2", imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png"))) {
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(16.dp),
-    ) {
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(vertical = 25.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    stringResource(id = R.string.product_list_title),
-                    style = MaterialTheme.typography.headlineMedium,
-                )
-            }
-        }
-        items(productList) { product ->
-            Product(product.productId, product.denomination)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ProductList(
-    drawerState: DrawerState,
-) {
+fun ProductListScreen(productListViewModel: ProductListViewModel, drawerState: DrawerState) {
     Scaffold(
         topBar = {
             TopAppBar(drawerState)
@@ -86,13 +51,12 @@ private fun ProductList(
             Column(
                 modifier = Modifier
                     .padding(it)
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // TODO: show FullScreenLoading() while loading data
-                ProductList()
+                ProductList(productListViewModel.productList)
             }
         },
     )
@@ -100,11 +64,17 @@ private fun ProductList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TopAppBar(drawerState: DrawerState) {
+@Preview("Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_NO)
+private fun TopAppBar(drawerState: DrawerState = DrawerState(DrawerValue.Closed)) {
     val coroutineScope = rememberCoroutineScope()
 
     CenterAlignedTopAppBar(
-        title = {},
+        title = {
+            Text(
+                stringResource(id = R.string.product_list_title),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
         navigationIcon = {
             IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
                 Icon(
@@ -124,6 +94,47 @@ private fun TopAppBar(drawerState: DrawerState) {
         },
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState()),
     )
+}
+
+@Composable
+@Preview("Product List", uiMode = Configuration.UI_MODE_NIGHT_NO)
+private fun ProductList(
+    productList: List<Product> = listOf(
+        Product(
+            "Product name 1",
+            "This is an example of product description 1",
+            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        ),
+        Product(
+            "Product name 2",
+            "This is an example of product description 2",
+            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        ),
+        Product(
+            "Product name 3",
+            "This is an example of product description 3",
+            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        ),
+        Product(
+            "Product name 4",
+            "This is an example of product description 4",
+            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        ),
+        Product(
+            "Product name 5",
+            "This is an example of product description 5",
+            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        ),
+    ),
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+        contentPadding = PaddingValues(16.dp),
+    ) {
+        items(productList) { product ->
+            Product(product.productId, product.denomination)
+        }
+    }
 }
 
 @Composable

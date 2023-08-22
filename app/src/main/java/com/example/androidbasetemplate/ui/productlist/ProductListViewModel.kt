@@ -15,7 +15,7 @@ class ProductListViewModel @Inject constructor(
     private val productUseCase: ProductUseCase,
 ) : ViewModel() {
 
-    lateinit var productList: List<Product>
+    var productList: List<Product> = listOf()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -24,7 +24,38 @@ class ProductListViewModel @Inject constructor(
     }
 
     @VisibleForTesting
-    private suspend fun getProducts() {
-        productList = productUseCase.getProducts()
+    private fun getProducts() {
+        productList = getLocalProducts()
+        // TODO: productList = productUseCase.getProducts()
+    }
+
+    private fun getLocalProducts(): List<Product> {
+        return listOf(
+            Product(
+                "Product name 1",
+                "This is an example of product description 1",
+                imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            ),
+            Product(
+                "Product name 2",
+                "This is an example of product description 2",
+                imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            ),
+            Product(
+                "Product name 3",
+                "This is an example of product description 3",
+                imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            ),
+            Product(
+                "Product name 4",
+                "This is an example of product description 4",
+                imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            ),
+            Product(
+                "Product name 5",
+                "This is an example of product description 5",
+                imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            ),
+        )
     }
 }
