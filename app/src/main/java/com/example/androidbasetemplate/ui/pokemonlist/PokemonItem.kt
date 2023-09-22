@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.productlist
+package com.example.androidbasetemplate.ui.pokemonlist
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -27,11 +27,10 @@ import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
 
 @Composable
-@Preview("Product Item", uiMode = Configuration.UI_MODE_NIGHT_NO)
-fun Product(
-    name: String = "Product name",
-    description: String = "This is an example of product description",
-    imageUrl: String? = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+@Preview("Pokemon Item", uiMode = Configuration.UI_MODE_NIGHT_NO)
+fun PokemonItem(
+    name: String = "Pokemon name",
+    url: String? = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
 ) {
     Card(
         modifier = Modifier
@@ -46,11 +45,11 @@ fun Product(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
+                    .data(url)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.ic_blur),
-                contentDescription = "Product Image",
+                contentDescription = "PokemonResponse Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.clip(CircleShape).size(128.dp).padding(8.dp),
             )
@@ -60,10 +59,6 @@ fun Product(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 20.dp),
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }

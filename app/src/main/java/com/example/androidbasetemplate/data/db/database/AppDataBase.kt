@@ -2,10 +2,10 @@ package com.example.androidbasetemplate.data.db.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.androidbasetemplate.data.db.dao.ProductDao
-import com.example.androidbasetemplate.entity.Product
+import com.example.androidbasetemplate.data.db.dao.PokemonDao
+import com.example.androidbasetemplate.entity.Pokemon
 
-@Database(entities = [Product::class], version = 2)
+@Database(entities = [Pokemon::class], version = 1)
 abstract class AppDataBase : RoomDatabase() {
-    abstract fun productDao(): ProductDao
+    abstract fun pokemonDao(): PokemonDao
 }

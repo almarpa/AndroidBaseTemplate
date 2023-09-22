@@ -1,11 +1,13 @@
 package com.example.androidbasetemplate.di.module
 
-import com.example.androidbasetemplate.data.db.ws.api.ProductApi
+import com.example.androidbasetemplate.data.db.ws.api.PokemonApi
+import com.example.androidbasetemplate.data.db.ws.interceptor.UrlInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -17,23 +19,28 @@ import javax.inject.Singleton
 class ApiModule {
 
     @Provides
-    @Named("SecureTemplateApi")
+    @Named("SecureApi")
     @Singleton
-    fun provideSecureTemplateApiClient(): OkHttpClient {
+    fun provideSecureApiClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        @Named("UrlInterceptor") urlInterceptor: UrlInterceptor,
+        ): OkHttpClient {
         return OkHttpClient().newBuilder()
             .readTimeout(5L, TimeUnit.SECONDS)
             .connectTimeout(5L, TimeUnit.SECONDS)
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(urlInterceptor)
             .build()
     }
 
     @Provides
-    @Named("SecureTemplateApi")
+    @Named("SecureApi")
     @Singleton
     fun provideSecureTemplateRetrofit(
-        @Named("SecureTemplateApi") apiClient: OkHttpClient,
+        @Named("SecureApi") apiClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://template-app")
+            .baseUrl("https://pokeapi.co/")
             .client(apiClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -41,7 +48,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideProductApi(
-        @Named("SecureTemplateApi") retrofit: Retrofit,
-    ): ProductApi = retrofit.create(ProductApi::class.java)
+    fun providePokemonApi(
+        @Named("SecureApi") retrofit: Retrofit,
+    ): PokemonApi = retrofit.create(PokemonApi::class.java)
 }

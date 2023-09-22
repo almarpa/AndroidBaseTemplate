@@ -26,11 +26,10 @@ import com.example.androidbasetemplate.ui.theme.TemplateTheme
 fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
-    navigateToProductList: () -> Unit,
+    navigateToPokemonList: () -> Unit,
     closeDrawer: () -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
-    ModalDrawerSheet(modifier) {
+    ModalDrawerSheet {
         TemplateAppLogo(
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
         )
@@ -42,10 +41,10 @@ fun AppDrawer(
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.product_list_title)) },
+            label = { Text(stringResource(id = R.string.pokemon_list_title)) },
             icon = { Icon(Icons.Filled.List, null) },
-            selected = currentRoute == TemplateDestinations.PRODUCT_LIST,
-            onClick = { navigateToProductList(); closeDrawer() },
+            selected = currentRoute == TemplateDestinations.POKEMON_LIST,
+            onClick = { navigateToPokemonList(); closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
     }
@@ -69,7 +68,7 @@ fun PreviewAppDrawer() {
         AppDrawer(
             currentRoute = TemplateDestinations.HOME_ROUTE,
             navigateToHome = {},
-            navigateToProductList = {},
+            navigateToPokemonList = {},
         )
     }
 }

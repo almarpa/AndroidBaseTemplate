@@ -8,8 +8,8 @@ import androidx.navigation.NavHostController
  */
 object TemplateDestinations {
     const val HOME_ROUTE = "home"
-    const val PRODUCT_LIST = "productList"
-    const val PRODUCT_DETAIL = "productDetail"
+    const val POKEMON_LIST = "pokemonList"
+    const val POKEMON_DETAIL = "pokemonDetail"
 }
 
 /**
@@ -31,8 +31,8 @@ class TemplateNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
-    val navigateToProductList: () -> Unit = {
-        navController.navigate(TemplateDestinations.PRODUCT_LIST) {
+    val navigateToPokemonList: () -> Unit = {
+        navController.navigate(TemplateDestinations.POKEMON_LIST) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
@@ -40,8 +40,8 @@ class TemplateNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
-    val navigateToProductDetail: () -> Unit = {
-        navController.navigate(TemplateDestinations.PRODUCT_DETAIL) {
+    val navigateToPokemonDetail: () -> Unit = {
+        navController.navigate(TemplateDestinations.POKEMON_DETAIL) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
