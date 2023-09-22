@@ -23,7 +23,7 @@ class UtilsModule {
         return HttpLoggingInterceptor {
             Log.d("message: $it", "API-CALL")
         }.setLevel(
-            HttpLoggingInterceptor.Level.BASIC,
+            HttpLoggingInterceptor.Level.BODY,
         )
     }
 
