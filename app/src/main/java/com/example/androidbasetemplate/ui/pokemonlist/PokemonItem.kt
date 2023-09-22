@@ -34,7 +34,6 @@ fun PokemonItem(
 ) {
     Card(
         modifier = Modifier
-            .padding(10.dp)
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = MaterialTheme.shapes.large,
@@ -51,14 +50,14 @@ fun PokemonItem(
                 placeholder = painterResource(R.drawable.ic_blur),
                 contentDescription = "PokemonResponse Image",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(CircleShape).size(128.dp).padding(8.dp),
+                modifier = Modifier.clip(CircleShape).size(128.dp).padding(0.dp),
             )
-            Column(Modifier.padding(8.dp).fillMaxWidth()) {
+            Column(Modifier.fillMaxWidth()) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 20.dp),
+                    modifier = Modifier.padding(10.dp, 10.dp),
                 )
             }
         }
