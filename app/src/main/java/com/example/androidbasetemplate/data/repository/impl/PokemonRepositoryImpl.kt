@@ -7,7 +7,6 @@ import com.example.androidbasetemplate.entity.Pokemon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 class PokemonRepositoryImpl(
     private val pokemonApi: PokemonApi,
@@ -15,13 +14,15 @@ class PokemonRepositoryImpl(
 ) : PokemonRepository {
 
     override suspend fun getPokemons() = flow {
-            emit(pokemonDao.getAll().ifEmpty {
+        emit(
+            getLocalPokemonList().ifEmpty {
                 with(
-                    pokemonApi.getPokemons().execute()
+                    pokemonApi.getPokemons().execute(),
                 ) {
                     body()?.map()?.results?.also { savePokemonList(it) } ?: listOf()
                 }
-            })
+            },
+        )
     }
 
     private suspend fun savePokemonList(pokemonList: List<Pokemon>) {
@@ -30,7 +31,7 @@ class PokemonRepositoryImpl(
         }
     }
 
-    private suspend fun getLocalPokemonList(): List<Pokemon>? {
+    private suspend fun getLocalPokemonList(): List<Pokemon> {
         return withContext(Dispatchers.IO) {
             pokemonDao.getAll()
         }
