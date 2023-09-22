@@ -1,5 +1,6 @@
 package com.example.androidbasetemplate.di.module
 
+import com.example.androidbasetemplate.BuildConfig
 import com.example.androidbasetemplate.data.db.ws.api.PokemonApi
 import com.example.androidbasetemplate.data.db.ws.interceptor.UrlInterceptor
 import dagger.Module
@@ -24,7 +25,7 @@ class ApiModule {
     fun provideSecureApiClient(
         loggingInterceptor: HttpLoggingInterceptor,
         @Named("UrlInterceptor") urlInterceptor: UrlInterceptor,
-        ): OkHttpClient {
+    ): OkHttpClient {
         return OkHttpClient().newBuilder()
             .readTimeout(5L, TimeUnit.SECONDS)
             .connectTimeout(5L, TimeUnit.SECONDS)
@@ -40,7 +41,7 @@ class ApiModule {
         @Named("SecureApi") apiClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://pokeapi.co/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(apiClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

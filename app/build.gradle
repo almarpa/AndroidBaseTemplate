@@ -36,8 +36,36 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17
     }
+
+    flavorDimensions "environment"
+    productFlavors {
+        dev {
+            dimension "environment"
+            applicationIdSuffix ".dev"
+            buildConfigField "String", "BASE_URL", '"http://10.0.2.2"'
+        }
+
+        itg {
+            dimension "environment"
+            applicationIdSuffix ".itg"
+            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        }
+
+        pre {
+            dimension "environment"
+            applicationIdSuffix ".pre"
+            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        }
+
+        pro {
+            dimension "environment"
+            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        }
+    }
+
     buildFeatures {
         compose true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
