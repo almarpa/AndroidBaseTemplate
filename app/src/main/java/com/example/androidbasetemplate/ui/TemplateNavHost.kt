@@ -13,8 +13,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.MainActivity
 import com.example.androidbasetemplate.ui.home.HomeScreen
 import com.example.androidbasetemplate.ui.home.HomeViewModel
-import com.example.androidbasetemplate.ui.productlist.ProductListScreen
-import com.example.androidbasetemplate.ui.productlist.ProductListViewModel
+import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
+import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,15 +35,15 @@ fun TemplateNavHost(
                 drawerState = drawerState,
             )
         }
-        composable(TemplateDestinations.PRODUCT_LIST) {
-            ProductListScreen(
-                productListViewModel = ViewModelProvider(LocalContext.current as MainActivity)[ProductListViewModel::class.java],
+        composable(TemplateDestinations.POKEMON_LIST) {
+            PokemonListScreen(
+                pokemonListViewModel = ViewModelProvider(LocalContext.current as MainActivity)[PokemonListViewModel::class.java],
                 drawerState = drawerState,
             )
         }
-        composable(TemplateDestinations.PRODUCT_DETAIL) { navBackStackEntry ->
-            /* TODO: implement product detail */
-            // val selectedProductID = navBackStackEntry.arguments?.getString(PRODUCT_ID)
+        composable(TemplateDestinations.POKEMON_DETAIL) { navBackStackEntry ->
+            /* TODO: implement pokemon detail */
+            // val selectedPokemonID = navBackStackEntry.arguments?.getString(POKEMON_ID)
         }
     }
 }

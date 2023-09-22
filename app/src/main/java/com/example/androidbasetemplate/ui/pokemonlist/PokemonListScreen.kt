@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.productlist
+package com.example.androidbasetemplate.ui.pokemonlist
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -25,10 +25,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,17 +36,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.entity.Product
+import com.example.androidbasetemplate.entity.Pokemon
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListScreen(productListViewModel: ProductListViewModel, drawerState: DrawerState) {
+fun PokemonListScreen(pokemonListViewModel: PokemonListViewModel, drawerState: DrawerState) {
+    val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
+
     Scaffold(
-        topBar = {
-            TopAppBar(drawerState)
-        },
+        topBar = { TopAppBar(drawerState) },
         content = {
             Column(
                 modifier = Modifier
@@ -55,8 +56,19 @@ fun ProductListScreen(productListViewModel: ProductListViewModel, drawerState: D
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // TODO: show FullScreenLoading() while loading data
-                ProductList(productListViewModel.productList)
+                when (uiState) {
+                    is PokemonListUiState.Loading -> {
+                        FullScreenLoading()
+                    }
+
+                    is PokemonListUiState.Error -> {
+                        /*TODO: retry btn */
+                    }
+
+                    is PokemonListUiState.Success -> {
+                        PokemonList((uiState as PokemonListUiState.Success).pokemonList)
+                    }
+                }
             }
         },
     )
@@ -71,7 +83,7 @@ private fun TopAppBar(drawerState: DrawerState = DrawerState(DrawerValue.Closed)
     CenterAlignedTopAppBar(
         title = {
             Text(
-                stringResource(id = R.string.product_list_title),
+                stringResource(id = R.string.pokemon_list_title),
                 style = MaterialTheme.typography.titleLarge,
             )
         },
@@ -97,42 +109,31 @@ private fun TopAppBar(drawerState: DrawerState = DrawerState(DrawerValue.Closed)
 }
 
 @Composable
-@Preview("Product List", uiMode = Configuration.UI_MODE_NIGHT_NO)
-private fun ProductList(
-    productList: List<Product> = listOf(
-        Product(
-            "Product name 1",
-            "This is an example of product description 1",
-            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+@Preview("Pokemon List", uiMode = Configuration.UI_MODE_NIGHT_NO)
+private fun PokemonList(
+    pokemonList: List<Pokemon> = listOf(
+        Pokemon(
+            url = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            name = "This is an example of product description 1",
         ),
-        Product(
-            "Product name 2",
-            "This is an example of product description 2",
-            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        Pokemon(
+            url = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            name = "This is an example of product description 2",
         ),
-        Product(
-            "Product name 3",
-            "This is an example of product description 3",
-            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
-        ),
-        Product(
-            "Product name 4",
-            "This is an example of product description 4",
-            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
-        ),
-        Product(
-            "Product name 5",
-            "This is an example of product description 5",
-            imageUrl = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+        Pokemon(
+            url = "https://definicion.de/wp-content/uploads/2009/06/producto.png",
+            name = "This is an example of product description 3",
         ),
     ),
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
         contentPadding = PaddingValues(16.dp),
     ) {
-        items(productList) { product ->
-            Product(product.productId, product.denomination)
+        items(pokemonList) { pokemon ->
+            PokemonItem(url = pokemon.url, name = pokemon.name)
         }
     }
 }

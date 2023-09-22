@@ -1,8 +1,8 @@
 package com.example.androidbasetemplate.di.module
 
-import com.example.androidbasetemplate.data.repository.ProductRepository
-import com.example.androidbasetemplate.domain.ProductUseCase
-import com.example.androidbasetemplate.domain.impl.ProductUseCaseImpl
+import com.example.androidbasetemplate.data.repository.PokemonRepository
+import com.example.androidbasetemplate.domain.PokemonUseCase
+import com.example.androidbasetemplate.domain.impl.PokemonUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideProductUseCase(
-        productRepository: ProductRepository,
-    ): ProductUseCase = ProductUseCaseImpl(productRepository)
+    fun providePokemonUseCase(
+        pokemonRepository: PokemonRepository,
+    ): PokemonUseCase = PokemonUseCaseImpl(pokemonRepository)
 }

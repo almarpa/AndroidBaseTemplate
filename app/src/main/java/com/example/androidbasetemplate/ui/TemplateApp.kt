@@ -29,7 +29,7 @@ fun TemplateApp() {
             AppDrawer(
                 currentRoute = currentRoute,
                 navigateToHome = navigationActions.navigateToHome,
-                navigateToProductList = navigationActions.navigateToProductList,
+                navigateToPokemonList = navigationActions.navigateToPokemonList,
                 closeDrawer = { coroutineScope.launch { drawerState.close() } },
             )
         },
