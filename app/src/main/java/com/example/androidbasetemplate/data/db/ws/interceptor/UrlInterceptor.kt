@@ -20,14 +20,14 @@ class UrlInterceptor : Interceptor {
             var newUrl: HttpUrl? = null
             try {
                 newUrl = url.newBuilder().apply {
-                    BuildConfig.BASE_URL.toHttpUrlOrNull()?.apply {
+                    BuildConfig.BASE_URL.toHttpUrlOrNull()?.apply applyBaseUrl@{
                         if (BuildConfig.FLAVOR == "dev") {
                             scheme("http")
-                            host(url.toUrl().toURI().host)
+                            host(this@applyBaseUrl.toUrl().toURI().host)
                             port(MOCK_SERVER_PORT)
                         } else {
-                            scheme(scheme)
-                            host(toUrl().toURI().host)
+                            scheme("https")
+                            host(this@applyBaseUrl.toUrl().toURI().host)
                         }
                     }
                 }.build()
