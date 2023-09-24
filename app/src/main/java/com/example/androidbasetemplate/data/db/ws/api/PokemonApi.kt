@@ -1,6 +1,6 @@
 package com.example.androidbasetemplate.data.db.ws.api
 
-import com.example.androidbasetemplate.data.db.ws.model.response.PokemonResponse
+import com.example.androidbasetemplate.data.db.ws.model.response.PokemonDetailResponse
 import com.example.androidbasetemplate.data.db.ws.model.response.PokemonResultResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -16,5 +16,5 @@ interface PokemonApi {
     ): Call<PokemonResultResponse>
 
     @GET("api/v2/pokemon/{pokemonID}")
-    fun getPokemon(@Path("pokemonID") pokemonId: Int): Call<PokemonResponse>
+    fun getPokemon(@Path("pokemonID") pokemonId: Int): Call<PokemonDetailResponse>
 }

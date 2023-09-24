@@ -1,5 +1,6 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +41,7 @@ class PokemonListViewModel @Inject constructor(
             pokemonUseCase.getPokemons()
                 .flowOn(Dispatchers.IO)
                 .catch { e ->
+                    Log.e("ERROR", "getPokemonList", e)
                     _uiState.tryEmit(PokemonListUiState.Error)
                 }
                 .collect { pokemonList ->

@@ -4,9 +4,11 @@ import com.example.androidbasetemplate.data.db.dao.PokemonDao
 import com.example.androidbasetemplate.data.db.ws.api.PokemonApi
 import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.entity.Pokemon
+import com.example.androidbasetemplate.entity.PokemonDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class PokemonRepositoryImpl(
     private val pokemonApi: PokemonApi,
@@ -14,17 +16,15 @@ class PokemonRepositoryImpl(
 ) : PokemonRepository {
 
     override suspend fun getPokemons() = flow {
-        withContext(Dispatchers.IO) {
-            emit(
-                getLocalPokemonList().ifEmpty {
-                    with(
-                        pokemonApi.getPokemons().execute(),
-                    ) {
-                        body()?.map()?.results?.also { savePokemonList(it) } ?: listOf()
-                    }
-                },
-            )
-        }
+        emit(
+            with(
+                pokemonApi.getPokemons().execute(),
+            ) {
+                body()?.map()?.results?.onEach { pokemon ->
+                    pokemon.url = getPokemon(pokemon.url).sprites
+                }?.also { savePokemonList(it) } ?: listOf()
+            },
+        )
     }
 
     private suspend fun savePokemonList(pokemonList: List<Pokemon>) {
@@ -39,11 +39,12 @@ class PokemonRepositoryImpl(
         }
     }
 
-    override suspend fun getPokemon(pokemonId: Int): Pokemon {
+    override suspend fun getPokemon(pokemonUrl: String): PokemonDetail {
         return withContext(Dispatchers.IO) {
             try {
                 with(
-                    pokemonApi.getPokemon(pokemonId).execute(),
+                    pokemonApi.getPokemon(with(pokemonUrl.toHttpUrl().pathSegments) { get(size - 2) }.toInt())
+                        .execute(),
                 ) {
                     body()?.let { body ->
                         return@let body.map()

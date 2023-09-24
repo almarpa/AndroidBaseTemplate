@@ -1,14 +1,15 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,9 +51,7 @@ fun PokemonListScreen(pokemonListViewModel: PokemonListViewModel, drawerState: D
         topBar = { TopAppBar(drawerState) },
         content = {
             Column(
-                modifier = Modifier
-                    .padding(it)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier.padding(it),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -134,6 +133,7 @@ private fun PokemonList(
     ) {
         items(pokemonList) { pokemon ->
             PokemonItem(url = pokemon.url, name = pokemon.name)
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
