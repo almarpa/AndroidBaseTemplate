@@ -14,15 +14,17 @@ class PokemonRepositoryImpl(
 ) : PokemonRepository {
 
     override suspend fun getPokemons() = flow {
-        emit(
-            getLocalPokemonList().ifEmpty {
-                with(
-                    pokemonApi.getPokemons().execute(),
-                ) {
-                    body()?.map()?.results?.also { savePokemonList(it) } ?: listOf()
-                }
-            },
-        )
+        withContext(Dispatchers.IO) {
+            emit(
+                getLocalPokemonList().ifEmpty {
+                    with(
+                        pokemonApi.getPokemons().execute(),
+                    ) {
+                        body()?.map()?.results?.also { savePokemonList(it) } ?: listOf()
+                    }
+                },
+            )
+        }
     }
 
     private suspend fun savePokemonList(pokemonList: List<Pokemon>) {
