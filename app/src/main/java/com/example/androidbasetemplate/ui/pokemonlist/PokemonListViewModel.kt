@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,7 +38,6 @@ class PokemonListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.tryEmit(PokemonListUiState.Loading)
             pokemonUseCase.getPokemons()
-                .flowOn(Dispatchers.IO)
                 .catch { e ->
                     Log.e("ERROR", "getPokemonList", e)
                     _uiState.tryEmit(PokemonListUiState.Error)

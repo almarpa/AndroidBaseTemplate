@@ -6,7 +6,9 @@ import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.entity.PokemonDetail
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
@@ -16,20 +18,25 @@ class PokemonRepositoryImpl(
 ) : PokemonRepository {
 
     override suspend fun getPokemons() = flow {
-        emit(
-            with(
-                pokemonApi.getPokemons().execute(),
-            ) {
+        with(
+            pokemonApi.getPokemons().execute(),
+        ) {
+            emit(
                 body()?.map()?.results?.onEach { pokemon ->
                     pokemon.url = getPokemon(pokemon.url).sprites
-                }?.also { savePokemonList(it) } ?: listOf()
-            },
-        )
+                    savePokemon(pokemon)
+                } ?: getLocalPokemonList(),
+            )
+        }
     }
+        .flowOn(Dispatchers.IO)
+        .catch { error ->
+            throw Exception(error)
+        }
 
-    private suspend fun savePokemonList(pokemonList: List<Pokemon>) {
+    private suspend fun savePokemon(pokemon: Pokemon) {
         withContext(Dispatchers.IO) {
-            pokemonDao.insertAll(pokemonList)
+            pokemonDao.insert(pokemon)
         }
     }
 
