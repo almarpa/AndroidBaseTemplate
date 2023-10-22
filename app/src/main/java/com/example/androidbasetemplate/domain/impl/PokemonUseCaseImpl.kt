@@ -20,7 +20,7 @@ class PokemonUseCaseImpl(private val pokemonRepository: PokemonRepository) : Pok
         }
     }
 
-    override suspend fun getPokemon(pokemonUrl: String): PokemonDetail {
-        return pokemonRepository.getPokemon(pokemonUrl)
+    override suspend fun getPokemon(pokemonID: Int): PokemonDetail {
+        return pokemonRepository.getPokemon(pokemonID)
     }
 }
