@@ -26,7 +26,7 @@ fun TemplateApp() {
 
     ModalNavigationDrawer(
         drawerContent = {
-            AppDrawer(
+            TemplateDrawer(
                 currentRoute = currentRoute,
                 navigateToHome = navigationActions.navigateToHome,
                 navigateToPokemonList = navigationActions.navigateToPokemonList,
@@ -39,6 +39,7 @@ fun TemplateApp() {
             TemplateNavHost(
                 navController = navController,
                 drawerState = drawerState,
+                navigationActions = navigationActions,
             )
         }
     }

@@ -23,7 +23,10 @@ class PokemonRepositoryImpl(
         ) {
             emit(
                 body()?.map()?.results?.onEach { pokemon ->
-                    pokemon.url = getPokemon(pokemon.url).sprites
+                    pokemon.url =
+                        getPokemon(
+                            with(pokemon.url.toHttpUrl().pathSegments) { get(size - 2) }.toInt(),
+                        ).sprites
                     savePokemon(pokemon)
                 } ?: getLocalPokemonList(),
             )
@@ -46,13 +49,10 @@ class PokemonRepositoryImpl(
         }
     }
 
-    override suspend fun getPokemon(pokemonUrl: String): PokemonDetail {
+    override suspend fun getPokemon(pokemonID: Int): PokemonDetail {
         return withContext(Dispatchers.IO) {
             try {
-                with(
-                    pokemonApi.getPokemon(with(pokemonUrl.toHttpUrl().pathSegments) { get(size - 2) }.toInt())
-                        .execute(),
-                ) {
+                with(pokemonApi.getPokemon(pokemonID).execute()) {
                     body()?.let { body ->
                         return@let body.map()
                     } ?: run {

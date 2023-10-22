@@ -23,7 +23,7 @@ import com.example.androidbasetemplate.ui.theme.TemplateTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppDrawer(
+fun TemplateDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToPokemonList: () -> Unit,
@@ -65,7 +65,7 @@ private fun TemplateAppLogo(modifier: Modifier = Modifier) {
 @Composable
 fun PreviewAppDrawer() {
     TemplateTheme {
-        AppDrawer(
+        TemplateDrawer(
             currentRoute = TemplateDestinations.HOME_ROUTE,
             navigateToHome = {},
             navigateToPokemonList = {},

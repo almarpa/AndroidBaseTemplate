@@ -3,6 +3,7 @@
     <string name="toolbar_title">TemplateApp</string>
     <string name="home_title">Menú principal</string>
     <string name="pokemon_list_title">Pokedex</string>
+    <string name="pokemon_detail_title">Detalle</string>
     <string name="search_title">Buscar</string>
     <string name="menu_drawer_btn">Menú drawer</string>
 </resources>

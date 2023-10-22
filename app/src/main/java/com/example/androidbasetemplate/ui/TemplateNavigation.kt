@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 object TemplateDestinations {
     const val HOME_ROUTE = "home"
     const val POKEMON_LIST = "pokemonList"
-    const val POKEMON_DETAIL = "pokemonDetail"
+    const val POKEMON_DETAIL = "pokemonDetail/{pokemonID}"
 }
 
 /**
@@ -33,15 +33,6 @@ class TemplateNavigationActions(navController: NavHostController) {
     }
     val navigateToPokemonList: () -> Unit = {
         navController.navigate(TemplateDestinations.POKEMON_LIST) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-    val navigateToPokemonDetail: () -> Unit = {
-        navController.navigate(TemplateDestinations.POKEMON_DETAIL) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }

@@ -29,15 +29,16 @@ import coil.request.ImageRequest
 @Composable
 @Preview("Pokemon Item", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun PokemonItem(
+    id: Int = 1,
     name: String = "Pokemon name",
     url: String? = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-    onClick: () -> Unit = {},
+    onItemClick: (Int) -> Unit = {},
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable(true) { onClick.invoke() }
+            .clickable { onItemClick(id) }
             .focusable(true),
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),

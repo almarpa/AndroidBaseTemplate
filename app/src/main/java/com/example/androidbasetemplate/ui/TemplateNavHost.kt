@@ -15,6 +15,8 @@ import com.example.androidbasetemplate.ui.home.HomeScreen
 import com.example.androidbasetemplate.ui.home.HomeViewModel
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
+import com.example.androidbasetemplate.ui.pokemonlist.detailNavGraph
+import com.example.androidbasetemplate.ui.pokemonlist.navigateToDetailNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,6 +25,7 @@ fun TemplateNavHost(
     navController: NavHostController = rememberNavController(),
     startDestination: String = TemplateDestinations.HOME_ROUTE,
     drawerState: DrawerState,
+    navigationActions: TemplateNavigationActions,
 ) {
     NavHost(
         navController = navController,
@@ -39,11 +42,11 @@ fun TemplateNavHost(
             PokemonListScreen(
                 pokemonListViewModel = ViewModelProvider(LocalContext.current as MainActivity)[PokemonListViewModel::class.java],
                 drawerState = drawerState,
-            )
+                navigationActions = navigationActions,
+            ) { selectedPokemonID ->
+                navController.navigateToDetailNavGraph(selectedPokemonID)
+            }
         }
-        composable(TemplateDestinations.POKEMON_DETAIL) { navBackStackEntry ->
-            /* TODO: implement pokemon detail */
-            // val selectedPokemonID = navBackStackEntry.arguments?.getString(POKEMON_ID)
-        }
+        detailNavGraph(drawerState, navigationActions)
     }
 }
