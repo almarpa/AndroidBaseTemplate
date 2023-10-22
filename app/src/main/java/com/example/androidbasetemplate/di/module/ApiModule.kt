@@ -37,7 +37,7 @@ class ApiModule {
     @Provides
     @Named("SecureApi")
     @Singleton
-    fun provideSecureTemplateRetrofit(
+    fun provideSecureRetrofit(
         @Named("SecureApi") apiClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder()

@@ -9,16 +9,16 @@ class PokemonResultResponse(
     @SerializedName("next")
     var next: String,
     @SerializedName("previous")
-    var previous: String,
+    var previous: String?,
     @SerializedName("results")
-    var results: List<PokemonResponse>
+    var results: List<PokemonResponse>,
 ) {
     fun map(): PokemonResult {
         return PokemonResult(
             count = count,
             next = next,
             previous = previous,
-            results = results.map { pokemonResponse -> pokemonResponse.map() }
+            results = results.map { pokemonResponse -> pokemonResponse.map() },
         )
     }
 }

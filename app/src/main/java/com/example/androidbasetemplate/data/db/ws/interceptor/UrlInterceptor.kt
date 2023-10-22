@@ -16,32 +16,31 @@ class UrlInterceptor : Interceptor {
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        with(chain.request()) {
-            var newUrl: HttpUrl? = null
+        var request = chain.request()
+        var newUrl: HttpUrl? = null
+
+        BuildConfig.BASE_URL.toHttpUrlOrNull()?.let { httpUrl ->
             try {
-                newUrl = url.newBuilder().apply {
-                    BuildConfig.BASE_URL.toHttpUrlOrNull()?.apply {
-                        if (BuildConfig.FLAVOR == "dev") {
-                            scheme("http")
-                            host(url.toUrl().toURI().host)
-                            port(MOCK_SERVER_PORT)
-                        } else {
-                            scheme(scheme)
-                            host(toUrl().toURI().host)
-                        }
+                newUrl = request.url.newBuilder().apply {
+                    if (BuildConfig.FLAVOR == "dev") {
+                        scheme("http")
+                        host(httpUrl.toUrl().toURI().host)
+                        port(MOCK_SERVER_PORT)
+                    } else {
+                        scheme(httpUrl.scheme)
+                        host(httpUrl.toUrl().toURI().host)
                     }
                 }.build()
             } catch (e: URISyntaxException) {
                 e.printStackTrace()
             }
-
             newUrl?.let {
-                newBuilder()
+                request = request.newBuilder()
                     .url(it)
                     .build()
             }
-
-            return chain.proceed(this)
         }
+
+        return chain.proceed(request)
     }
 }
