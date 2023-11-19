@@ -79,7 +79,7 @@ fun TemplateBottomAppBar(
             }
             IconButton(
                 onClick = {
-                    /* TODO: navigationActions.navigateToFavorites */
+                    navigationActions?.navigateToFavoriteList?.invoke()
                     coroutineScope.launch {
                         drawerState.close()
                     }

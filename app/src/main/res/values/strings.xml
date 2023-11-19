@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">TemplateApp</string>
     <string name="toolbar_title">TemplateApp</string>
-    <string name="home_title">Menú principal</string>
+    <string name="home_title">Home</string>
     <string name="pokemon_list_title">Pokedex</string>
-    <string name="pokemon_detail_title">Detalle</string>
-    <string name="search_title">Buscar</string>
-    <string name="menu_drawer_btn">Menú drawer</string>
+    <string name="favorites_title">Favoritos</string>
+    <string name="settings_title">Settings</string>
+    <string name="about_title">About</string>
+    <string name="pokemon_detail_title">Detail</string>
+    <string name="search_title">Search</string>
+    <string name="menu_drawer_btn">Drawer menu</string>
 </resources>

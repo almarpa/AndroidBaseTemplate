@@ -3,8 +3,14 @@ package com.example.androidbasetemplate.ui
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,29 +26,34 @@ import com.example.androidbasetemplate.R
 @Composable
 fun TemplateDrawer(
     currentRoute: String = TemplateDestinations.HOME_ROUTE,
-    navigateToHome: () -> Unit = {},
-    navigateToPokemonList: () -> Unit = {},
+    navigateToSettings: () -> Unit = {},
+    navigateToAbout: () -> Unit = {},
     closeDrawer: () -> Unit = {},
 ) {
     ModalDrawerSheet {
         TemplateAppLogo(
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
         )
-        /* TODO: create About section
-       NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.home_title)) },
-            icon = { Icon(Icons.Filled.Home, null) },
-            selected = currentRoute == TemplateDestinations.HOME_ROUTE,
-            onClick = { navigateToHome(); closeDrawer() },
+        NavigationDrawerItem(
+            label = { Text(stringResource(id = R.string.settings_title)) },
+            icon = { Icon(Icons.Filled.Settings, null) },
+            selected = currentRoute == TemplateDestinations.SETTINGS_ROUTE,
+            onClick = {
+                navigateToSettings()
+                closeDrawer()
+            },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
         NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.pokemon_list_title)) },
-            icon = { Icon(Icons.Filled.List, null) },
-            selected = currentRoute == TemplateDestinations.POKEMON_LIST,
-            onClick = { navigateToPokemonList(); closeDrawer() },
+            label = { Text(stringResource(id = R.string.about_title)) },
+            icon = { Icon(Icons.Filled.Person, null) },
+            selected = currentRoute == TemplateDestinations.ABOUT_ROUTE,
+            onClick = {
+                navigateToAbout()
+                closeDrawer()
+            },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-        )*/
+        )
     }
 }
 

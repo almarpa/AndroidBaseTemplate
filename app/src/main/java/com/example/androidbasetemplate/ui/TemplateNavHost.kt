@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.androidbasetemplate.ui.common.bottomAppBarNavGraph
 import com.example.androidbasetemplate.ui.pokemondetail.pokemonDetailNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,7 +24,8 @@ fun TemplateNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        drawerNavGraph(navController, drawerState, navigationActions)
+        templateDrawerNavGraph(drawerState, navigationActions)
+        bottomAppBarNavGraph(navController, drawerState, navigationActions)
         pokemonDetailNavGraph(drawerState, navigationActions)
     }
 }

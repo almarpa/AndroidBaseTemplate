@@ -28,8 +28,8 @@ fun TemplateApp() {
         drawerContent = {
             TemplateDrawer(
                 currentRoute = currentRoute,
-                navigateToHome = navigationActions.navigateToHome,
-                navigateToPokemonList = navigationActions.navigateToPokemonList,
+                navigateToSettings = navigationActions.navigateToSettings,
+                navigateToAbout = navigationActions.navigateToAbout,
                 closeDrawer = { coroutineScope.launch { drawerState.close() } },
             )
         },
