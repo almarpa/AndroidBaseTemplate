@@ -1,16 +1,10 @@
 package com.example.androidbasetemplate.ui
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,21 +13,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.ui.theme.TemplateTheme
 
+@Preview("Drawer contents")
+@Preview("Drawer contents (dark)", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TemplateDrawer(
-    currentRoute: String,
-    navigateToHome: () -> Unit,
-    navigateToPokemonList: () -> Unit,
+    currentRoute: String = TemplateDestinations.HOME_ROUTE,
+    navigateToHome: () -> Unit = {},
+    navigateToPokemonList: () -> Unit = {},
     closeDrawer: () -> Unit = {},
 ) {
     ModalDrawerSheet {
         TemplateAppLogo(
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
         )
-        NavigationDrawerItem(
+        /* TODO: create About section
+       NavigationDrawerItem(
             label = { Text(stringResource(id = R.string.home_title)) },
             icon = { Icon(Icons.Filled.Home, null) },
             selected = currentRoute == TemplateDestinations.HOME_ROUTE,
@@ -46,7 +42,7 @@ fun TemplateDrawer(
             selected = currentRoute == TemplateDestinations.POKEMON_LIST,
             onClick = { navigateToPokemonList(); closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-        )
+        )*/
     }
 }
 
@@ -56,19 +52,6 @@ private fun TemplateAppLogo(modifier: Modifier = Modifier) {
         Text(
             text = stringResource(id = R.string.app_name),
             fontSize = 24.sp,
-        )
-    }
-}
-
-@Preview("Drawer contents")
-@Preview("Drawer contents (dark)", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun PreviewAppDrawer() {
-    TemplateTheme {
-        TemplateDrawer(
-            currentRoute = TemplateDestinations.HOME_ROUTE,
-            navigateToHome = {},
-            navigateToPokemonList = {},
         )
     }
 }

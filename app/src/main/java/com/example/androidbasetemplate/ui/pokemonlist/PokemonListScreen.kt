@@ -14,34 +14,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.TemplateNavigationActions
-import kotlinx.coroutines.launch
+import com.example.androidbasetemplate.ui.common.TemplateBottomAppBar
+import com.example.androidbasetemplate.ui.common.TemplateTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +42,13 @@ fun PokemonListScreen(
     val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = { TopAppBar(drawerState, navigationActions) },
+        topBar = {
+            TemplateTopAppBar(
+                drawerState = drawerState,
+                navigationActions = navigationActions,
+                title = R.string.pokemon_list_title
+            )
+        },
         content = {
             Column(
                 modifier = Modifier.padding(it),
@@ -81,43 +75,12 @@ fun PokemonListScreen(
                 }
             }
         },
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@Preview("Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_NO)
-private fun TopAppBar(
-    drawerState: DrawerState = DrawerState(DrawerValue.Closed),
-    navigationActions: TemplateNavigationActions? = null,
-) {
-    val coroutineScope = rememberCoroutineScope()
-
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                stringResource(id = R.string.pokemon_list_title),
-                style = MaterialTheme.typography.titleLarge,
+        bottomBar = {
+            TemplateBottomAppBar(
+                drawerState = drawerState,
+                navigationActions = navigationActions
             )
-        },
-        navigationIcon = {
-            IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_menu),
-                    contentDescription = stringResource(R.string.menu_drawer_btn),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { navigationActions?.navigateToPokemonList }) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = stringResource(R.string.search_title),
-                )
-            }
-        },
-        scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState()),
+        }
     )
 }
 

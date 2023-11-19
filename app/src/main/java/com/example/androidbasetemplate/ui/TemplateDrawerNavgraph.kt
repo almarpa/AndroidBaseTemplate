@@ -23,6 +23,7 @@ fun NavGraphBuilder.drawerNavGraph(
         HomeScreen(
             homeViewModel = ViewModelProvider(LocalContext.current as MainActivity)[HomeViewModel::class.java],
             drawerState = drawerState,
+            navigationActions = navigationActions
         )
     }
     composable(TemplateDestinations.POKEMON_LIST) {
