@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.favorites
+package com.example.androidbasetemplate.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,22 +11,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.ui.common.NavigationActions
-import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
-import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
+import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteListScreen(
-    favoriteListViewModel: FavoriteListViewModel,
+fun SettingsScreen(
+    settingsViewModel: SettingsViewModel,
+    navController: NavHostController,
     drawerState: DrawerState,
-    currentRoute: String,
-    navigationActions: NavigationActions,
 ) {
     Scaffold(
         topBar = {
-            DrawerTopAppBar(drawerState = drawerState, title = R.string.favorites_title)
+            DefaultTopAppBar(drawerState = drawerState, title = R.string.settings_title) {
+                navController.popBackStack()
+            }
         },
         content = {
             Column(
@@ -39,13 +39,6 @@ fun FavoriteListScreen(
             ) {
                 // TODO : add background icon
             }
-        },
-        bottomBar = {
-            TemplateBottomAppBar(
-                drawerState = drawerState,
-                currentRoute = currentRoute,
-                navigationActions
-            )
         }
     )
 }

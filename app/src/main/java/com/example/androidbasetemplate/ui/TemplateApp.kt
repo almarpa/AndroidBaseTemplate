@@ -11,13 +11,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.androidbasetemplate.ui.common.NavigationActions
+import com.example.androidbasetemplate.ui.common.TemplateDestinations
+import com.example.androidbasetemplate.ui.drawer.Drawer
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TemplateApp() {
     val navController = rememberNavController()
-    val navigationActions = remember(navController) { TemplateNavigationActions(navController) }
+    val navigationActions = remember(navController) { NavigationActions(navController) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: TemplateDestinations.HOME_ROUTE
 
@@ -26,10 +29,8 @@ fun TemplateApp() {
 
     ModalNavigationDrawer(
         drawerContent = {
-            TemplateDrawer(
-                currentRoute = currentRoute,
+            Drawer(
                 navigateToSettings = navigationActions.navigateToSettings,
-                navigateToAbout = navigationActions.navigateToAbout,
                 closeDrawer = { coroutineScope.launch { drawerState.close() } },
             )
         },
@@ -39,6 +40,7 @@ fun TemplateApp() {
             TemplateNavHost(
                 navController = navController,
                 drawerState = drawerState,
+                currentRoute = currentRoute,
                 navigationActions = navigationActions,
             )
         }

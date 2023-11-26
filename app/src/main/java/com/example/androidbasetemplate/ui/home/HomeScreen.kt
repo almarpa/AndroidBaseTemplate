@@ -12,20 +12,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.ui.TemplateNavigationActions
-import com.example.androidbasetemplate.ui.common.TemplateBottomAppBar
-import com.example.androidbasetemplate.ui.common.TemplateTopAppBar
+import com.example.androidbasetemplate.ui.common.NavigationActions
+import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
+import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
     drawerState: DrawerState,
-    navigationActions: TemplateNavigationActions,
+    navigationActions: NavigationActions,
+    currentRoute: String,
 ) {
     Scaffold(
         topBar = {
-            TemplateTopAppBar(drawerState = drawerState, title = R.string.home_title)
+            DrawerTopAppBar(drawerState = drawerState, title = R.string.home_title)
         },
         content = {
             Column(
@@ -40,7 +41,7 @@ fun HomeScreen(
             }
         },
         bottomBar = {
-            TemplateBottomAppBar(drawerState = drawerState, navigationActions)
+            TemplateBottomAppBar(drawerState = drawerState, currentRoute, navigationActions)
         }
     )
 }

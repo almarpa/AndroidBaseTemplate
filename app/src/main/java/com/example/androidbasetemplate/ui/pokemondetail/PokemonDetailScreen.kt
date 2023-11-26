@@ -37,15 +37,15 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.PokemonDetail
-import com.example.androidbasetemplate.ui.TemplateNavigationActions
-import com.example.androidbasetemplate.ui.common.TemplateTopAppBar
+import com.example.androidbasetemplate.ui.common.NavigationActions
+import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreen(
     pokemonListViewModel: PokemonDetailViewModel,
     drawerState: DrawerState,
-    navigationActions: TemplateNavigationActions,
+    navigationActions: NavigationActions,
     selectedPokemonID: Int,
 ) {
     val currentPokemon by pokemonListViewModel.pokemon.observeAsState()
@@ -53,7 +53,7 @@ fun PokemonDetailScreen(
 
     Scaffold(
         topBar = {
-            TemplateTopAppBar(
+            DrawerTopAppBar(
                 drawerState = drawerState,
                 navigationActions = navigationActions,
                 title = R.string.pokemon_detail_title

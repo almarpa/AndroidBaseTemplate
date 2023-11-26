@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui
+package com.example.androidbasetemplate.ui.common
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -12,15 +12,13 @@ object TemplateDestinations {
     const val POKEMON_LIST_ROUTE = "pokemonList"
     const val POKEMON_DETAIL = "pokemonDetail/{pokemonID}"
     const val FAVORITE_LIST_ROUTE = "favoriteList"
-
     const val SETTINGS_ROUTE = "settings"
-    const val ABOUT_ROUTE = "about"
 }
 
 /**
  * Models the navigation actions in the app.
  */
-class TemplateNavigationActions(navController: NavHostController) {
+class NavigationActions(navController: NavHostController) {
     val navigateToHome: () -> Unit = {
         navController.navigate(TemplateDestinations.HOME_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
@@ -52,18 +50,6 @@ class TemplateNavigationActions(navController: NavHostController) {
     // TODO: separate in different navgraphs
     val navigateToSettings: () -> Unit = {
         navController.navigate(TemplateDestinations.SETTINGS_ROUTE) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-    val navigateToAbout: () -> Unit = {
-        navController.navigate(TemplateDestinations.ABOUT_ROUTE) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
             launchSingleTop = true
             restoreState = true
         }
@@ -72,9 +58,6 @@ class TemplateNavigationActions(navController: NavHostController) {
 
 fun NavController.navigateToDetailNavGraph(selectedPokemonID: Int) {
     navigate("pokemonDetail/$selectedPokemonID") {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
-        }
         launchSingleTop = true
         restoreState = true
     }

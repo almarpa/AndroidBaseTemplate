@@ -1,10 +1,9 @@
-package com.example.androidbasetemplate.ui
+package com.example.androidbasetemplate.ui.drawer
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,10 +23,8 @@ import com.example.androidbasetemplate.R
 @Preview("Drawer contents (dark)", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TemplateDrawer(
-    currentRoute: String = TemplateDestinations.HOME_ROUTE,
+fun Drawer(
     navigateToSettings: () -> Unit = {},
-    navigateToAbout: () -> Unit = {},
     closeDrawer: () -> Unit = {},
 ) {
     ModalDrawerSheet {
@@ -37,19 +34,9 @@ fun TemplateDrawer(
         NavigationDrawerItem(
             label = { Text(stringResource(id = R.string.settings_title)) },
             icon = { Icon(Icons.Filled.Settings, null) },
-            selected = currentRoute == TemplateDestinations.SETTINGS_ROUTE,
+            selected = false,
             onClick = {
                 navigateToSettings()
-                closeDrawer()
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-        )
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.about_title)) },
-            icon = { Icon(Icons.Filled.Person, null) },
-            selected = currentRoute == TemplateDestinations.ABOUT_ROUTE,
-            onClick = {
-                navigateToAbout()
                 closeDrawer()
             },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),

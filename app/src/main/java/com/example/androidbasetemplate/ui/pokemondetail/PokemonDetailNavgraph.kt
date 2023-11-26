@@ -9,13 +9,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.androidbasetemplate.MainActivity
-import com.example.androidbasetemplate.ui.TemplateDestinations
-import com.example.androidbasetemplate.ui.TemplateNavigationActions
+import com.example.androidbasetemplate.ui.common.NavigationActions
+import com.example.androidbasetemplate.ui.common.TemplateDestinations
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.pokemonDetailNavGraph(
     drawerState: DrawerState,
-    navigationActions: TemplateNavigationActions,
+    navigationActions: NavigationActions,
 ) {
     composable(
         route = TemplateDestinations.POKEMON_DETAIL,

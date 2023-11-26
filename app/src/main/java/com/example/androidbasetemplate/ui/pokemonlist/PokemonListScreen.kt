@@ -27,23 +27,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.ui.TemplateNavigationActions
-import com.example.androidbasetemplate.ui.common.TemplateBottomAppBar
-import com.example.androidbasetemplate.ui.common.TemplateTopAppBar
+import com.example.androidbasetemplate.ui.common.NavigationActions
+import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
+import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonListScreen(
     pokemonListViewModel: PokemonListViewModel,
     drawerState: DrawerState,
-    navigationActions: TemplateNavigationActions,
+    currentRoute: String,
+    navigationActions: NavigationActions,
     onNavigateToPokemonDetail: (Int) -> Unit,
 ) {
     val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
-            TemplateTopAppBar(
+            DrawerTopAppBar(
                 drawerState = drawerState,
                 navigationActions = navigationActions,
                 title = R.string.pokemon_list_title
@@ -78,6 +79,7 @@ fun PokemonListScreen(
         bottomBar = {
             TemplateBottomAppBar(
                 drawerState = drawerState,
+                currentRoute = currentRoute,
                 navigationActions = navigationActions
             )
         }
@@ -101,7 +103,7 @@ private fun PokemonList(
             name = "This is an example of product description 3",
         ),
     ),
-    navigationActions: TemplateNavigationActions? = null,
+    navigationActions: NavigationActions? = null,
     onNavigateToPokemonDetail: (Int) -> Unit = {},
 ) {
     LazyColumn(
