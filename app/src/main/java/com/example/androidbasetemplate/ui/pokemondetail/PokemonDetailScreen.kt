@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,23 +28,24 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.PokemonDetail
-import com.example.androidbasetemplate.ui.common.NavigationActions
-import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
+import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreen(
     pokemonListViewModel: PokemonDetailViewModel,
+    navController: NavHostController,
     drawerState: DrawerState,
-    navigationActions: NavigationActions,
     selectedPokemonID: Int,
 ) {
     val currentPokemon by pokemonListViewModel.pokemon.observeAsState()
@@ -53,16 +53,16 @@ fun PokemonDetailScreen(
 
     Scaffold(
         topBar = {
-            DrawerTopAppBar(
+            DefaultTopAppBar(
                 drawerState = drawerState,
-                navigationActions = navigationActions,
                 title = R.string.pokemon_detail_title
-            )
+            ) {
+                navController.popBackStack()
+            }
         },
         content = {
             Column(
-                modifier = Modifier.padding(it)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier.padding(it),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -95,13 +95,12 @@ private fun PokemonDescription(
         shape = MaterialTheme.shapes.large,
     ) {
         Row(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier.fillMaxHeight().background(Color.White),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Card(
                 modifier = Modifier.padding(8.dp).wrapContentHeight().align(Alignment.Top),
                 shape = RoundedCornerShape(100.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current).data(pokemonDetail.sprites)

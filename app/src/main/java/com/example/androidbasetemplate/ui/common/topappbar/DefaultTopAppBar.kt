@@ -37,7 +37,9 @@ fun DefaultTopAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { onBackButton.invoke() }) {
+            IconButton(
+                onClick = { onBackButton.invoke() }
+            ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = stringResource(R.string.menu_drawer_btn),

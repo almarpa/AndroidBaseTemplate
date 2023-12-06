@@ -1,6 +1,7 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,8 +55,8 @@ fun PokemonItem(
                         .crossfade(true)
                         .build(),
                     contentDescription = "PokemonResponse Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.clip(CircleShape).size(128.dp).padding(0.dp),
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.background(Color.White).clip(CircleShape).size(100.dp).padding(8.dp),
                 )
             }
             Column(Modifier.fillMaxWidth()) {

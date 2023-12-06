@@ -30,6 +30,6 @@ fun TemplateNavHost(
     ) {
         drawerNavGraph(navController, drawerState)
         bottomAppBarNavGraph(navController, drawerState, currentRoute, navigationActions)
-        pokemonDetailNavGraph(drawerState, navigationActions)
+        pokemonDetailNavGraph(navController, drawerState)
     }
 }
