@@ -18,20 +18,21 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class UtilsModule {
 
-    @Provides
-    fun provideLoggerInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor {
-            Log.d("message: $it", "API-CALL")
-        }.setLevel(
-            HttpLoggingInterceptor.Level.BODY,
-        )
-    }
-
     @Singleton
     @Named("UrlInterceptor")
     @Provides
     fun provideBaseUrlInterceptor(): UrlInterceptor {
         return UrlInterceptor()
+    }
+
+    @Provides
+    @Named("LoggingInterceptor")
+    fun provideLoggerInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor {
+            Log.v("API-CALL", "message: $it")
+        }.setLevel(
+            HttpLoggingInterceptor.Level.BODY,
+        )
     }
 
     @Singleton

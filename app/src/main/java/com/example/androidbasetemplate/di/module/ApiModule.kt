@@ -23,7 +23,7 @@ class ApiModule {
     @Named("SecureApi")
     @Singleton
     fun provideSecureApiClient(
-        loggingInterceptor: HttpLoggingInterceptor,
+        @Named("LoggingInterceptor") loggingInterceptor: HttpLoggingInterceptor,
         @Named("UrlInterceptor") urlInterceptor: UrlInterceptor,
     ): OkHttpClient {
         return OkHttpClient().newBuilder()
