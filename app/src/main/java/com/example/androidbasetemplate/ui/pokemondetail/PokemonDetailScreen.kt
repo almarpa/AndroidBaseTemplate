@@ -37,7 +37,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.entity.PokemonDetail
+import com.example.androidbasetemplate.entity.PokemonDetails
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +66,8 @@ fun PokemonDetailScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                currentPokemon?.let { pokemonDetail ->
-                    PokemonDescription(pokemonDetail)
+                currentPokemon?.let { pokemonDetails ->
+                    PokemonDescription(pokemonDetails)
                 } ?: run {
                     FullScreenLoading()
                 }
@@ -79,15 +79,13 @@ fun PokemonDetailScreen(
 @Composable
 @Preview("Pokemon Description", uiMode = Configuration.UI_MODE_NIGHT_NO)
 private fun PokemonDescription(
-    pokemonDetail: PokemonDetail = PokemonDetail(
+    pokemonDetail: PokemonDetails = PokemonDetails(
         id = 1,
         order = 1,
         name = "Bulbasour",
         baseExperience = 64,
         height = 24,
         weight = 12,
-        types = listOf(),
-        sprites = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
     ),
 ) {
     Card(

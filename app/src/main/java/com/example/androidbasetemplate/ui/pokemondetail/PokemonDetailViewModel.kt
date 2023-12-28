@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidbasetemplate.domain.PokemonUseCase
-import com.example.androidbasetemplate.entity.PokemonDetail
+import com.example.androidbasetemplate.entity.PokemonDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,8 +16,8 @@ class PokemonDetailViewModel @Inject constructor(
     private val pokemonUseCase: PokemonUseCase,
 ) : ViewModel() {
 
-    private val _pokemon = MutableLiveData<PokemonDetail>()
-    val pokemon: LiveData<PokemonDetail>
+    private val _pokemon = MutableLiveData<PokemonDetails>()
+    val pokemon: LiveData<PokemonDetails>
         get() = _pokemon
 
     fun getPokemonDetail(pokemonID: Int) {

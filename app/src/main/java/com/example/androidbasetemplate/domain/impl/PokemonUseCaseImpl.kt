@@ -3,7 +3,7 @@ package com.example.androidbasetemplate.domain.impl
 import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.domain.PokemonUseCase
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.entity.PokemonDetail
+import com.example.androidbasetemplate.entity.PokemonDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -20,7 +20,7 @@ class PokemonUseCaseImpl(private val pokemonRepository: PokemonRepository) : Pok
         }
     }
 
-    override suspend fun getPokemon(pokemonID: Int): PokemonDetail {
+    override suspend fun getPokemon(pokemonID: Int): PokemonDetails {
         return pokemonRepository.getPokemon(pokemonID)
     }
 }

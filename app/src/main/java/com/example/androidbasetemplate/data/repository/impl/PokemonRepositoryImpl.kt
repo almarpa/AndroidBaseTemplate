@@ -4,7 +4,7 @@ import com.example.androidbasetemplate.data.db.dao.PokemonDao
 import com.example.androidbasetemplate.data.db.ws.api.PokemonApi
 import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.entity.PokemonDetail
+import com.example.androidbasetemplate.entity.PokemonDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -26,7 +26,7 @@ class PokemonRepositoryImpl(
                     pokemon.url =
                         getPokemon(
                             with(pokemon.url.toHttpUrl().pathSegments) { get(size - 2) }.toInt(),
-                        ).sprites
+                        ).getDefaultImage()
                     savePokemon(pokemon)
                 } ?: getLocalPokemonList(),
             )
@@ -49,7 +49,7 @@ class PokemonRepositoryImpl(
         }
     }
 
-    override suspend fun getPokemon(pokemonID: Int): PokemonDetail {
+    override suspend fun getPokemon(pokemonID: Int): PokemonDetails {
         return withContext(Dispatchers.IO) {
             try {
                 with(pokemonApi.getPokemon(pokemonID).execute()) {
