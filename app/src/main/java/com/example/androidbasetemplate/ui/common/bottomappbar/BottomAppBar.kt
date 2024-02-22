@@ -4,12 +4,13 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerState
@@ -35,19 +36,19 @@ import kotlinx.coroutines.launch
 @Preview("Bottom App Bar", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun TemplateBottomAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
-    currentRoute: String = TemplateDestinations.HOME_ROUTE,
+    currentRoute: String = TemplateDestinations.POKEMON_LIST_ROUTE,
     navigationActions: NavigationActions? = null,
 ) {
     val coroutineScope = rememberCoroutineScope()
     BottomAppBar(
         modifier = Modifier
-            .height(60.dp)
+            .height(65.dp)
             .background(color = Color.Transparent)
             .clip(shape = RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp)),
         contentColor = MaterialTheme.colorScheme.onBackground,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(4.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -67,24 +68,7 @@ fun TemplateBottomAppBar(
                     } else {
                         Color.Unspecified
                     },
-                )
-            }
-            IconButton(
-                onClick = {
-                    navigationActions?.navigateToHome?.invoke()
-                    coroutineScope.launch {
-                        drawerState.close()
-                    }
-                },
-            ) {
-                Icon(
-                    Icons.Filled.Home,
-                    contentDescription = "List",
-                    tint = if (currentRoute == TemplateDestinations.HOME_ROUTE) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        Color.Unspecified
-                    },
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                 )
             }
             IconButton(
@@ -103,6 +87,7 @@ fun TemplateBottomAppBar(
                     } else {
                         Color.Unspecified
                     },
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                 )
             }
         }

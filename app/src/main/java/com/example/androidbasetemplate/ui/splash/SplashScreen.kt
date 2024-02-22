@@ -42,7 +42,7 @@ fun SplashScreen(navigationActions: NavigationActions) {
     if (!splashAnimationFinished.value) {
         SplashContent(rotationState)
     } else {
-        navigationActions.navigateToHome()
+        navigationActions.navigateToPokemonList()
     }
 }
 

@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
  */
 object TemplateDestinations {
     const val SPLASH_ROUTE = "splash"
-    const val HOME_ROUTE = "home"
     const val POKEMON_LIST_ROUTE = "pokemonList"
     const val POKEMON_DETAIL = "pokemonDetail/{pokemonID}"
     const val FAVORITE_LIST_ROUTE = "favoriteList"
@@ -20,20 +19,11 @@ object TemplateDestinations {
  * Models the navigation actions in the app.
  */
 class NavigationActions(navController: NavHostController) {
-    val navigateToHome: () -> Unit = {
-        navController.navigate(TemplateDestinations.HOME_ROUTE) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-                inclusive = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
     val navigateToPokemonList: () -> Unit = {
         navController.navigate(TemplateDestinations.POKEMON_LIST_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
+                inclusive = true
             }
             launchSingleTop = true
             restoreState = true

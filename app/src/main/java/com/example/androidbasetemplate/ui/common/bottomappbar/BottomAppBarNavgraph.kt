@@ -13,8 +13,6 @@ import com.example.androidbasetemplate.ui.common.TemplateDestinations
 import com.example.androidbasetemplate.ui.common.navigateToDetailNavGraph
 import com.example.androidbasetemplate.ui.favorites.FavoriteListScreen
 import com.example.androidbasetemplate.ui.favorites.FavoriteListViewModel
-import com.example.androidbasetemplate.ui.home.HomeScreen
-import com.example.androidbasetemplate.ui.home.HomeViewModel
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
 import com.example.androidbasetemplate.ui.splash.SplashScreen
@@ -28,14 +26,6 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
 ) {
     composable(TemplateDestinations.SPLASH_ROUTE) {
         SplashScreen(navigationActions = navigationActions)
-    }
-    composable(TemplateDestinations.HOME_ROUTE) {
-        HomeScreen(
-            homeViewModel = ViewModelProvider(LocalContext.current as MainActivity)[HomeViewModel::class.java],
-            drawerState = drawerState,
-            currentRoute = currentRoute,
-            navigationActions = navigationActions,
-        )
     }
     composable(TemplateDestinations.POKEMON_LIST_ROUTE) {
         PokemonListScreen(
