@@ -55,7 +55,7 @@ fun PokemonDetailScreen(
         topBar = {
             DefaultTopAppBar(
                 drawerState = drawerState,
-                title = R.string.pokemon_detail_title
+                title = R.string.pokemon_detail_title,
             ) {
                 navController.popBackStack()
             }
@@ -72,7 +72,7 @@ fun PokemonDetailScreen(
                     FullScreenLoading()
                 }
             }
-        }
+        },
     )
 }
 

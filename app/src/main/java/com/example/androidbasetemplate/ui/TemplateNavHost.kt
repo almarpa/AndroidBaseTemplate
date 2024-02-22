@@ -18,7 +18,7 @@ import com.example.androidbasetemplate.ui.pokemondetail.pokemonDetailNavGraph
 fun TemplateNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = TemplateDestinations.HOME_ROUTE,
+    startDestination: String = TemplateDestinations.SPLASH_ROUTE,
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,

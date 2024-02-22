@@ -22,7 +22,7 @@ fun TemplateApp() {
     val navController = rememberNavController()
     val navigationActions = remember(navController) { NavigationActions(navController) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route ?: TemplateDestinations.HOME_ROUTE
+    val currentRoute = navBackStackEntry?.destination?.route ?: TemplateDestinations.SPLASH_ROUTE
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()

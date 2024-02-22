@@ -57,7 +57,7 @@ fun TemplateBottomAppBar(
                     coroutineScope.launch {
                         drawerState.close()
                     }
-                }
+                },
             ) {
                 Icon(
                     Icons.Filled.List,
@@ -75,7 +75,7 @@ fun TemplateBottomAppBar(
                     coroutineScope.launch {
                         drawerState.close()
                     }
-                }
+                },
             ) {
                 Icon(
                     Icons.Filled.Home,
@@ -93,7 +93,7 @@ fun TemplateBottomAppBar(
                     coroutineScope.launch {
                         drawerState.close()
                     }
-                }
+                },
             ) {
                 Icon(
                     Icons.Filled.Favorite,

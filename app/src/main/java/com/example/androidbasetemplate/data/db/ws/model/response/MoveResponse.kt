@@ -8,6 +8,6 @@ data class MoveResponse(
     val moveResponseX: MoveResponseX,
 ) {
     fun map() = Move(
-        moveResponseX.map()
+        moveResponseX.map(),
     )
 }

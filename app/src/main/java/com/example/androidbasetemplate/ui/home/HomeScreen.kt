@@ -42,6 +42,6 @@ fun HomeScreen(
         },
         bottomBar = {
             TemplateBottomAppBar(drawerState = drawerState, currentRoute, navigationActions)
-        }
+        },
     )
 }

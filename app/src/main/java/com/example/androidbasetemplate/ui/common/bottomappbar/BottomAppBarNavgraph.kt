@@ -17,6 +17,7 @@ import com.example.androidbasetemplate.ui.home.HomeScreen
 import com.example.androidbasetemplate.ui.home.HomeViewModel
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
+import com.example.androidbasetemplate.ui.splash.SplashScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.bottomAppBarNavGraph(
@@ -25,12 +26,15 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
     currentRoute: String,
     navigationActions: NavigationActions,
 ) {
+    composable(TemplateDestinations.SPLASH_ROUTE) {
+        SplashScreen(navigationActions = navigationActions)
+    }
     composable(TemplateDestinations.HOME_ROUTE) {
         HomeScreen(
             homeViewModel = ViewModelProvider(LocalContext.current as MainActivity)[HomeViewModel::class.java],
             drawerState = drawerState,
             currentRoute = currentRoute,
-            navigationActions = navigationActions
+            navigationActions = navigationActions,
         )
     }
     composable(TemplateDestinations.POKEMON_LIST_ROUTE) {

@@ -5,9 +5,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
 /**
- * Destinations used in the [TemplateApp].
+ * Destinations used throughout the app.
  */
 object TemplateDestinations {
+    const val SPLASH_ROUTE = "splash"
     const val HOME_ROUTE = "home"
     const val POKEMON_LIST_ROUTE = "pokemonList"
     const val POKEMON_DETAIL = "pokemonDetail/{pokemonID}"
@@ -23,6 +24,7 @@ class NavigationActions(navController: NavHostController) {
         navController.navigate(TemplateDestinations.HOME_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
+                inclusive = true
             }
             launchSingleTop = true
             restoreState = true
