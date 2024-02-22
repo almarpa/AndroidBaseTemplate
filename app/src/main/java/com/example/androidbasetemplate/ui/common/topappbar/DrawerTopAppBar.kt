@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 fun DrawerTopAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
     navigationActions: NavigationActions? = null,
-    title: Int = R.string.home_title,
+    title: Int = R.string.pokemon_list_title,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
