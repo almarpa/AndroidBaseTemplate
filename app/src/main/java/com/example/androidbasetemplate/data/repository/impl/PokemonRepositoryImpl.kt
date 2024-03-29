@@ -53,9 +53,7 @@ class PokemonRepositoryImpl(
         return withContext(Dispatchers.IO) {
             try {
                 with(pokemonApi.getPokemon(pokemonID).execute()) {
-                    body()?.let { body ->
-                        return@let body.map()
-                    } ?: run {
+                    return@with body()?.map() ?: run {
                         throw Exception()
                     }
                 }

@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.drawer
+package com.example.androidbasetemplate.ui.common.drawer
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row

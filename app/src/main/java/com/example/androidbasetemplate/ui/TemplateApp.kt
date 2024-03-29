@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.TemplateDestinations
-import com.example.androidbasetemplate.ui.drawer.Drawer
+import com.example.androidbasetemplate.ui.common.drawer.Drawer
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ fun TemplateApp() {
                 navController = navController,
                 drawerState = drawerState,
                 currentRoute = currentRoute,
-                navigationActions = navigationActions,
+                navigationActions = navigationActions
             )
         }
     }

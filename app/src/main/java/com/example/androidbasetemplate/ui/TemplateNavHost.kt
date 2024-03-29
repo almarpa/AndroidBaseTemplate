@@ -10,8 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.TemplateDestinations
 import com.example.androidbasetemplate.ui.common.bottomappbar.bottomAppBarNavGraph
-import com.example.androidbasetemplate.ui.drawer.drawerNavGraph
-import com.example.androidbasetemplate.ui.pokemondetail.pokemonDetailNavGraph
+import com.example.androidbasetemplate.ui.common.drawer.drawerNavGraph
+import com.example.androidbasetemplate.ui.splash.splashNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,8 +28,8 @@ fun TemplateNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
+        splashNavGraph(navigationActions)
         drawerNavGraph(navController, drawerState)
         bottomAppBarNavGraph(navController, drawerState, currentRoute, navigationActions)
-        pokemonDetailNavGraph(navController, drawerState)
     }
 }
