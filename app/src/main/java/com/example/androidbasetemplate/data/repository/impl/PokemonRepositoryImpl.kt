@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class PokemonRepositoryImpl(
     private val pokemonApi: PokemonApi,
@@ -18,19 +17,17 @@ class PokemonRepositoryImpl(
 ) : PokemonRepository {
 
     override suspend fun getPokemons() = flow {
-        with(
-            pokemonApi.getPokemons().execute(),
-        ) {
-            emit(
-                body()?.map()?.results?.onEach { pokemon ->
-                    pokemon.url =
-                        getPokemon(
-                            with(pokemon.url.toHttpUrl().pathSegments) { get(size - 2) }.toInt(),
-                        ).getDefaultImage()
-                    savePokemon(pokemon)
-                } ?: getLocalPokemonList(),
-            )
-        }
+        emit(
+            getLocalPokemonList().ifEmpty {
+                with(
+                    pokemonApi.getPokemons().execute(),
+                ) {
+                    body()?.map()?.results?.let { remotePokemonList ->
+                        remotePokemonList.onEach { pokemon -> savePokemon(pokemon) }
+                    } ?: emptyList()
+                }
+            }
+        )
     }
         .flowOn(Dispatchers.IO)
         .catch { error ->
