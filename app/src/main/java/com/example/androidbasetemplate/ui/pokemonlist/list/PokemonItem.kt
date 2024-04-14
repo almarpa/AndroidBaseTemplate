@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.pokemonlist
+package com.example.androidbasetemplate.ui.pokemonlist.list
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContentScope
@@ -35,7 +35,7 @@ import com.example.androidbasetemplate.entity.Pokemon
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-@Preview("Pokemon Item", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview("Pokemon Item View", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun PokemonItem(
     pokemon: Pokemon = Pokemon(
         id = 1,

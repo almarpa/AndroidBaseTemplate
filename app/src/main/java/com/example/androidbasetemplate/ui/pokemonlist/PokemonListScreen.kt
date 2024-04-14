@@ -1,9 +1,7 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
-import android.content.res.Configuration
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -15,15 +13,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.common.utils.getModifierWithSharedElementAnimationOrDefault
 import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
+import com.example.androidbasetemplate.ui.common.error.ErrorRetryView
+import com.example.androidbasetemplate.ui.common.loader.FullScreenLoader
 import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
 import com.example.androidbasetemplate.ui.pokemonlist.detail.PokemonDetailsScreen
-import com.example.androidbasetemplate.ui.pokemonlist.interfaces.PokemonListScreenState
+import com.example.androidbasetemplate.ui.pokemonlist.list.PokemonList
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -55,17 +54,20 @@ fun PokemonListScreen(
                         },
                         content = {
                             Column(
-                                modifier = Modifier.padding(it),
+                                modifier = Modifier
+                                    .padding(it)
+                                    .fillMaxHeight()
+                                    .fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 when (uiState) {
                                     is PokemonListUiState.Loading -> {
-                                        FullScreenLoading()
+                                        FullScreenLoader()
                                     }
 
                                     is PokemonListUiState.Error -> {
-                                        /*TODO: retry btn */
+                                        ErrorRetryView { pokemonListViewModel.getPokemonList() }
                                     }
 
                                     is PokemonListUiState.Success -> {
@@ -123,15 +125,3 @@ fun getTransitionSpec(animState: PokemonListScreenState) =
     } else {
         slideInHorizontally { it } + fadeIn() togetherWith slideOutHorizontally { -it } + fadeOut()
     }
-
-@Preview("Full Screen Loader", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FullScreenLoading() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center),
-    ) {
-        CircularProgressIndicator()
-    }
-}

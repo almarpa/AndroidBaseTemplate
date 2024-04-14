@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.pokemonlist
+package com.example.androidbasetemplate.ui.pokemonlist.list
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContentScope
@@ -14,10 +14,11 @@ import androidx.compose.ui.unit.dp
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.lazylist.rememberLazyScrollState
+import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-@Preview("Pokemon List", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview("Pokemon List View", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun PokemonList(
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedContentScope: AnimatedContentScope? = null,
@@ -75,7 +76,11 @@ fun PokemonList(
             ) {
                 onPokemonItemClick(pokemonList[item].id)
             }
-            Spacer(modifier = Modifier.width(16.dp).height(16.dp))
+            Spacer(
+                modifier = Modifier
+                    .width(16.dp)
+                    .height(16.dp)
+            )
         }
     }
 }

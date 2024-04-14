@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.ui.pokemonlist.interfaces
+package com.example.androidbasetemplate.ui.pokemonlist
 
 sealed interface PokemonListScreenState {
     object List : PokemonListScreenState

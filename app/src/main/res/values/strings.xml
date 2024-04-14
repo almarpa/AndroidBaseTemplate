@@ -7,4 +7,6 @@
     <string name="pokemon_detail_title">Detail</string>
     <string name="search_title">Search</string>
     <string name="menu_drawer_btn">Drawer menu</string>
+    <string name="retry_btn">Retry</string>
+    <string name="error_getting_pokemon_list">Data could not be retrieved</string>
 </resources>

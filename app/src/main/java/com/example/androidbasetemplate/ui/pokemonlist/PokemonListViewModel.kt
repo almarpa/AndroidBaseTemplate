@@ -1,7 +1,5 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
-import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,13 +41,11 @@ class PokemonListViewModel @Inject constructor(
         getPokemonList()
     }
 
-    @VisibleForTesting
-    private fun getPokemonList() {
+    fun getPokemonList() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.tryEmit(PokemonListUiState.Loading)
             pokemonUseCase.getPokemons()
-                .catch { e ->
-                    Log.e("ERROR", "getPokemonList", e)
+                .catch {
                     _uiState.tryEmit(PokemonListUiState.Error)
                 }
                 .collect { pokemonList ->
