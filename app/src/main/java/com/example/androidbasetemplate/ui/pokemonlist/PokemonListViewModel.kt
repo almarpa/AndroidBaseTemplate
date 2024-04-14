@@ -2,10 +2,13 @@ package com.example.androidbasetemplate.ui.pokemonlist
 
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidbasetemplate.domain.PokemonUseCase
 import com.example.androidbasetemplate.entity.Pokemon
+import com.example.androidbasetemplate.entity.PokemonDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +32,13 @@ class PokemonListViewModel @Inject constructor(
         MutableStateFlow<PokemonListUiState>(PokemonListUiState.Success(emptyList()))
     val uiState: StateFlow<PokemonListUiState> = _uiState
 
+    private val _pokemon = MutableLiveData<PokemonDetails>()
+    val pokemon: LiveData<PokemonDetails>
+        get() = _pokemon
+
+    var firstVisibleItemIdx: Int = 0
+    var firstVisibleItemOffset: Int = 0
+
     init {
         getPokemonList()
     }
@@ -45,6 +55,12 @@ class PokemonListViewModel @Inject constructor(
                 .collect { pokemonList ->
                     _uiState.tryEmit(PokemonListUiState.Success(pokemonList))
                 }
+        }
+    }
+
+    fun getPokemonDetail(pokemonID: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _pokemon.postValue(pokemonUseCase.getPokemon(pokemonID))
         }
     }
 }

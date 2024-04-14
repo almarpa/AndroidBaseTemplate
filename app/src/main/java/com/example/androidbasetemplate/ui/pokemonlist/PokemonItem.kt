@@ -1,11 +1,13 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,44 +30,78 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.androidbasetemplate.common.utils.getModifierWithSharedElementAnimationOrDefault
+import com.example.androidbasetemplate.entity.Pokemon
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview("Pokemon Item", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun PokemonItem(
-    id: Int = 1,
-    name: String = "Pokemon name",
-    url: String? = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+    pokemon: Pokemon = Pokemon(
+        id = 1,
+        url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
+        name = "Pokemon name",
+    ),
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedContentScope: AnimatedContentScope? = null,
     onItemClick: (Int) -> Unit = {},
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable { onItemClick(id) }
-            .focusable(true),
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) {
+                onItemClick(pokemon.id)
+            },
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Card(modifier = Modifier.padding(8.dp), shape = RoundedCornerShape(100.dp)) {
+            Card(
+                modifier = Modifier.padding(8.dp),
+                shape = RoundedCornerShape(100.dp)
+            ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(url)
+                    model = ImageRequest.Builder(
+                        LocalContext.current
+                    )
+                        .data(pokemon.url)
                         .crossfade(true)
                         .build(),
                     contentDescription = "PokemonResponse Image",
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.background(Color.White).clip(CircleShape).size(100.dp).padding(8.dp),
+                    modifier = Modifier
+                        .background(Color.White)
+                        .clip(CircleShape)
+                        .size(100.dp)
+                        .padding(8.dp)
+                        .then(
+                            Modifier.getModifierWithSharedElementAnimationOrDefault(
+                                modifier = Modifier,
+                                sharedTransitionScope,
+                                animatedContentScope,
+                                pokemon.id,
+                            )
+                        ),
                 )
             }
-            Column(Modifier.fillMaxWidth()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
-                    text = name.uppercase(),
+                    text = pokemon.name.uppercase(),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(10.dp, 10.dp),
+                    modifier = Modifier.padding(
+                        5.dp,
+                        10.dp
+                    ),
                 )
             }
         }

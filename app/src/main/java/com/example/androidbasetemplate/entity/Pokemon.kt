@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pokemon")
 data class Pokemon(
     @PrimaryKey
+    @ColumnInfo(name = "id")
+    var id: Int,
     @ColumnInfo(name = "url")
     var url: String,
     @ColumnInfo(name = "name")

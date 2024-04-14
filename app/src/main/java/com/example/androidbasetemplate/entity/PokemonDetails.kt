@@ -17,6 +17,8 @@ data class PokemonDetails(
     var height: Int,
     @ColumnInfo(name = "weight")
     var weight: Int,
+    @ColumnInfo(name = "imageURL")
+    var imageURL: String,
     var isDefault: Boolean,
     var locationAreaEncounters: String,
     var species: Species,
@@ -34,6 +36,7 @@ data class PokemonDetails(
         baseExperience: Int,
         height: Int,
         weight: Int,
+        imageURL: String,
     ) : this(
         id = id,
         name = name,
@@ -41,6 +44,7 @@ data class PokemonDetails(
         baseExperience = baseExperience,
         height = height,
         weight = weight,
+        imageURL = imageURL,
         isDefault = false,
         locationAreaEncounters = "",
         species = Species(),
@@ -51,6 +55,4 @@ data class PokemonDetails(
         stats = listOf(),
         types = listOf(),
     )
-
-    fun getDefaultImage() = sprites.front_default
 }

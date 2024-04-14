@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 object TemplateDestinations {
     const val SPLASH_ROUTE = "/splash"
     const val POKEMON_LIST_ROUTE = "/pokemonList"
-    const val POKEMON_DETAIL_ROUTE = "/pokemonDetail/{pokemonID}"
     const val FAVORITE_LIST_ROUTE = "/favoriteList"
     const val SETTINGS_ROUTE = "/settings"
 }
@@ -40,13 +39,6 @@ class NavigationActions(private val navController: NavHostController) {
 
     val navigateToSettings: () -> Unit = {
         navController.navigate(TemplateDestinations.SETTINGS_ROUTE) {
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-
-    val navigateToDetailNavGraph: (Int) -> Unit = { selectedPokemonID: Int ->
-        navController.navigate("/pokemonDetail/${selectedPokemonID}") {
             launchSingleTop = true
             restoreState = true
         }

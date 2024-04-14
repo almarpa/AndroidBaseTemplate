@@ -45,6 +45,7 @@ data class PokemonDetailsResponse(
             baseExperience = baseExperience,
             height = height,
             weight = weight,
+            imageURL = getPokemonImageURL(),
             isDefault = false,
             locationAreaEncounters = "",
             species = species.map(),
@@ -56,4 +57,8 @@ data class PokemonDetailsResponse(
             types = types.map { inner -> inner.map() },
         )
     }
+
+    private fun getPokemonImageURL() =
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png"
+
 }
