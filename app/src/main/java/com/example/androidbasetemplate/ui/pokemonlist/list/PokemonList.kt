@@ -76,11 +76,9 @@ fun PokemonList(
             ) {
                 onPokemonItemClick(pokemonList[item].id)
             }
-            Spacer(
-                modifier = Modifier
-                    .width(16.dp)
-                    .height(16.dp)
-            )
+            Spacer(modifier = Modifier
+                .width(16.dp)
+                .height(16.dp))
         }
     }
 }
