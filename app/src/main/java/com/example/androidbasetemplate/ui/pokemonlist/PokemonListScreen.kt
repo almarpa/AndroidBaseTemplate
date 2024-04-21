@@ -77,9 +77,9 @@ fun PokemonListScreen(
                                             pokemonList = (uiState as PokemonListUiState.Success).pokemonList,
                                             pokemonListViewModel = pokemonListViewModel,
                                             navigationActions = navigationActions,
-                                        ) { selectedPokemonID ->
+                                        ) { onPokemonItemClick ->
                                             animState =
-                                                PokemonListScreenState.Details(selectedPokemonID)
+                                                PokemonListScreenState.Details(onPokemonItemClick)
                                         }
                                     }
                                 }
@@ -96,19 +96,20 @@ fun PokemonListScreen(
                 }
 
                 is PokemonListScreenState.Details -> {
-                    pokemonListViewModel.getPokemonDetail(screenState.item)
+                    pokemonListViewModel.getPokemonDetail(screenState.pokemonDetails.first)
                     val currentPokemon by pokemonListViewModel.pokemon.observeAsState()
 
                     currentPokemon?.let { pokemonDetails ->
                         PokemonDetailsScreen(
-                            Modifier.getModifierWithSharedElementAnimationOrDefault(
+                            modifier = Modifier.getModifierWithSharedElementAnimationOrDefault(
                                 modifier = Modifier,
                                 sharedTransitionScope = this@SharedTransitionLayout,
                                 animatedContentScope = this@AnimatedContent,
-                                elementPosition = screenState.item,
+                                elementPosition = screenState.pokemonDetails.first,
                             ),
-                            drawerState,
-                            pokemonDetails
+                            drawerState = drawerState,
+                            pokemonDetails = pokemonDetails,
+                            dominantColor = screenState.pokemonDetails.second
                         ) {
                             animState = PokemonListScreenState.List
                         }

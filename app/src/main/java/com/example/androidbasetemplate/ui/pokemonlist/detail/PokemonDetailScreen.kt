@@ -44,6 +44,7 @@ fun PokemonDetailsScreen(
         weight = 12,
         imageURL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
     ),
+    dominantColor: Color = Color.Blue,
     imageHeight: Int = 300,
     navigateBack: () -> Unit = {},
 ) {
@@ -55,7 +56,7 @@ fun PokemonDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .background(Color.Blue)
+            .background(dominantColor)
     ) {
         PokemonDetailAppBar(
             modifier = Modifier
