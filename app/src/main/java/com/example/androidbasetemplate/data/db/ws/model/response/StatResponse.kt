@@ -9,11 +9,11 @@ data class StatResponse(
     @SerializedName("effort")
     val effort: Int,
     @SerializedName("stat")
-    val stat: StatResponseX,
+    val statX: StatXResponse,
 ) {
     fun map() = Stat(
         baseStat,
         effort,
-        stat.map(),
+        statX.map(),
     )
 }

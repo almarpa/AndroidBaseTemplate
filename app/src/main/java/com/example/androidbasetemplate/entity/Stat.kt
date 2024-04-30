@@ -1,7 +1,8 @@
 package com.example.androidbasetemplate.entity
 
 data class Stat(
-    val base_stat: Int,
+    val baseStat: Int,
     val effort: Int,
-    val stat: StatX,
+    val statX: StatX,
 )
+

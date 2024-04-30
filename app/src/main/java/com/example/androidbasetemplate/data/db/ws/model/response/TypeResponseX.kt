@@ -7,10 +7,10 @@ data class TypeResponseX(
     @SerializedName("slot")
     val slot: Int,
     @SerializedName("type")
-    val type: TypeResponseXX,
+    val typeXXResponse: TypeXXResponse,
 ) {
     fun map() = TypeX(
         slot,
-        type.map()
+        typeXXResponse.map()
     )
 }

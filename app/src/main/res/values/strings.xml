@@ -9,4 +9,11 @@
     <string name="menu_drawer_btn">Drawer menu</string>
     <string name="retry_btn">Retry</string>
     <string name="error_getting_pokemon_list">Data could not be retrieved</string>
+    <string name="stat_hp">HP</string>
+    <string name="stat_attack">Atk</string>
+    <string name="stat_defense">Def</string>
+    <string name="stat_speed">Vel</string>
+    <string name="stat_special_attack">S. Atk</string>
+    <string name="stat_special_defense">S. Def</string>
+    <string name="empty_string">""</string>
 </resources>

@@ -24,7 +24,7 @@ fun SettingsScreen(
 ) {
     Scaffold(
         topBar = {
-            DefaultTopAppBar(drawerState = drawerState, title = R.string.settings_title) {
+            DefaultTopAppBar(title = R.string.settings_title) {
                 navController.popBackStack()
             }
         },

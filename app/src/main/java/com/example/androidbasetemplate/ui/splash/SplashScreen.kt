@@ -27,7 +27,7 @@ fun SplashScreen(navigationActions: NavigationActions) {
     val splashAnimationFinished = remember { mutableStateOf(false) }
     val animDuration = 2000
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = true) {
         rotationState.animateTo(
             targetValue = 720f,
             animationSpec = tween(durationMillis = animDuration),

@@ -60,5 +60,4 @@ data class PokemonDetailsResponse(
 
     private fun getPokemonImageURL() =
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png"
-
 }
