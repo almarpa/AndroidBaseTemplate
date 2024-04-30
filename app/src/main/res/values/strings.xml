@@ -12,7 +12,7 @@
     <string name="stat_hp">HP</string>
     <string name="stat_attack">Atk</string>
     <string name="stat_defense">Def</string>
-    <string name="stat_speed">Vel</string>
+    <string name="stat_speed">Spd</string>
     <string name="stat_special_attack">S. Atk</string>
     <string name="stat_special_defense">S. Def</string>
     <string name="empty_string">""</string>

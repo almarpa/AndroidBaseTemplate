@@ -101,7 +101,7 @@ fun PokemonImageAnimation(
 ) {
     Box(
         contentAlignment = Alignment.TopCenter,
-        modifier = Modifier.wrapContentHeight()
+        modifier = Modifier.wrapContentHeight().padding(top = 25.dp)
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -153,7 +153,7 @@ fun PokemonCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxHeight()
-            .padding(top = imageSize.dp / 2)
+            .padding(top = imageSize.dp / 2 + 20.dp)
             .verticalScroll(scrollState)
     ) {
         Text(
