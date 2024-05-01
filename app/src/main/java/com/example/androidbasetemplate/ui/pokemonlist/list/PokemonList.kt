@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -13,9 +15,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androidbasetemplate.common.utils.ScaleAndAlphaAnimationArgs
+import com.example.androidbasetemplate.common.utils.getScaleAndAlphaAnimation
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.lazylist.rememberLazyScrollState
@@ -25,6 +30,10 @@ import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
 @Composable
 @Preview(
     name = "Pokemon List View",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Pokemon List View Landscape",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
     device = "spec:width=500dp,height=500dp,orientation=landscape"
 )
@@ -67,13 +76,15 @@ fun PokemonList(
     navigationActions: NavigationActions? = null,
     onPokemonItemClick: (Pair<Int, Color>) -> Unit = { },
 ) {
+
     val currentOrientation = LocalConfiguration.current.orientation
     val isLandScape by remember {
         mutableStateOf(currentOrientation == Configuration.ORIENTATION_LANDSCAPE)
     }
+    val columns = if (isLandScape) 2 else 1
 
     LazyVerticalGrid(
-        columns = GridCells.Fixed(if (isLandScape) 3 else 1),
+        columns = GridCells.Fixed(columns),
         state = rememberLazyScrollState(pokemonListViewModel),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -82,9 +93,24 @@ fun PokemonList(
             .fillMaxHeight()
             .fillMaxWidth(),
     ) {
-        items(pokemonList.size) { item ->
+        items(count = pokemonList.size) { index ->
+            val (scale, alpha) = getScaleAndAlphaAnimation(
+                args = ScaleAndAlphaAnimationArgs(
+                    fromScale = 0f,
+                    toScale = 1f,
+                    fromAlpha = 0f,
+                    toAlpha = 1f
+                ),
+                animation = tween(
+                    durationMillis = 400,
+                    delayMillis = index % columns * 50,
+                    easing = LinearOutSlowInEasing
+                )
+            )
+
             PokemonItem(
-                pokemonList[item],
+                modifier = Modifier.graphicsLayer(alpha = alpha, scaleX = scale, scaleY = scale),
+                pokemonList[index],
                 sharedTransitionScope,
                 animatedContentScope,
             ) { pokemonDetails ->

@@ -43,6 +43,7 @@ import com.example.androidbasetemplate.entity.Pokemon
 @Composable
 @Preview("Pokemon Item View", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun PokemonItem(
+    modifier: Modifier = Modifier,
     pokemon: Pokemon = Pokemon(
         id = 1,
         url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
@@ -57,7 +58,7 @@ fun PokemonItem(
     }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable(
