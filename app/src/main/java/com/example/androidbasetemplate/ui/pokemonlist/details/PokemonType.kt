@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidbasetemplate.entity.TypeX
 import com.example.androidbasetemplate.entity.TypeXX
-import com.example.androidbasetemplate.entity.enum.PokemonTypeEnum
+import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 
 @Preview("Pokemon Type", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable

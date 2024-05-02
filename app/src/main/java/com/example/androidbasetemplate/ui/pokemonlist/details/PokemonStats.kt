@@ -21,8 +21,8 @@ import com.example.androidbasetemplate.entity.Stat
 import com.example.androidbasetemplate.entity.StatX
 import com.example.androidbasetemplate.entity.TypeX
 import com.example.androidbasetemplate.entity.TypeXX
-import com.example.androidbasetemplate.entity.enum.PokemonTypeEnum
-import com.example.androidbasetemplate.entity.enum.StatNameEnum
+import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
+import com.example.androidbasetemplate.entity.enums.StatNameEnum
 
 @Preview("Pokemon Stats", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable

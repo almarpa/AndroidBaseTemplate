@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.entity.enum
+package com.example.androidbasetemplate.entity.enums
 
 enum class PokemonTypeEnum(val value: String) {
     NORMAL("normal"),

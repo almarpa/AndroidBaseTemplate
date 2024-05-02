@@ -2,7 +2,7 @@ package com.example.androidbasetemplate.entity
 
 import androidx.compose.ui.graphics.Color
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.entity.enum.StatNameEnum
+import com.example.androidbasetemplate.entity.enums.StatNameEnum
 import com.example.androidbasetemplate.ui.theme.*
 
 data class StatX(

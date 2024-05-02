@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.entity.enum
+package com.example.androidbasetemplate.entity.enums
 
 enum class StatNameEnum(val value: String) {
     HP("hp"),

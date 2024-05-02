@@ -16,4 +16,5 @@
     <string name="stat_special_attack">S. Atk</string>
     <string name="stat_special_defense">S. Def</string>
     <string name="empty_string">""</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

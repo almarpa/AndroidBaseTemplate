@@ -19,7 +19,7 @@ data class ScaleAndAlphaAnimationArgs(
 )
 
 @Composable
-fun getScaleAndAlphaAnimation(
+fun ScaleAndAlphaAnimation(
     args: ScaleAndAlphaAnimationArgs,
     animation: FiniteAnimationSpec<Float>,
 ): Pair<Float, Float> {

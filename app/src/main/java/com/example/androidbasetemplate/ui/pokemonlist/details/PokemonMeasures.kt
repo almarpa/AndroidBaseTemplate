@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +27,9 @@ fun PokemonMeasures(
     val pokemonHeightInMeters = remember { round(pokemonHeight * 100f) / 1000f }
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         PokemonMeasureItem(
             modifier = Modifier.weight(1f),
@@ -38,8 +39,9 @@ fun PokemonMeasures(
         )
         Spacer(
             modifier = Modifier
-                .size(2.dp)
-                .background(Color.LightGray)
+                .height(60.dp)
+                .size(1.dp)
+                .background(MaterialTheme.colorScheme.primary)
         )
         PokemonMeasureItem(
             modifier = Modifier.weight(1f),

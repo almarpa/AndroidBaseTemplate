@@ -1,7 +1,7 @@
 package com.example.androidbasetemplate.entity
 
 import androidx.compose.ui.graphics.Color
-import com.example.androidbasetemplate.entity.enum.PokemonTypeEnum
+import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.ui.theme.*
 
 data class TypeXX(

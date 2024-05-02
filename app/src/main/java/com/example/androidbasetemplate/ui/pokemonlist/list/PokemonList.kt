@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androidbasetemplate.common.utils.ScaleAndAlphaAnimation
 import com.example.androidbasetemplate.common.utils.ScaleAndAlphaAnimationArgs
-import com.example.androidbasetemplate.common.utils.getScaleAndAlphaAnimation
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.lazylist.rememberLazyScrollState
@@ -94,19 +94,7 @@ fun PokemonList(
             .fillMaxWidth(),
     ) {
         items(count = pokemonList.size) { index ->
-            val (scale, alpha) = getScaleAndAlphaAnimation(
-                args = ScaleAndAlphaAnimationArgs(
-                    fromScale = 0f,
-                    toScale = 1f,
-                    fromAlpha = 0f,
-                    toAlpha = 1f
-                ),
-                animation = tween(
-                    durationMillis = 400,
-                    delayMillis = index % columns * 50,
-                    easing = LinearOutSlowInEasing
-                )
-            )
+            val (scale, alpha) = getScaleAndAlphaAnimation(index, columns)
 
             PokemonItem(
                 modifier = Modifier.graphicsLayer(alpha = alpha, scaleX = scale, scaleY = scale),
@@ -124,3 +112,19 @@ fun PokemonList(
         }
     }
 }
+
+@Composable
+fun getScaleAndAlphaAnimation(index: Int, columns: Int) =
+    ScaleAndAlphaAnimation(
+        args = ScaleAndAlphaAnimationArgs(
+            fromScale = 0f,
+            toScale = 1f,
+            fromAlpha = 0f,
+            toAlpha = 1f
+        ),
+        animation = tween(
+            durationMillis = 400,
+            delayMillis = index % columns * 50,
+            easing = LinearOutSlowInEasing
+        )
+    )

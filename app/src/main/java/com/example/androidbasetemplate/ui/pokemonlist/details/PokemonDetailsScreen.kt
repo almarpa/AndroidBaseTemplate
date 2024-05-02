@@ -32,8 +32,8 @@ import com.example.androidbasetemplate.entity.Stat
 import com.example.androidbasetemplate.entity.StatX
 import com.example.androidbasetemplate.entity.TypeX
 import com.example.androidbasetemplate.entity.TypeXX
-import com.example.androidbasetemplate.entity.enum.PokemonTypeEnum
-import com.example.androidbasetemplate.entity.enum.StatNameEnum
+import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
+import com.example.androidbasetemplate.entity.enums.StatNameEnum
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 import java.util.Locale
 
@@ -92,32 +92,6 @@ fun PokemonDetailTopAppBar(navigateBack: () -> Unit = {}) {
     }
 }
 
-@Preview("Pokemon Image Animation", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun PokemonImageAnimation(
-    modifier: Modifier = Modifier,
-    pokemonImageUrl: String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-    imageSize: Int = 300,
-) {
-    Box(
-        contentAlignment = Alignment.TopCenter,
-        modifier = Modifier.wrapContentHeight().padding(top = 25.dp)
-    ) {
-        SubcomposeAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(pokemonImageUrl)
-                .crossfade(true)
-                .build(),
-            loading = { CircularProgressIndicator() },
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(imageSize.dp)
-                .then(modifier)
-        )
-    }
-}
-
 @Preview("Pokemon Description", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun PokemonCard(
@@ -134,8 +108,14 @@ fun PokemonCard(
         stats = listOf(
             Stat(
                 baseStat = 50, effort = 30, statX = StatX(StatNameEnum.ATTACK, "")
-            ), Stat(
+            ),
+            Stat(
                 baseStat = 80, effort = 70, statX = StatX(StatNameEnum.DEFENSE, "")
+            ),
+            Stat(
+                baseStat = 70, effort = 10, statX = StatX(StatNameEnum.SPECIAL_ATTACK, "")
+            ), Stat(
+                baseStat = 100, effort = 30, statX = StatX(StatNameEnum.SPECIAL_DEFENSE, "")
             )
         ),
         types = listOf(
@@ -168,4 +148,33 @@ fun PokemonCard(
         PokemonStats(pokemonDetails)
     }
 }
+
+@Preview("Pokemon Image Animation", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun PokemonImageAnimation(
+    modifier: Modifier = Modifier,
+    pokemonImageUrl: String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    imageSize: Int = 300,
+) {
+    Box(
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(top = 25.dp)
+    ) {
+        SubcomposeAsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(pokemonImageUrl)
+                .crossfade(true)
+                .build(),
+            loading = { CircularProgressIndicator() },
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(imageSize.dp)
+                .then(modifier)
+        )
+    }
+}
+
 
