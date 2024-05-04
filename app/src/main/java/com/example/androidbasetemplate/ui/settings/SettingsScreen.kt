@@ -41,7 +41,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.secondary)
-                    .height(1.dp)
+                    .height(2.dp)
             )
             Row(
                 modifier = Modifier
@@ -67,7 +67,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.secondary)
-                    .height(1.dp)
+                    .height(2.dp)
             )
         }
     }
