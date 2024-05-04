@@ -88,39 +88,46 @@ fun PokemonStat(
 ) {
     var startAnim by remember { mutableStateOf(false) }
     val animatedStatValue by animateFloatAsState(
-        targetValue = if (startAnim) stat.baseStat / 100.toFloat() else .25f,
+        targetValue = if (startAnim) stat.baseStat / 100.toFloat() else .15f,
         animationSpec = tween(1000, 100),
         label = "StatProgressAnimation"
     )
 
     LaunchedEffect(key1 = true) { startAnim = true }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primaryContainer)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(.2f),
+            text = LocalContext.current.getString(stat.statX.getAbbreviation()),
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+        )
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(animatedStatValue)
+                .fillMaxWidth()
+                .height(40.dp)
                 .clip(CircleShape)
-                .background(stat.statX.getColor())
-                .padding(horizontal = 8.dp)
+                .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
-            Text(
-                text = LocalContext.current.getString(stat.statX.getAbbreviation()),
-                fontWeight = FontWeight.SemiBold,
-
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(animatedStatValue)
+                    .clip(CircleShape)
+                    .background(stat.statX.getColor())
+                    .padding(horizontal = 12.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = (animatedStatValue * 100).toInt().toString(),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
                 )
-            Text(
-                text = (animatedStatValue * 100).toInt().toString(),
-                fontWeight = FontWeight.SemiBold
-            )
+            }
         }
     }
 }

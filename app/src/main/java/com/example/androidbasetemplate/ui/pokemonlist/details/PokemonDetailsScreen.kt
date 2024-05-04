@@ -12,6 +12,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,14 +29,17 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
+import com.example.androidbasetemplate.common.utils.getViewModel
 import com.example.androidbasetemplate.entity.PokemonDetails
 import com.example.androidbasetemplate.entity.Stat
 import com.example.androidbasetemplate.entity.StatX
 import com.example.androidbasetemplate.entity.TypeX
 import com.example.androidbasetemplate.entity.TypeXX
+import com.example.androidbasetemplate.entity.enums.AppTheme
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.entity.enums.StatNameEnum
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
+import com.example.androidbasetemplate.ui.settings.SettingsViewModel
 import java.util.Locale
 
 @Composable
@@ -46,6 +51,7 @@ fun PokemonDetailsScreen(
     navigateBack: () -> Unit,
 ) {
     BackHandler { navigateBack() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -74,10 +80,28 @@ fun PokemonDetailsScreen(
 
 @Composable
 fun getBackgroundColor(dominantColor: Color): Brush {
-    return if (isSystemInDarkTheme()) {
-        Brush.verticalGradient(listOf(Color.Black, dominantColor), startY = 0.0f, endY = 400.0f)
-    } else {
-        Brush.verticalGradient(listOf(Color.White, dominantColor), startY = 0.0f, endY = 400.0f)
+    val settingsViewModel: SettingsViewModel =
+        LocalContext.current.getViewModel<SettingsViewModel>()
+    val userAppTheme by settingsViewModel.themeState.collectAsState()
+
+    return when (userAppTheme) {
+        AppTheme.AUTO -> if (isSystemInDarkTheme()) {
+            Brush.verticalGradient(listOf(Color.Black, dominantColor), startY = 0.0f, endY = 400.0f)
+        } else {
+            Brush.verticalGradient(listOf(Color.White, dominantColor), startY = 0.0f, endY = 400.0f)
+        }
+
+        AppTheme.DARK -> Brush.verticalGradient(
+            listOf(Color.Black, dominantColor),
+            startY = 0.0f,
+            endY = 400.0f
+        )
+
+        AppTheme.LIGHT -> Brush.verticalGradient(
+            listOf(Color.White, dominantColor),
+            startY = 0.0f,
+            endY = 400.0f
+        )
     }
 }
 
