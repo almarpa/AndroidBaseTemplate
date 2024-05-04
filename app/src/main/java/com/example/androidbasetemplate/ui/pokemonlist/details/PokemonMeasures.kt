@@ -28,7 +28,8 @@ fun PokemonMeasures(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PokemonMeasureItem(
@@ -63,7 +64,7 @@ fun PokemonMeasureItem(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.padding(4.dp)
+        modifier = modifier
     ) {
         Icon(
             painter = icon,

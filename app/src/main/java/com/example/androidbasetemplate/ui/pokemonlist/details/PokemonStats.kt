@@ -67,10 +67,9 @@ fun PokemonStats(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(horizontal = 8.dp, vertical = 16.dp)
+            .padding(8.dp),
     ) {
-        pokemonDetails.stats.forEachIndexed { i, stat ->
+        pokemonDetails.stats.forEach { stat ->
             PokemonStat(stat = stat)
             Spacer(modifier = Modifier.height(8.dp))
         }

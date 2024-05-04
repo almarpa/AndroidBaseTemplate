@@ -62,7 +62,7 @@ val HPColor = Color(0f, 1f, 0.063f, 0.55f)
 val AtkColor = Color(1f, .3f, 0f, 0.5f)
 val DefColor = Color(0f, 0.6f, 1f, 0.5f)
 val SpAtkColor = Color(1f, 0f, 0f, .5f)
-val SpDefColor = Color(0f, 0f, 1f, 1f)
+val SpDefColor = Color(.5f, .5f, 1f, 1f)
 val SpdColor = Color(1f, 1f, 0f, .5f)
 
 val TypeNormal = Color(0xFFA8A77A)

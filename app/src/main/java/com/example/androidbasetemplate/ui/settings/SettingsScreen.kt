@@ -37,12 +37,7 @@ fun SettingsScreen(
                 .wrapContentSize()
                 .fillMaxWidth(),
         ) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.secondary)
-                    .height(2.dp)
-            )
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,7 +61,7 @@ fun SettingsScreen(
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.secondary)
+                    .background(MaterialTheme.colorScheme.primary)
                     .height(2.dp)
             )
         }

@@ -156,7 +156,7 @@ fun PokemonCard(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .fillMaxHeight()
+            .wrapContentHeight()
             .padding(top = imageSize.dp / 2 + 20.dp)
             .verticalScroll(scrollState)
     ) {
