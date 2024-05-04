@@ -21,7 +21,6 @@ import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     navController: NavHostController,
-    drawerState: DrawerState,
 ) {
     Scaffold(
         topBar = {

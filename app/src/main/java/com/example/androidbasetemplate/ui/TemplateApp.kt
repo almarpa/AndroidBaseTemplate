@@ -1,6 +1,5 @@
 package com.example.androidbasetemplate.ui
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalNavigationDrawer
@@ -35,14 +34,13 @@ fun TemplateApp() {
             )
         },
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
     ) {
-        Row {
-            TemplateNavHost(
-                navController = navController,
-                drawerState = drawerState,
-                currentRoute = currentRoute,
-                navigationActions = navigationActions
-            )
-        }
+        TemplateNavHost(
+            navController = navController,
+            drawerState = drawerState,
+            currentRoute = currentRoute,
+            navigationActions = navigationActions
+        )
     }
 }
