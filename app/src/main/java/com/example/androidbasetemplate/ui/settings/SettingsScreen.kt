@@ -30,6 +30,7 @@ fun SettingsScreen(
         }
     ) { paddingValues ->
         val themeState by settingsViewModel.themeState.collectAsStateWithLifecycle()
+        
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -51,7 +52,7 @@ fun SettingsScreen(
                 )
                 Switch(
                     checked = themeState == AppTheme.DARK,
-                    onCheckedChange = { settingsViewModel.setCurrentTheme(it) },
+                    onCheckedChange = { settingsViewModel.setUserAppTheme(it) },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.White,
                         checkedTrackColor = MaterialTheme.colorScheme.primary

@@ -1,6 +1,6 @@
 package com.example.androidbasetemplate.data.repository.impl
 
-import com.example.androidbasetemplate.data.db.dao.PokemonDao
+import com.example.androidbasetemplate.data.db.database.dao.PokemonDao
 import com.example.androidbasetemplate.data.db.ws.api.PokemonApi
 import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.entity.Pokemon

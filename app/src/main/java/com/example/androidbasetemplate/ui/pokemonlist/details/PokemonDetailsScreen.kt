@@ -12,7 +12,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
@@ -75,33 +75,6 @@ fun PokemonDetailsScreen(
             pokemonDetails = pokemonDetails,
         )
         PokemonImageAnimation(modifier, pokemonDetails.imageURL, imageSize)
-    }
-}
-
-@Composable
-fun getBackgroundColor(dominantColor: Color): Brush {
-    val settingsViewModel: SettingsViewModel =
-        LocalContext.current.getViewModel<SettingsViewModel>()
-    val userAppTheme by settingsViewModel.themeState.collectAsState()
-
-    return when (userAppTheme) {
-        AppTheme.AUTO -> if (isSystemInDarkTheme()) {
-            Brush.verticalGradient(listOf(Color.Black, dominantColor), startY = 0.0f, endY = 400.0f)
-        } else {
-            Brush.verticalGradient(listOf(Color.White, dominantColor), startY = 0.0f, endY = 400.0f)
-        }
-
-        AppTheme.DARK -> Brush.verticalGradient(
-            listOf(Color.Black, dominantColor),
-            startY = 0.0f,
-            endY = 400.0f
-        )
-
-        AppTheme.LIGHT -> Brush.verticalGradient(
-            listOf(Color.White, dominantColor),
-            startY = 0.0f,
-            endY = 400.0f
-        )
     }
 }
 
@@ -201,4 +174,35 @@ fun PokemonImageAnimation(
     }
 }
 
+@Composable
+fun getBackgroundColor(dominantColor: Color): Brush {
+    val settingsViewModel: SettingsViewModel =
+        LocalContext.current.getViewModel<SettingsViewModel>()
+    val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
+
+    return when (userAppTheme) {
+        AppTheme.AUTO -> if (isSystemInDarkTheme()) {
+            getDarkGradient(dominantColor)
+        } else {
+            getLightGradient(dominantColor)
+        }
+
+        AppTheme.DARK -> getDarkGradient(dominantColor)
+        AppTheme.LIGHT -> getLightGradient(dominantColor)
+    }
+}
+
+private fun getLightGradient(dominantColor: Color) =
+    Brush.verticalGradient(
+        listOf(Color.White, dominantColor),
+        startY = 0.0f,
+        endY = 400.0f
+    )
+
+private fun getDarkGradient(dominantColor: Color) =
+    Brush.verticalGradient(
+        listOf(Color.Black, dominantColor),
+        startY = 0.0f,
+        endY = 400.0f
+    )
 
