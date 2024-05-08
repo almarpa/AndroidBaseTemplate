@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.androidbasetemplate.entity.PokemonDetails
 import com.example.androidbasetemplate.entity.Stat
 import com.example.androidbasetemplate.entity.StatX
@@ -117,14 +118,15 @@ fun PokemonStat(
                     .fillMaxWidth(animatedStatValue)
                     .clip(CircleShape)
                     .background(stat.statX.getColor())
-                    .padding(horizontal = 12.dp),
+                    .padding(end = 8.dp),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = (animatedStatValue * 100).toInt().toString(),
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp,
                 )
             }
         }

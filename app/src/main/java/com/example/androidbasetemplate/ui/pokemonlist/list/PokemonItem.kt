@@ -78,9 +78,7 @@ fun PokemonItem(
                 shape = RoundedCornerShape(100.dp)
             ) {
                 SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(
-                        LocalContext.current
-                    )
+                    model = ImageRequest.Builder(LocalContext.current)
                         .data(pokemon.url)
                         .crossfade(true)
                         .build(),

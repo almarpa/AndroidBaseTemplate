@@ -75,7 +75,9 @@ fun PokemonListScreen(
                                             navigationActions = navigationActions,
                                         ) { onPokemonItemClick ->
                                             animState =
-                                                PokemonListScreenState.Details(onPokemonItemClick)
+                                                PokemonListScreenState.Details(
+                                                    onPokemonItemClick
+                                                )
                                         }
                                     }
                                 }
@@ -92,11 +94,11 @@ fun PokemonListScreen(
                 }
 
                 is PokemonListScreenState.Details -> {
-                    LaunchedEffect(key1 = true) {
+                    val currentPokemon by pokemonListViewModel.pokemon.observeAsState()
+                    LaunchedEffect(key1 = Unit) {
                         pokemonListViewModel.getPokemonDetail(screenState.pokemonDetails.first)
                     }
 
-                    val currentPokemon by pokemonListViewModel.pokemon.observeAsState()
                     currentPokemon?.let { pokemonDetails ->
                         PokemonDetailsScreen(
                             modifier = Modifier.getModifierWithSharedElementAnimationOrDefault(
