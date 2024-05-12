@@ -1,127 +1,96 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.common.utils.getModifierWithSharedElementAnimationOrDefault
-import com.example.androidbasetemplate.ui.common.NavigationActions
+import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
 import com.example.androidbasetemplate.ui.common.error.GenericRetryView
 import com.example.androidbasetemplate.ui.common.loader.FullScreenLoader
+import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
-import com.example.androidbasetemplate.ui.pokemonlist.details.PokemonDetailsScreen
 import com.example.androidbasetemplate.ui.pokemonlist.list.PokemonList
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun PokemonListScreen(
-    pokemonListViewModel: PokemonListViewModel,
+fun SharedTransitionScope.PokemonListScreen(
+    animatedContentScope: AnimatedContentScope,
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,
 ) {
-    var animState: PokemonListScreenState by remember { mutableStateOf(PokemonListScreenState.List) }
-    val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
+    Scaffold(
+        topBar = {
+            DrawerTopAppBar(
+                drawerState = drawerState,
+                navigationActions = navigationActions,
+                title = R.string.pokemon_list_title
+            )
+        },
+        content = { paddingValues ->
+            PokemonListContent(
+                modifier = Modifier.padding(paddingValues = paddingValues),
+                pokemonListViewModel = hiltViewModel(),
+                animatedContentScope = animatedContentScope,
+            ) { pokemon ->
+                navigationActions.navigateToDetailNavGraph(pokemon)
+            }
+        },
+        bottomBar = {
+            TemplateBottomAppBar(
+                drawerState = drawerState,
+                currentRoute = currentRoute,
+                navigationActions = navigationActions
+            )
+        },
+    )
+}
 
-    SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
-        AnimatedContent(
-            animState,
-            label = "ListToDetailAnimation",
-            contentKey = { it.javaClass },
-            transitionSpec = { getTransitionSpec(animState) },
-        ) { screenState ->
-            when (screenState) {
-                PokemonListScreenState.List -> {
-                    Scaffold(
-                        topBar = {
-                            DrawerTopAppBar(
-                                drawerState = drawerState,
-                                navigationActions = navigationActions,
-                                title = R.string.pokemon_list_title
-                            )
-                        },
-                        content = {
-                            Column(
-                                modifier = Modifier
-                                    .padding(it)
-                                    .fillMaxHeight()
-                                    .fillMaxWidth(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                when (uiState) {
-                                    is PokemonListUiState.Loading -> {
-                                        FullScreenLoader()
-                                    }
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun SharedTransitionScope.PokemonListContent(
+    modifier: Modifier = Modifier,
+    pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
+    animatedContentScope: AnimatedContentScope,
+    navigateToPokemonDetail: (Pokemon) -> Unit = {},
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
+        when (uiState) {
+            is PokemonListUiState.Loading -> {
+                FullScreenLoader()
+            }
 
-                                    is PokemonListUiState.Error -> {
-                                        GenericRetryView { pokemonListViewModel.getPokemonList() }
-                                    }
+            is PokemonListUiState.Error -> {
+                GenericRetryView { pokemonListViewModel.getPokemonList() }
+            }
 
-                                    is PokemonListUiState.Success -> {
-                                        PokemonList(
-                                            sharedTransitionScope = this@SharedTransitionLayout,
-                                            animatedContentScope = this@AnimatedContent,
-                                            pokemonList = (uiState as PokemonListUiState.Success).pokemonList,
-                                            pokemonListViewModel = pokemonListViewModel,
-                                            navigationActions = navigationActions,
-                                        ) { onPokemonItemClick ->
-                                            animState =
-                                                PokemonListScreenState.Details(
-                                                    onPokemonItemClick
-                                                )
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        bottomBar = {
-                            TemplateBottomAppBar(
-                                drawerState = drawerState,
-                                currentRoute = currentRoute,
-                                navigationActions = navigationActions
-                            )
-                        },
-                    )
-                }
-
-                is PokemonListScreenState.Details -> {
-                    val currentPokemon by pokemonListViewModel.pokemon.observeAsState()
-                    LaunchedEffect(key1 = Unit) {
-                        pokemonListViewModel.getPokemonDetail(screenState.pokemonDetails.first)
-                    }
-
-                    currentPokemon?.let { pokemonDetails ->
-                        PokemonDetailsScreen(
-                            modifier = Modifier.getModifierWithSharedElementAnimationOrDefault(
-                                modifier = Modifier,
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animatedContentScope = this@AnimatedContent,
-                                elementPosition = screenState.pokemonDetails.first,
-                            ),
-                            pokemonDetails = pokemonDetails,
-                            dominantColor = screenState.pokemonDetails.second,
-                        ) {
-                            animState = PokemonListScreenState.List
-                        }
-                    }
+            is PokemonListUiState.Success -> {
+                PokemonList(
+                    animatedContentScope = animatedContentScope,
+                    pokemonList = (uiState as PokemonListUiState.Success).pokemonList,
+                ) { onPokemonItemClick ->
+                    navigateToPokemonDetail(onPokemonItemClick)
                 }
             }
         }
     }
 }
-
-fun getTransitionSpec(animState: PokemonListScreenState) =
-    if (animState == PokemonListScreenState.List) {
-        slideInHorizontally { -it } + fadeIn() togetherWith slideOutHorizontally { it } + fadeOut()
-    } else {
-        slideInHorizontally { it } + fadeIn() togetherWith slideOutHorizontally { -it } + fadeOut()
-    }

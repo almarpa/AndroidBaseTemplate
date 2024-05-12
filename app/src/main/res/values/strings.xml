@@ -17,4 +17,6 @@
     <string name="stat_special_defense">S. Def</string>
     <string name="empty_string">""</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="common_accept">Aceptar</string>
+    <string name="common_cancel">Cancelar</string>
 </resources>

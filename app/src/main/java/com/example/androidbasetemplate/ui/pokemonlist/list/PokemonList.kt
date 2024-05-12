@@ -4,42 +4,28 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.androidbasetemplate.common.utils.ScaleAndAlphaAnimation
-import com.example.androidbasetemplate.common.utils.ScaleAndAlphaAnimationArgs
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.androidbasetemplate.common.utils.getLazyGridAnimation
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.lazylist.rememberLazyScrollState
+import com.example.androidbasetemplate.ui.common.spacer.CustomSpacer
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-@Preview(
-    name = "Pokemon List View",
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Pokemon List View Landscape",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = "spec:width=500dp,height=500dp,orientation=landscape"
-)
-fun PokemonList(
-    sharedTransitionScope: SharedTransitionScope? = null,
-    animatedContentScope: AnimatedContentScope? = null,
+fun SharedTransitionScope.PokemonList(
+    animatedContentScope: AnimatedContentScope,
     pokemonList: List<Pokemon> = listOf(
         Pokemon(
             id = 1,
@@ -72,16 +58,11 @@ fun PokemonList(
             name = "Pokemon 6",
         ),
     ),
-    pokemonListViewModel: PokemonListViewModel? = null,
-    navigationActions: NavigationActions? = null,
-    onPokemonItemClick: (Pair<Int, Color>) -> Unit = { },
+    pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
+    onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
-
     val currentOrientation = LocalConfiguration.current.orientation
-    val isLandScape by remember {
-        mutableStateOf(currentOrientation == Configuration.ORIENTATION_LANDSCAPE)
-    }
-    val columns = if (isLandScape) 2 else 1
+    val columns = if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
@@ -94,37 +75,20 @@ fun PokemonList(
             .fillMaxWidth(),
     ) {
         items(count = pokemonList.size) { index ->
-            val (scale, alpha) = getScaleAndAlphaAnimation(index, columns)
-
-            PokemonItem(
-                modifier = Modifier.graphicsLayer(alpha = alpha, scaleX = scale, scaleY = scale),
-                pokemonList[index],
-                sharedTransitionScope,
-                animatedContentScope,
-            ) { pokemonDetails ->
-                onPokemonItemClick(pokemonDetails)
+            with(getLazyGridAnimation(index, columns)) {
+                PokemonItem(
+                    modifier = Modifier.graphicsLayer(
+                        alpha = first,
+                        scaleX = second,
+                        scaleY = second
+                    ),
+                    animatedContentScope = animatedContentScope,
+                    pokemon = pokemonList[index],
+                ) { pokemonItem ->
+                    onPokemonItemClick(pokemonItem)
+                }
+                CustomSpacer(16, 16)
             }
-            Spacer(
-                modifier = Modifier
-                    .width(16.dp)
-                    .height(16.dp)
-            )
         }
     }
 }
-
-@Composable
-fun getScaleAndAlphaAnimation(index: Int, columns: Int) =
-    ScaleAndAlphaAnimation(
-        args = ScaleAndAlphaAnimationArgs(
-            fromScale = 0f,
-            toScale = 1f,
-            fromAlpha = 0f,
-            toAlpha = 1f
-        ),
-        animation = tween(
-            durationMillis = 400,
-            delayMillis = index % columns * 50,
-            easing = LinearOutSlowInEasing
-        )
-    )

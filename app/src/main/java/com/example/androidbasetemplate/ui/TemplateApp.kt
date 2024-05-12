@@ -1,5 +1,7 @@
 package com.example.androidbasetemplate.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalNavigationDrawer
@@ -10,11 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.androidbasetemplate.ui.common.NavigationActions
-import com.example.androidbasetemplate.ui.common.TemplateDestinations
 import com.example.androidbasetemplate.ui.common.drawer.Drawer
+import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
+import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TemplateApp() {
@@ -22,7 +25,6 @@ fun TemplateApp() {
     val navigationActions = remember(navController) { NavigationActions(navController) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: TemplateDestinations.SPLASH_ROUTE
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 

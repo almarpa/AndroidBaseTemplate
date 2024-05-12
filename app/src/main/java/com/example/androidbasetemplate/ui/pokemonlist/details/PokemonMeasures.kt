@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidbasetemplate.R
+import com.example.androidbasetemplate.ui.common.spacer.CustomSpacer
 import kotlin.math.round
 
 @Preview("Pokemon Measures", uiMode = Configuration.UI_MODE_NIGHT_NO)
@@ -77,7 +78,7 @@ fun PokemonMeasureItem(
             contentDescription = stringResource(R.string.menu_drawer_btn),
             tint = MaterialTheme.colorScheme.primary
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        CustomSpacer(height = 8)
         Text(
             text = "$value $unit",
             color = MaterialTheme.colorScheme.primary

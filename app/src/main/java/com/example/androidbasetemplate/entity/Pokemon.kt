@@ -1,10 +1,18 @@
 package com.example.androidbasetemplate.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.Gson
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Entity(tableName = "pokemon")
+@Parcelize
+@Serializable
 data class Pokemon(
     @PrimaryKey
     @ColumnInfo(name = "id")
@@ -13,4 +21,12 @@ data class Pokemon(
     var url: String,
     @ColumnInfo(name = "name")
     var name: String,
-)
+
+    var dominantColor: Int? = null,
+) : Parcelable {
+
+    fun toJSONString(): String =
+        Gson().toJson(
+            apply { url = URLEncoder.encode(url, StandardCharsets.UTF_8.toString()) }
+        )
+}

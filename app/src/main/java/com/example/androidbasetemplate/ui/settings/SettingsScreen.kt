@@ -4,14 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.enums.AppTheme
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
@@ -19,18 +20,17 @@ import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    settingsViewModel: SettingsViewModel,
-    navController: NavHostController,
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
-            DefaultTopAppBar(title = R.string.settings_title) {
-                navController.popBackStack()
-            }
+            DefaultTopAppBar(title = R.string.settings_title) { onBackPressed() }
         }
     ) { paddingValues ->
         val themeState by settingsViewModel.themeState.collectAsStateWithLifecycle()
-        
+        LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -38,26 +38,8 @@ fun SettingsScreen(
                 .wrapContentSize()
                 .fillMaxWidth(),
         ) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = stringResource(R.string.dark_mode),
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Switch(
-                    checked = themeState == AppTheme.DARK,
-                    onCheckedChange = { settingsViewModel.setUserAppTheme(it) },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary
-                    )
-                )
+            DarkModeSwitch(themeState) { isChecked ->
+                settingsViewModel.setUserAppTheme(isChecked)
             }
             Spacer(
                 modifier = Modifier
@@ -66,5 +48,29 @@ fun SettingsScreen(
                     .height(2.dp)
             )
         }
+    }
+}
+
+@Composable
+fun DarkModeSwitch(themeState: AppTheme, onSwitchChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = stringResource(R.string.dark_mode),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Switch(
+            checked = themeState == AppTheme.DARK,
+            onCheckedChange = { onSwitchChange(it) },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.White,
+                checkedTrackColor = MaterialTheme.colorScheme.primary
+            )
+        )
     }
 }

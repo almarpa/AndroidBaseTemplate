@@ -1,5 +1,9 @@
 package com.example.androidbasetemplate.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -7,13 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.androidbasetemplate.ui.common.NavigationActions
-import com.example.androidbasetemplate.ui.common.TemplateDestinations
 import com.example.androidbasetemplate.ui.common.bottomappbar.bottomAppBarNavGraph
 import com.example.androidbasetemplate.ui.common.drawer.drawerNavGraph
+import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
+import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations
 import com.example.androidbasetemplate.ui.splash.splashNavGraph
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun TemplateNavHost(
     modifier: Modifier = Modifier,
@@ -23,13 +28,15 @@ fun TemplateNavHost(
     currentRoute: String,
     navigationActions: NavigationActions,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier,
-    ) {
-        splashNavGraph(navigationActions)
-        drawerNavGraph(navController)
-        bottomAppBarNavGraph(drawerState, currentRoute, navigationActions)
+    SharedTransitionLayout {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+            modifier = modifier,
+        ) {
+            splashNavGraph(navigationActions)
+            drawerNavGraph(navController)
+            bottomAppBarNavGraph(drawerState, currentRoute, navigationActions, navController)
+        }
     }
 }

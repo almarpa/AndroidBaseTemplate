@@ -10,17 +10,13 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun Modifier.getModifierWithSharedElementAnimationOrDefault(
     modifier: Modifier = this,
-    sharedTransitionScope: SharedTransitionScope?,
-    animatedContentScope: AnimatedContentScope?,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     elementPosition: Int,
 ) =
-    sharedTransitionScope?.let {
-        animatedContentScope?.let {
-            with(sharedTransitionScope) {
-                modifier.sharedElement(
-                    state = rememberSharedContentState(key = "item-image${elementPosition}"),
-                    animatedVisibilityScope = animatedContentScope
-                )
-            }
-        } ?: modifier
-    } ?: modifier
+    with(sharedTransitionScope) {
+        modifier.sharedElement(
+            state = rememberSharedContentState(key = "item-image${elementPosition}"),
+            animatedVisibilityScope = animatedContentScope
+        )
+    }

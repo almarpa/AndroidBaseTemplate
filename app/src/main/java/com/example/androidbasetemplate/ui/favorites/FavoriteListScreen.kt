@@ -11,15 +11,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.ui.common.NavigationActions
 import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
+import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteListScreen(
-    favoriteListViewModel: FavoriteListViewModel,
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,

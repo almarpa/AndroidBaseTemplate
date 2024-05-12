@@ -24,6 +24,7 @@ import com.example.androidbasetemplate.entity.TypeX
 import com.example.androidbasetemplate.entity.TypeXX
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.entity.enums.StatNameEnum
+import com.example.androidbasetemplate.ui.common.spacer.CustomSpacer
 
 @Preview("Pokemon Stats", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
@@ -72,7 +73,7 @@ fun PokemonStats(
     ) {
         pokemonDetails.stats.forEach { stat ->
             PokemonStat(stat = stat)
-            Spacer(modifier = Modifier.height(8.dp))
+            CustomSpacer(height = 8)
         }
     }
 }
@@ -93,7 +94,7 @@ fun PokemonStat(
         label = "StatProgressAnimation"
     )
 
-    LaunchedEffect(key1 = true) { startAnim = true }
+    LaunchedEffect(Unit) { startAnim = true }
 
     Row(
         modifier = Modifier.fillMaxWidth(),

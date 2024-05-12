@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.ui.common.NavigationActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,7 +21,6 @@ import com.example.androidbasetemplate.ui.common.NavigationActions
 )
 fun DefaultTopAppBar(
     modifier: Modifier = Modifier,
-    navigationActions: NavigationActions? = null,
     title: Int = R.string.settings_title,
     onBackButton: () -> Unit = {},
 ) {

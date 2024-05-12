@@ -18,8 +18,9 @@ class PokemonResponse(
         )
     }
 
+    private fun getPokemonID() = with(url.toHttpUrl().pathSegments) { get(size - 2) }.toInt()
+    
     private fun getPokemonImageURL() =
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${getPokemonID()}.png"
 
-    private fun getPokemonID() = with(url.toHttpUrl().pathSegments) { get(size - 2) }.toInt()
 }

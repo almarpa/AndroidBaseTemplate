@@ -1,7 +1,12 @@
 package com.example.androidbasetemplate.ui.pokemonlist.details
 
 import android.content.res.Configuration
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -12,7 +17,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,56 +32,80 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.common.utils.getViewModel
-import com.example.androidbasetemplate.entity.PokemonDetails
-import com.example.androidbasetemplate.entity.Stat
-import com.example.androidbasetemplate.entity.StatX
-import com.example.androidbasetemplate.entity.TypeX
-import com.example.androidbasetemplate.entity.TypeXX
+import com.example.androidbasetemplate.common.utils.getModifierWithSharedElementAnimationOrDefault
+import com.example.androidbasetemplate.entity.*
 import com.example.androidbasetemplate.entity.enums.AppTheme
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.entity.enums.StatNameEnum
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidbasetemplate.ui.settings.SettingsViewModel
+import java.net.URLDecoder
 import java.util.Locale
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PokemonDetailsScreen(
-    modifier: Modifier,
-    pokemonDetails: PokemonDetails,
-    dominantColor: Color,
+fun SharedTransitionScope.PokemonDetailsScreen(
+    animatedContentScope: AnimatedContentScope,
+    pokemon: Pokemon = Pokemon(1, "", "name"),
     imageSize: Int = 300,
-    navigateBack: () -> Unit,
+    navigateBack: () -> Unit = {},
 ) {
     BackHandler { navigateBack() }
+    PokemonDetailsContent(
+        animatedContentScope = animatedContentScope,
+        pokemon = pokemon,
+        imageSize = imageSize
+    ) {
+        navigateBack()
+    }
+}
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun SharedTransitionScope.PokemonDetailsContent(
+    animatedContentScope: AnimatedContentScope,
+    pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
+    pokemon: Pokemon = Pokemon(1, "", "name"),
+    imageSize: Int = 300,
+    navigateBack: () -> Unit = {},
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(getBackgroundColor(dominantColor)),
+            .background(
+                getBackgroundColor(pokemon.dominantColor?.let { Color(it) } ?: Color.White)
+            ),
     ) {
+        val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.observeAsState()
+        LaunchedEffect(Unit) { pokemonDetailsViewModel.getPokemonDetails(pokemon.id) }
+
         PokemonDetailTopAppBar { navigateBack() }
-        PokemonCard(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = imageSize.dp / 2 - 16.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 30.dp
-                )
-                .shadow(10.dp, RoundedCornerShape(10.dp))
-                .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp),
-            imageSize = imageSize,
-            pokemonDetails = pokemonDetails,
-        )
-        PokemonImageAnimation(modifier, pokemonDetails.imageURL, imageSize)
+        pokemonDetails?.let { pokemonDetailsNotNull -> // TODO: migrate state to flow
+            PokemonCard(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = imageSize.dp / 2 - 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 30.dp
+                    )
+                    .shadow(10.dp, RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(16.dp),
+                pokemonDetails = pokemonDetailsNotNull,
+                pokemon = pokemon,
+                imageSize = imageSize,
+            )
+        }
+        PokemonImageAnimation(animatedContentScope, pokemon, imageSize)
     }
 }
 
@@ -89,10 +120,11 @@ fun PokemonDetailTopAppBar(navigateBack: () -> Unit = {}) {
     }
 }
 
-@Preview("Pokemon Description", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview("Pokemon Card", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun PokemonCard(
     modifier: Modifier = Modifier,
+    pokemon: Pokemon = Pokemon(1, "", "name"),
     imageSize: Int = 300,
     pokemonDetails: PokemonDetails = PokemonDetails(
         id = 1,
@@ -111,7 +143,8 @@ fun PokemonCard(
             ),
             Stat(
                 baseStat = 70, effort = 10, statX = StatX(StatNameEnum.SPECIAL_ATTACK, "")
-            ), Stat(
+            ),
+            Stat(
                 baseStat = 100, effort = 30, statX = StatX(StatNameEnum.SPECIAL_DEFENSE, "")
             )
         ),
@@ -146,11 +179,15 @@ fun PokemonCard(
     }
 }
 
-@Preview("Pokemon Image Animation", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PokemonImageAnimation(
-    modifier: Modifier = Modifier,
-    pokemonImageUrl: String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+fun SharedTransitionScope.PokemonImageAnimation(
+    animatedContentScope: AnimatedContentScope,
+    pokemon: Pokemon = Pokemon(
+        id = 1,
+        url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+        name = "Bulbasour"
+    ),
     imageSize: Int = 300,
 ) {
     Box(
@@ -161,7 +198,7 @@ fun PokemonImageAnimation(
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(pokemonImageUrl)
+                .data(URLDecoder.decode(pokemon.url, "UTF-8"))
                 .crossfade(true)
                 .build(),
             loading = { CircularProgressIndicator() },
@@ -169,17 +206,24 @@ fun PokemonImageAnimation(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(imageSize.dp)
-                .then(modifier)
+                .then(
+                    Modifier.getModifierWithSharedElementAnimationOrDefault(
+                        modifier = Modifier,
+                        this@PokemonImageAnimation,
+                        animatedContentScope,
+                        pokemon.id,
+                    )
+                )
         )
     }
 }
 
 @Composable
 fun getBackgroundColor(dominantColor: Color): Brush {
-    val settingsViewModel: SettingsViewModel =
-        LocalContext.current.getViewModel<SettingsViewModel>()
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
     val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
     return when (userAppTheme) {
         AppTheme.AUTO -> if (isSystemInDarkTheme()) {
             getDarkGradient(dominantColor)
