@@ -8,12 +8,12 @@ import com.example.androidbasetemplate.entity.Pokemon
 /**
  * Destinations used throughout the app.
  */
-object TemplateDestinations {
-    const val SPLASH_ROUTE = "/splash"
-    const val POKEMON_LIST_ROUTE = "/pokemonList"
-    const val POKEMON_DETAIL_ROUTE = "/pokemonDetail/{pokemon}"
-    const val FAVORITE_LIST_ROUTE = "/favoriteList"
-    const val SETTINGS_ROUTE = "/settings"
+sealed class Routes(val route: String) {
+    data object Splash : Routes("/splash")
+    data object PokemonList : Routes("/pokemonList")
+    data object PokemonDetail : Routes("/pokemonDetail/{pokemon}")
+    data object Favorites : Routes("/favoriteList")
+    data object Settings : Routes("/settings")
 }
 
 /**
@@ -21,7 +21,7 @@ object TemplateDestinations {
  */
 class NavigationActions(private val navController: NavHostController) {
     val navigateToPokemonList: () -> Unit = {
-        navController.navigate(TemplateDestinations.POKEMON_LIST_ROUTE) {
+        navController.navigate(Routes.PokemonList.route) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
                 inclusive = true
@@ -31,7 +31,7 @@ class NavigationActions(private val navController: NavHostController) {
         }
     }
     val navigateToFavoriteList: () -> Unit = {
-        navController.navigate(TemplateDestinations.FAVORITE_LIST_ROUTE) {
+        navController.navigate(Routes.Favorites.route) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
@@ -41,7 +41,7 @@ class NavigationActions(private val navController: NavHostController) {
     }
 
     val navigateToSettings: () -> Unit = {
-        navController.navigate(TemplateDestinations.SETTINGS_ROUTE) {
+        navController.navigate(Routes.Settings.route) {
             launchSingleTop = true
             restoreState = true
         }

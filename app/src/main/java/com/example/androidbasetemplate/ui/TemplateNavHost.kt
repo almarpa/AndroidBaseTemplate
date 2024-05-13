@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.ui.common.bottomappbar.bottomAppBarNavGraph
 import com.example.androidbasetemplate.ui.common.drawer.drawerNavGraph
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
-import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations
+import com.example.androidbasetemplate.ui.common.navigation.Routes
 import com.example.androidbasetemplate.ui.splash.splashNavGraph
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -23,7 +23,7 @@ import com.example.androidbasetemplate.ui.splash.splashNavGraph
 fun TemplateNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = TemplateDestinations.SPLASH_ROUTE,
+    startDestination: String = Routes.Splash.route,
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,

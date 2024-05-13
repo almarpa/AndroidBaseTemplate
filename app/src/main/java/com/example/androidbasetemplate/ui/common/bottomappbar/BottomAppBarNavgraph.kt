@@ -13,9 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.androidbasetemplate.common.utils.getPokemonFromJson
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
-import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations.FAVORITE_LIST_ROUTE
-import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations.POKEMON_DETAIL_ROUTE
-import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations.POKEMON_LIST_ROUTE
+import com.example.androidbasetemplate.ui.common.navigation.Routes
 import com.example.androidbasetemplate.ui.favorites.FavoriteListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.details.PokemonDetailsScreen
@@ -31,7 +29,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
     navigationActions: NavigationActions,
     navController: NavController,
 ) {
-    composable(POKEMON_LIST_ROUTE) {
+    composable(Routes.PokemonList.route) {
         PokemonListScreen(
             animatedContentScope = this,
             drawerState = drawerState,
@@ -39,7 +37,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             navigationActions = navigationActions,
         )
     }
-    composable(FAVORITE_LIST_ROUTE) {
+    composable(Routes.Favorites.route) {
         FavoriteListScreen(
             drawerState = drawerState,
             currentRoute = currentRoute,
@@ -47,7 +45,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
         )
     }
     composable(
-        route = POKEMON_DETAIL_ROUTE,
+        route = Routes.PokemonDetail.route,
         arguments = listOf(
             navArgument("pokemon") {
                 type = NavType.StringType

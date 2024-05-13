@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
-import com.example.androidbasetemplate.ui.common.navigation.TemplateDestinations
+import com.example.androidbasetemplate.ui.common.navigation.Routes
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 @Preview("Bottom App Bar", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun TemplateBottomAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
-    currentRoute: String = TemplateDestinations.POKEMON_LIST_ROUTE,
+    currentRoute: String = Routes.PokemonList.route,
     navigationActions: NavigationActions? = null,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -50,7 +50,7 @@ fun TemplateBottomAppBar(
         BottomNavigationItem(
             icon = {
                 Icon(
-                    if(currentRoute == TemplateDestinations.POKEMON_LIST_ROUTE) {
+                    if(currentRoute == Routes.PokemonList.route) {
                         Icons.AutoMirrored.Filled.List
                     } else {
                         Icons.AutoMirrored.Outlined.List
@@ -59,7 +59,7 @@ fun TemplateBottomAppBar(
                 )
             },
             label = { Text(stringResource(R.string.favorites_title)) },
-            selected = currentRoute == TemplateDestinations.POKEMON_LIST_ROUTE,
+            selected = currentRoute == Routes.PokemonList.route,
             onClick = {
                 navigationActions?.navigateToPokemonList?.invoke()
                 coroutineScope.launch { drawerState.close() }
@@ -68,7 +68,7 @@ fun TemplateBottomAppBar(
         BottomNavigationItem(
             icon = {
                 Icon(
-                    if(currentRoute == TemplateDestinations.FAVORITE_LIST_ROUTE) {
+                    if(currentRoute == Routes.Favorites.route) {
                         Icons.Filled.Favorite
                     } else {
                         Icons.Outlined.Favorite
@@ -77,70 +77,11 @@ fun TemplateBottomAppBar(
                 )
             },
             label = { Text(stringResource(R.string.favorites_title)) },
-            selected = currentRoute == TemplateDestinations.FAVORITE_LIST_ROUTE,
+            selected = currentRoute == Routes.Favorites.route,
             onClick = {
                 navigationActions?.navigateToFavoriteList?.invoke()
                 coroutineScope.launch { drawerState.close() }
             }
         )
     }
-
-//    BottomAppBar(
-//        modifier = Modifier
-//            .height(65.dp)
-//            .background(color = Color.Transparent)
-//            .clip(shape = RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp)),
-//        contentColor = MaterialTheme.colorScheme.onBackground,
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(4.dp),
-//            horizontalArrangement = Arrangement.SpaceEvenly,
-//            verticalAlignment = Alignment.CenterVertically,
-//        ) {
-//            IconButton(
-//                onClick = {
-//                    navigationActions?.navigateToPokemonList?.invoke()
-//                    coroutineScope.launch {
-//                        drawerState.close()
-//                    }
-//                },
-//            ) {
-//                Icon(
-//                    Icons.AutoMirrored.Filled.List,
-//                    contentDescription = "Home",
-//                    tint = if (currentRoute == TemplateDestinations.POKEMON_LIST_ROUTE) {
-//                        MaterialTheme.colorScheme.primary
-//                    } else {
-//                        Color.Unspecified
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxHeight()
-//                        .fillMaxWidth(),
-//                )
-//            }
-//            IconButton(
-//                onClick = {
-//                    navigationActions?.navigateToFavoriteList?.invoke()
-//                    coroutineScope.launch {
-//                        drawerState.close()
-//                    }
-//                },
-//            ) {
-//                Icon(
-//                    Icons.Filled.Favorite,
-//                    contentDescription = "Favorites",
-//                    tint = if (currentRoute == TemplateDestinations.FAVORITE_LIST_ROUTE) {
-//                        MaterialTheme.colorScheme.primary
-//                    } else {
-//                        Color.Unspecified
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxHeight()
-//                        .fillMaxWidth(),
-//                )
-//            }
-//        }
-//    }
 }
