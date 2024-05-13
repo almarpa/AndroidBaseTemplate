@@ -86,25 +86,23 @@ fun SharedTransitionScope.PokemonDetailsContent(
         LaunchedEffect(Unit) { pokemonDetailsViewModel.getPokemonDetails(pokemon.id) }
 
         PokemonDetailTopAppBar { navigateBack() }
-        pokemonDetails?.let { pokemonDetailsNotNull -> // TODO: migrate state to flow
-            PokemonCard(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = imageSize.dp / 2 - 16.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 30.dp
-                    )
-                    .shadow(10.dp, RoundedCornerShape(10.dp))
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(16.dp),
-                pokemonDetails = pokemonDetailsNotNull,
-                pokemon = pokemon,
-                imageSize = imageSize,
-            )
-        }
+        PokemonCard(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = imageSize.dp / 2 - 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 30.dp
+                )
+                .shadow(10.dp, RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp),
+            pokemonDetails = pokemonDetails,
+            pokemon = pokemon,
+            imageSize = imageSize,
+        )
         PokemonImageAnimation(animatedContentScope, pokemon, imageSize)
     }
 }
@@ -126,7 +124,7 @@ fun PokemonCard(
     modifier: Modifier = Modifier,
     pokemon: Pokemon = Pokemon(1, "", "name"),
     imageSize: Int = 300,
-    pokemonDetails: PokemonDetails = PokemonDetails(
+    pokemonDetails: PokemonDetails? = PokemonDetails(
         id = 1,
         order = 1,
         name = "Bulbasour",
@@ -166,16 +164,18 @@ fun PokemonCard(
             .padding(top = imageSize.dp / 2 + 20.dp)
             .verticalScroll(scrollState)
     ) {
-        Text(
-            text = "${pokemonDetails.id} ${pokemonDetails.name.uppercase(Locale.ROOT)}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        PokemonType(pokemonDetails.types)
-        PokemonMeasures(pokemonDetails.weight, pokemonDetails.height)
-        PokemonStats(pokemonDetails)
+        pokemonDetails?.let {
+            Text(
+                text = "${it.id} ${it.name.uppercase(Locale.getDefault())}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            PokemonType(it.types)
+            PokemonMeasures(it.weight, it.height)
+            PokemonStats(it)
+        }
     }
 }
 

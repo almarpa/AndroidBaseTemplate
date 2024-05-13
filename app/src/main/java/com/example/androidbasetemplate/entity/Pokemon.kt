@@ -28,11 +28,11 @@ data class Pokemon(
     fun toJSONString(): String = Gson().toJson(apply { url = getEncodedUrl(url) })
 
     private fun getEncodedUrl(url: String) =
-        if (!urlIsEncodedYet(url)) {
-            URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
-        } else {
+        if (urlIsEncodedYet(url)) {
             url
+        } else {
+            URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
         }
 
-    private fun urlIsEncodedYet(url: String) = !url.contains("%")
+    private fun urlIsEncodedYet(url: String) = url.contains("%2")
 }
