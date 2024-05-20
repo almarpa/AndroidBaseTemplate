@@ -5,6 +5,15 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
+
+@Composable
+fun <Modifier> Modifier.applyIfCurrentLocalInspectionMode(block: Modifier.() -> Unit) =
+    if (LocalInspectionMode.current) {
+        this.apply { block() }
+    } else {
+        this
+    }
 
 context(SharedTransitionScope)
 @Composable

@@ -1,9 +1,6 @@
 package com.example.androidbasetemplate.ui.pokemonlist.details
 
-import android.content.res.Configuration
-import android.os.Build
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -38,6 +35,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.common.utils.pokemonSharedElement
+import com.example.androidbasetemplate.domain.impl.FakePokemonUseCaseImpl
+import com.example.androidbasetemplate.domain.impl.FakeUserDataUseCaseImpl
 import com.example.androidbasetemplate.entity.*
 import com.example.androidbasetemplate.entity.enums.AppTheme
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
@@ -49,11 +48,12 @@ import java.net.URLDecoder
 import java.util.Locale
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    pokemon: Pokemon = Pokemon(1, "", "name"),
+    pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
+    pokemon: Pokemon,
     imageSize: Int = 300,
     navigateBack: () -> Unit = {},
 ) {
@@ -61,6 +61,8 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     PokemonDetailsContent(
         animatedVisibilityScope = animatedVisibilityScope,
         pokemon = pokemon,
+        pokemonDetailsViewModel = pokemonDetailsViewModel,
+        settingsViewModel = settingsViewModel,
         imageSize = imageSize
     ) {
         navigateBack()
@@ -71,16 +73,19 @@ fun SharedTransitionScope.PokemonDetailsScreen(
 @Composable
 fun SharedTransitionScope.PokemonDetailsContent(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
-    pokemon: Pokemon = Pokemon(1, "", "name"),
-    imageSize: Int = 300,
+    pokemonDetailsViewModel: PokemonDetailsViewModel,
+    settingsViewModel: SettingsViewModel,
+    pokemon: Pokemon,
+    imageSize: Int,
     navigateBack: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                getBackgroundColor(pokemon.dominantColor?.let { Color(it) } ?: Color.White)
+                getBackgroundColor(
+                    settingsViewModel,
+                    pokemon.dominantColor?.let { Color(it) } ?: Color.White)
             ),
     ) {
         val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.observeAsState()
@@ -108,7 +113,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
     }
 }
 
-@Preview("Pokemon Details TopAppBar", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview("Pokemon Details TopAppBar")
 @Composable
 fun PokemonDetailTopAppBar(navigateBack: () -> Unit = {}) {
     DefaultTopAppBar(
@@ -119,7 +124,7 @@ fun PokemonDetailTopAppBar(navigateBack: () -> Unit = {}) {
     }
 }
 
-@Preview("Pokemon Card", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview("Pokemon Card")
 @Composable
 fun PokemonCard(
     modifier: Modifier = Modifier,
@@ -217,8 +222,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
 }
 
 @Composable
-fun getBackgroundColor(dominantColor: Color): Brush {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+fun getBackgroundColor(settingsViewModel: SettingsViewModel, dominantColor: Color): Brush {
     val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
@@ -252,8 +256,27 @@ private fun getDarkGradient(dominantColor: Color) =
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon Image Animation")
-fun PokemonItemPreview() {
+fun PokemonImageAnimationPreview() {
     TemplatePreviewTheme {
         PokemonImageAnimation(animatedVisibilityScope = it)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Pokemon Details Screen")
+fun PokemonDetailsScreenPreview() {
+    TemplatePreviewTheme {
+        PokemonDetailsScreen(
+            animatedVisibilityScope = it,
+            pokemonDetailsViewModel = PokemonDetailsViewModel(FakePokemonUseCaseImpl()),
+            settingsViewModel = SettingsViewModel(FakeUserDataUseCaseImpl()),
+            pokemon = Pokemon(
+                1,
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+                "Bulbasour"
+            ),
+            imageSize = 300,
+        ) {}
     }
 }

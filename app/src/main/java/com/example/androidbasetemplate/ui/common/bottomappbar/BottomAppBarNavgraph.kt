@@ -1,7 +1,5 @@
 package com.example.androidbasetemplate.ui.common.bottomappbar
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.DrawerState
@@ -19,7 +17,6 @@ import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.details.PokemonDetailsScreen
 
 context(SharedTransitionScope)
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class
 )

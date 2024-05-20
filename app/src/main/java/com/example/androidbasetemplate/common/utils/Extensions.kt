@@ -15,3 +15,5 @@ inline fun <reified T : Parcelable> Bundle.getParcelableCompat(code: String, cla
 
 fun String.getPokemonFromJson(): Pokemon =
     GsonBuilder().create().fromJson(this, Pokemon::class.java)
+
+

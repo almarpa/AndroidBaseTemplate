@@ -20,6 +20,6 @@ class UserDataUseCaseImpl(private val userDataRepository: UserDataRepository) : 
     }
 
     override suspend fun setAppTheme(appTheme: AppTheme) {
-        return userDataRepository.setAppTheme(appTheme.name)
+        userDataRepository.setAppTheme(appTheme.name)
     }
 }

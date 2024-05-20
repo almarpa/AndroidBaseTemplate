@@ -1,6 +1,5 @@
 package com.example.androidbasetemplate.ui.pokemonlist.details
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,14 +19,8 @@ import com.example.androidbasetemplate.entity.TypeX
 import com.example.androidbasetemplate.entity.TypeXX
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 
-@Preview("Pokemon Type", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun PokemonType(
-    types: List<TypeX> = listOf(
-        TypeX(1, TypeXX(PokemonTypeEnum.ICE, "")),
-        TypeX(2, TypeXX(PokemonTypeEnum.PSYCHIC, "")),
-    ),
-) {
+fun PokemonType(types: List<TypeX>) {
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)
     ) {
@@ -47,4 +40,15 @@ fun PokemonType(
             }
         }
     }
+}
+
+@Composable
+@Preview("Pokemon Type")
+fun PokemonTypePreview() {
+    PokemonType(
+        listOf(
+            TypeX(1, TypeXX(PokemonTypeEnum.ICE, "")),
+            TypeX(2, TypeXX(PokemonTypeEnum.PSYCHIC, "")),
+        )
+    )
 }

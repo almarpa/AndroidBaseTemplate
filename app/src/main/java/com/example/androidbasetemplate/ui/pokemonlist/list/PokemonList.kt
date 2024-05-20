@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.androidbasetemplate.common.utils.applyIfCurrentLocalInspectionMode
 import com.example.androidbasetemplate.common.utils.getLazyGridAnimation
 import com.example.androidbasetemplate.domain.impl.FakePokemonUseCaseImpl
 import com.example.androidbasetemplate.entity.Pokemon
@@ -49,11 +50,9 @@ fun SharedTransitionScope.PokemonList(
         items(count = pokemonList.size) { index ->
             with(getLazyGridAnimation(index, columns)) {
                 PokemonItem(
-                    modifier = Modifier.graphicsLayer(
-                        alpha = first,
-                        scaleX = second,
-                        scaleY = second
-                    ),
+                    modifier = Modifier.applyIfCurrentLocalInspectionMode {
+                        graphicsLayer(alpha = first, scaleX = second, scaleY = second)
+                    },
                     animatedVisibilityScope = animatedVisibilityScope,
                     pokemon = pokemonList[index],
                 ) { pokemonItem ->
@@ -67,7 +66,7 @@ fun SharedTransitionScope.PokemonList(
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Pokemon Image Animation")
+@Preview("Pokemon List")
 fun PokemonListPreview() {
     TemplatePreviewTheme {
         PokemonList(

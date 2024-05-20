@@ -1,6 +1,5 @@
 package com.example.androidbasetemplate.ui.pokemonlist.list
 
-import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -46,11 +45,7 @@ import java.net.URLDecoder
 fun SharedTransitionScope.PokemonItem(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    pokemon: Pokemon = Pokemon(
-        id = 1,
-        url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-        name = "Pokemon name",
-    ),
+    pokemon: Pokemon,
     onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
     val primaryColor = MaterialTheme.colorScheme.surface
@@ -116,9 +111,15 @@ fun calculateDominantColor(drawable: Drawable, onDominantColorCalculated: (Color
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon Item View")
-@Preview("Pokemon Item View", uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun PokemonItemPreview() {
     TemplatePreviewTheme {
-        PokemonItem(animatedVisibilityScope = it)
+        PokemonItem(
+            animatedVisibilityScope = it,
+            pokemon = Pokemon(
+                id = 1,
+                url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
+                name = "Pokemon name",
+            )
+        )
     }
 }
