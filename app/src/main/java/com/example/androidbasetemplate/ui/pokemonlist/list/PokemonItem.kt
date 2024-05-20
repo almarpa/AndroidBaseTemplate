@@ -1,10 +1,8 @@
 package com.example.androidbasetemplate.ui.pokemonlist.list
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
@@ -30,22 +28,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.common.utils.getDominantColorFromDrawable
-import com.example.androidbasetemplate.common.utils.getModifierWithSharedElementAnimationOrDefault
+import com.example.androidbasetemplate.common.utils.pokemonSharedElement
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.ui.theme.TemplateTheme
+import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import java.net.URLDecoder
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonItem(
     modifier: Modifier = Modifier,
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon = Pokemon(
         id = 1,
         url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
@@ -53,7 +53,8 @@ fun SharedTransitionScope.PokemonItem(
     ),
     onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
-    var dominantColor by remember { mutableStateOf(Color.White) }
+    val primaryColor = MaterialTheme.colorScheme.surface
+    var dominantColor by remember { mutableStateOf(primaryColor) }
 
     Card(
         modifier = modifier
@@ -72,6 +73,7 @@ fun SharedTransitionScope.PokemonItem(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(URLDecoder.decode(pokemon.url, "UTF-8"))
                     .crossfade(true)
+                    .apply { if (LocalInspectionMode.current) placeholder(R.drawable.pokeball) }
                     .build(),
                 contentDescription = "Pokemon Image",
                 contentScale = ContentScale.FillBounds,
@@ -86,15 +88,13 @@ fun SharedTransitionScope.PokemonItem(
                     .fillMaxWidth(.8f)
                     .aspectRatio(1f)
                     .padding(8.dp)
-                    .then(
-                        Modifier.getModifierWithSharedElementAnimationOrDefault(
-                            modifier = Modifier,
-                            this@PokemonItem,
-                            animatedContentScope,
-                            pokemon.id,
-                        )
+                    .pokemonSharedElement(
+                        isLocalInspectionMode = LocalInspectionMode.current,
+                        state = rememberSharedContentState(key = "item-image${pokemon.id}"),
+                        animatedVisibilityScope = animatedVisibilityScope
                     )
             )
+
             Text(
                 text = pokemon.name.uppercase(),
                 style = MaterialTheme.typography.titleLarge,
@@ -113,17 +113,12 @@ fun calculateDominantColor(drawable: Drawable, onDominantColorCalculated: (Color
     }
 }
 
+@Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon Item View")
 @Preview("Pokemon Item View", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@SuppressLint("UnusedContentLambdaTargetStateParameter")
-@Composable
 fun PokemonItemPreview() {
-    TemplateTheme {
-        SharedTransitionScope {
-            AnimatedContent(targetState = Unit, label = "") { _ ->
-                PokemonItem(animatedContentScope = this)
-            }
-        }
+    TemplatePreviewTheme {
+        PokemonItem(animatedVisibilityScope = it)
     }
 }

@@ -1,6 +1,6 @@
 package com.example.androidbasetemplate.ui.pokemonlist
 
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +28,7 @@ import com.example.androidbasetemplate.ui.pokemonlist.list.PokemonList
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonListScreen(
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,
@@ -45,7 +45,7 @@ fun SharedTransitionScope.PokemonListScreen(
             PokemonListContent(
                 modifier = Modifier.padding(paddingValues = paddingValues),
                 pokemonListViewModel = hiltViewModel(),
-                animatedContentScope = animatedContentScope,
+                animatedVisibilityScope = animatedVisibilityScope,
             ) { pokemon ->
                 navigationActions.navigateToDetailNavGraph(pokemon)
             }
@@ -65,7 +65,7 @@ fun SharedTransitionScope.PokemonListScreen(
 fun SharedTransitionScope.PokemonListContent(
     modifier: Modifier = Modifier,
     pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToPokemonDetail: (Pokemon) -> Unit = {},
 ) {
     Column(
@@ -85,7 +85,7 @@ fun SharedTransitionScope.PokemonListContent(
 
             is PokemonListUiState.Success -> {
                 PokemonList(
-                    animatedContentScope = animatedContentScope,
+                    animatedVisibilityScope = animatedVisibilityScope,
                     pokemonList = (uiState as PokemonListUiState.Success).pokemonList,
                 ) { onPokemonItemClick ->
                     navigateToPokemonDetail(onPokemonItemClick)

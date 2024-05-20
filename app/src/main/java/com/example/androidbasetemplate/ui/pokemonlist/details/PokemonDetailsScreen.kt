@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,11 +37,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.common.utils.getModifierWithSharedElementAnimationOrDefault
+import com.example.androidbasetemplate.common.utils.pokemonSharedElement
 import com.example.androidbasetemplate.entity.*
 import com.example.androidbasetemplate.entity.enums.AppTheme
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.entity.enums.StatNameEnum
+import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidbasetemplate.ui.settings.SettingsViewModel
 import java.net.URLDecoder
@@ -51,14 +52,14 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SharedTransitionScope.PokemonDetailsScreen(
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon = Pokemon(1, "", "name"),
     imageSize: Int = 300,
     navigateBack: () -> Unit = {},
 ) {
     BackHandler { navigateBack() }
     PokemonDetailsContent(
-        animatedContentScope = animatedContentScope,
+        animatedVisibilityScope = animatedVisibilityScope,
         pokemon = pokemon,
         imageSize = imageSize
     ) {
@@ -69,7 +70,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonDetailsContent(
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
     pokemon: Pokemon = Pokemon(1, "", "name"),
     imageSize: Int = 300,
@@ -103,7 +104,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
             pokemon = pokemon,
             imageSize = imageSize,
         )
-        PokemonImageAnimation(animatedContentScope, pokemon, imageSize)
+        PokemonImageAnimation(animatedVisibilityScope, pokemon, imageSize)
     }
 }
 
@@ -182,7 +183,7 @@ fun PokemonCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonImageAnimation(
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon = Pokemon(
         id = 1,
         url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
@@ -200,19 +201,16 @@ fun SharedTransitionScope.PokemonImageAnimation(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(URLDecoder.decode(pokemon.url, "UTF-8"))
                 .crossfade(true)
+                .apply { if (LocalInspectionMode.current) placeholder(R.drawable.pokeball) }
                 .build(),
-            loading = { CircularProgressIndicator() },
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .size(imageSize.dp)
-                .then(
-                    Modifier.getModifierWithSharedElementAnimationOrDefault(
-                        modifier = Modifier,
-                        this@PokemonImageAnimation,
-                        animatedContentScope,
-                        pokemon.id,
-                    )
+                .pokemonSharedElement(
+                    isLocalInspectionMode = LocalInspectionMode.current,
+                    state = rememberSharedContentState(key = "item-image${pokemon.id}"),
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
         )
     }
@@ -250,3 +248,12 @@ private fun getDarkGradient(dominantColor: Color) =
         endY = 400.0f
     )
 
+
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Pokemon Image Animation")
+fun PokemonItemPreview() {
+    TemplatePreviewTheme {
+        PokemonImageAnimation(animatedVisibilityScope = it)
+    }
+}

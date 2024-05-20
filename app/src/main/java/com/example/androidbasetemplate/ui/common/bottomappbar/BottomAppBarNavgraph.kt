@@ -31,7 +31,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
 ) {
     composable(Routes.PokemonList.route) {
         PokemonListScreen(
-            animatedContentScope = this,
+            animatedVisibilityScope = this,
             drawerState = drawerState,
             currentRoute = currentRoute,
             navigationActions = navigationActions,
@@ -56,7 +56,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
         // TODO: use typed safe navigation (PokemonNavType)
         navBackStackEntry.arguments?.getString("pokemon")?.let { pokemon ->
             PokemonDetailsScreen(
-                animatedContentScope = this,
+                animatedVisibilityScope = this,
                 pokemon = pokemon.getPokemonFromJson(),
             ) { navController.popBackStack() }
         }
