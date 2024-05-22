@@ -63,7 +63,7 @@ fun TemplateBottomAppBar(
                 )
             },
             selected = currentRoute == Routes.PokemonList.route,
-            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             onClick = {
                 navigationActions?.navigateToPokemonList?.invoke()
                 coroutineScope.launch { drawerState.close() }
@@ -88,7 +88,7 @@ fun TemplateBottomAppBar(
                 )
             },
             selected = currentRoute == Routes.Favorites.route,
-            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             onClick = {
                 navigationActions?.navigateToFavoriteList?.invoke()
                 coroutineScope.launch { drawerState.close() }
