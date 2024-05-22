@@ -7,23 +7,23 @@ import com.example.androidbasetemplate.entity.Pokemon
 interface PokemonDao {
 
     @Query("SELECT * from pokemon WHERE name = :id")
-    fun get(id: String): Pokemon?
+    suspend fun get(id: String): Pokemon?
 
     @Query("SELECT * from pokemon")
-    fun getAll(): List<Pokemon>
+    suspend fun getAll(): List<Pokemon>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(pokemon: Pokemon)
+    suspend fun insert(pokemon: Pokemon)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(pokemonList: List<Pokemon>)
+    suspend fun insertAll(pokemonList: List<Pokemon>)
 
     @Update
-    fun update(pokemon: Pokemon)
+    suspend fun update(pokemon: Pokemon)
 
     @Delete
-    fun delete(pokemon: Pokemon)
+    suspend fun delete(pokemon: Pokemon)
 
     @Query("DELETE FROM pokemon")
-    fun clearAll()
+    suspend fun clearAll()
 }

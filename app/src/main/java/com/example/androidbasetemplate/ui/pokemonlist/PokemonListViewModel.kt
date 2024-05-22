@@ -23,8 +23,7 @@ class PokemonListViewModel @Inject constructor(
     private val pokemonUseCase: PokemonUseCase,
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow<PokemonListUiState>(PokemonListUiState.Success(emptyList()))
+    private val _uiState = MutableStateFlow<PokemonListUiState>(PokemonListUiState.Loading)
     val uiState: StateFlow<PokemonListUiState> = _uiState
 
     var firstVisibleItemIdx: Int = 0

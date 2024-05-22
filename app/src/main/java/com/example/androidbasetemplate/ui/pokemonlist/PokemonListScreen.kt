@@ -20,11 +20,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.R
-import com.example.androidbasetemplate.domain.impl.FakePokemonUseCaseImpl
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
 import com.example.androidbasetemplate.ui.common.error.GenericRetryView
 import com.example.androidbasetemplate.ui.common.loader.FullScreenLoader
+import com.example.androidbasetemplate.ui.common.mocks.getPokemonListMock
+import com.example.androidbasetemplate.ui.common.mocks.getPokemonListViewModelMock
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.navigation.Routes
 import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
@@ -49,10 +50,12 @@ fun SharedTransitionScope.PokemonListScreen(
             )
         },
         content = { paddingValues ->
+            val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle(initialValue = PokemonListUiState.Loading)
             PokemonListContent(
                 modifier = Modifier.padding(paddingValues = paddingValues),
                 pokemonListViewModel = pokemonListViewModel,
                 animatedVisibilityScope = animatedVisibilityScope,
+                uiState = uiState,
             ) { pokemon ->
                 navigationActions.navigateToDetailNavGraph(pokemon)
             }
@@ -71,8 +74,9 @@ fun SharedTransitionScope.PokemonListScreen(
 @Composable
 fun SharedTransitionScope.PokemonListContent(
     modifier: Modifier = Modifier,
-    pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
+    pokemonListViewModel: PokemonListViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    uiState: PokemonListUiState,
     navigateToPokemonDetail: (Pokemon) -> Unit = {},
 ) {
     Column(
@@ -80,7 +84,6 @@ fun SharedTransitionScope.PokemonListContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
         when (uiState) {
             is PokemonListUiState.Loading -> {
                 FullScreenLoader()
@@ -93,7 +96,8 @@ fun SharedTransitionScope.PokemonListContent(
             is PokemonListUiState.Success -> {
                 PokemonList(
                     animatedVisibilityScope = animatedVisibilityScope,
-                    pokemonList = (uiState as PokemonListUiState.Success).pokemonList,
+                    pokemonListViewModel = pokemonListViewModel,
+                    pokemonList = uiState.pokemonList,
                 ) { onPokemonItemClick ->
                     navigateToPokemonDetail(onPokemonItemClick)
                 }
@@ -109,10 +113,24 @@ fun PokemonListScreenPreview() {
     TemplatePreviewTheme {
         PokemonListScreen(
             animatedVisibilityScope = it,
-            pokemonListViewModel = PokemonListViewModel(FakePokemonUseCaseImpl()),
+            pokemonListViewModel = getPokemonListViewModelMock(),
             drawerState = DrawerState(DrawerValue.Closed),
             Routes.PokemonList.route,
             NavigationActions(rememberNavController())
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Pokemon List Content")
+fun PokemonListContentPreview() {
+    TemplatePreviewTheme {
+        PokemonListContent(
+            modifier = Modifier,
+            animatedVisibilityScope = it,
+            pokemonListViewModel = getPokemonListViewModelMock(),
+            uiState = PokemonListUiState.Success(getPokemonListMock())
         )
     }
 }

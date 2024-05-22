@@ -11,11 +11,10 @@ class UserDataRepositoryImpl(private val dataStoreSource: DataStoreSource) : Use
         const val USER_APP_THEME = "user_app_theme"
     }
 
-    override suspend fun getAppTheme(): Flow<String?> {
-        return dataStoreSource.getString(USER_APP_THEME)
-    }
+    override suspend fun getAppTheme(): Flow<String?> =
+        dataStoreSource.getString(USER_APP_THEME)
 
     override suspend fun setAppTheme(isDarkTheme: String) {
-        return dataStoreSource.putString(USER_APP_THEME, isDarkTheme)
+        dataStoreSource.putString(USER_APP_THEME, isDarkTheme)
     }
 }

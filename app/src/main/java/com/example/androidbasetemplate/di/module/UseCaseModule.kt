@@ -1,9 +1,12 @@
 package com.example.androidbasetemplate.di.module
 
+import com.example.androidbasetemplate.data.repository.PokemonDetailsRepository
 import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.data.repository.UserDataRepository
+import com.example.androidbasetemplate.domain.PokemonDetailsUseCase
 import com.example.androidbasetemplate.domain.PokemonUseCase
 import com.example.androidbasetemplate.domain.UserDataUseCase
+import com.example.androidbasetemplate.domain.impl.PokemonDetailsUseCaseImpl
 import com.example.androidbasetemplate.domain.impl.PokemonUseCaseImpl
 import com.example.androidbasetemplate.domain.impl.UserDataUseCaseImpl
 import dagger.Module
@@ -21,6 +24,12 @@ class UseCaseModule {
     fun providePokemonUseCase(
         pokemonRepository: PokemonRepository,
     ): PokemonUseCase = PokemonUseCaseImpl(pokemonRepository)
+
+    @Provides
+    @Singleton
+    fun providePokemonDetailsUseCase(
+        pokemonDetailsRepository: PokemonDetailsRepository,
+    ): PokemonDetailsUseCase = PokemonDetailsUseCaseImpl(pokemonDetailsRepository)
 
     @Provides
     @Singleton

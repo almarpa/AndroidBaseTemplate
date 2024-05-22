@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,17 +29,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.common.utils.pokemonSharedElement
-import com.example.androidbasetemplate.domain.impl.FakePokemonUseCaseImpl
-import com.example.androidbasetemplate.domain.impl.FakeUserDataUseCaseImpl
+import com.example.androidbasetemplate.domain.mock.PokemonDetailsUseCaseImplMock
 import com.example.androidbasetemplate.entity.*
 import com.example.androidbasetemplate.entity.enums.AppTheme
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.entity.enums.StatNameEnum
+import com.example.androidbasetemplate.ui.common.mocks.getSettingsViewModelMock
 import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidbasetemplate.ui.settings.SettingsViewModel
@@ -88,8 +88,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
                     pokemon.dominantColor?.let { Color(it) } ?: Color.White)
             ),
     ) {
-        val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.observeAsState()
-        LaunchedEffect(Unit) { pokemonDetailsViewModel.getPokemonDetails(pokemon.id) }
+        val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
 
         PokemonDetailTopAppBar { navigateBack() }
         PokemonCard(
@@ -269,8 +268,11 @@ fun PokemonDetailsScreenPreview() {
     TemplatePreviewTheme {
         PokemonDetailsScreen(
             animatedVisibilityScope = it,
-            pokemonDetailsViewModel = PokemonDetailsViewModel(FakePokemonUseCaseImpl()),
-            settingsViewModel = SettingsViewModel(FakeUserDataUseCaseImpl()),
+            pokemonDetailsViewModel = PokemonDetailsViewModel(
+                PokemonDetailsUseCaseImplMock(),
+                SavedStateHandle()
+            ),
+            settingsViewModel = getSettingsViewModelMock(),
             pokemon = Pokemon(
                 1,
                 "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",

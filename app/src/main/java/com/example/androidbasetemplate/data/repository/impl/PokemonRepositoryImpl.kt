@@ -4,7 +4,6 @@ import com.example.androidbasetemplate.data.db.database.dao.PokemonDao
 import com.example.androidbasetemplate.data.db.ws.api.PokemonApi
 import com.example.androidbasetemplate.data.repository.PokemonRepository
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.entity.PokemonDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -23,7 +22,7 @@ class PokemonRepositoryImpl(
                     pokemonApi.getPokemons().execute(),
                 ) {
                     body()?.map()?.results?.let { remotePokemonList ->
-                        remotePokemonList.onEach { pokemon -> savePokemon(pokemon) }
+                        remotePokemonList.also { savePokemons(it) }
                     } ?: emptyList()
                 }
             }
@@ -34,29 +33,15 @@ class PokemonRepositoryImpl(
             throw Exception(error)
         }
 
-    private suspend fun savePokemon(pokemon: Pokemon) {
+    private suspend fun savePokemons(pokemonList: List<Pokemon>) {
         withContext(Dispatchers.IO) {
-            pokemonDao.insert(pokemon)
+            pokemonDao.insertAll(pokemonList)
         }
     }
 
     private suspend fun getLocalPokemonList(): List<Pokemon> {
         return withContext(Dispatchers.IO) {
             pokemonDao.getAll()
-        }
-    }
-
-    override suspend fun getPokemon(pokemonID: Int): PokemonDetails {
-        return withContext(Dispatchers.IO) {
-            try {
-                with(pokemonApi.getPokemon(pokemonID).execute()) {
-                    return@with body()?.map() ?: run {
-                        throw Exception()
-                    }
-                }
-            } catch (e: Throwable) {
-                throw Exception(e)
-            }
         }
     }
 }

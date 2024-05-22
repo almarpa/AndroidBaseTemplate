@@ -46,6 +46,8 @@ data class PokemonDetailsResponse(
             height = height,
             weight = weight,
             imageURL = getPokemonImageURL(),
+            stats = stats.map { inner -> inner.map() },
+            types = types.map { inner -> inner.map() },
             isDefault = false,
             locationAreaEncounters = "",
             species = species.map(),
@@ -53,8 +55,6 @@ data class PokemonDetailsResponse(
             abilities = listOf(),
             moves = moves.map { inner -> inner.map() },
             forms = forms.map { inner -> inner.map() },
-            stats = stats.map { inner -> inner.map() },
-            types = types.map { inner -> inner.map() },
         )
     }
 

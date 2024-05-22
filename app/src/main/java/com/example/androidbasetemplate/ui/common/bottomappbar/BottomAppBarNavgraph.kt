@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.androidbasetemplate.common.utils.getPokemonFromJson
+import com.example.androidbasetemplate.entity.Pokemon.Companion.getPokemonFromJson
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.navigation.Routes
 import com.example.androidbasetemplate.ui.favorites.FavoriteListScreen

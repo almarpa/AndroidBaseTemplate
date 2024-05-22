@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import java.net.URLEncoder
@@ -21,11 +22,16 @@ data class Pokemon(
     var url: String,
     @ColumnInfo(name = "name")
     var name: String,
-
+    @ColumnInfo(name = "dominantColor")
     var dominantColor: Int? = null,
 ) : Parcelable {
 
-    fun toJSONString(): String = Gson().toJson(apply { url = getEncodedUrl(url) })
+    companion object {
+        fun String.getPokemonFromJson(): Pokemon =
+            GsonBuilder().create().fromJson(this, Pokemon::class.java)
+    }
+
+    fun pokemonToJSONString(): String = Gson().toJson(apply { url = getEncodedUrl(url) })
 
     private fun getEncodedUrl(url: String) =
         if (urlIsEncodedYet(url)) {
@@ -35,4 +41,6 @@ data class Pokemon(
         }
 
     private fun urlIsEncodedYet(url: String) = url.contains("%2")
+
+
 }

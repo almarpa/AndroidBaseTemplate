@@ -25,4 +25,8 @@ object DataBaseModule {
     @Singleton
     @Provides
     fun providePokemonDao(appDataBase: AppDataBase) = appDataBase.pokemonDao()
+
+    @Singleton
+    @Provides
+    fun providePokemonDetailsDao(appDataBase: AppDataBase) = appDataBase.pokemonDetailsDao()
 }

@@ -49,7 +49,7 @@ class NavigationActions(private val navController: NavHostController) {
 
     val navigateToDetailNavGraph: (Pokemon) -> Unit = { pokemon ->
         navController.navigate(
-            "/pokemonDetail/${pokemon.toJSONString()}"
+            "/pokemonDetail/${pokemon.pokemonToJSONString()}"
         )
     }
 }

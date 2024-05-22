@@ -1,8 +1,11 @@
 package com.example.androidbasetemplate.entity
 
 import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
+@Entity(tableName = "pokemonDetails")
 data class PokemonDetails(
     @PrimaryKey
     @ColumnInfo(name = "id")
@@ -19,15 +22,25 @@ data class PokemonDetails(
     var weight: Int,
     @ColumnInfo(name = "imageURL")
     var imageURL: String,
-    var isDefault: Boolean,
-    var locationAreaEncounters: String,
+    @ColumnInfo(name = "stats")
     var stats: List<Stat>,
-    var species: Species,
-    var sprites: Sprites,
-    var abilities: List<Ability>,
-    var moves: List<Move>,
-    var forms: List<Form>,
+    @ColumnInfo(name = "types")
     var types: List<TypeX>,
+    
+    @Ignore
+    var isDefault: Boolean,
+    @Ignore
+    var locationAreaEncounters: String,
+    @Ignore
+    var species: Species,
+    @Ignore
+    var sprites: Sprites,
+    @Ignore
+    var abilities: List<Ability>,
+    @Ignore
+    var moves: List<Move>,
+    @Ignore
+    var forms: List<Form>,
 ) {
     constructor(
         id: Int,
@@ -47,10 +60,10 @@ data class PokemonDetails(
         height = height,
         weight = weight,
         imageURL = imageURL,
-        isDefault = false,
-        locationAreaEncounters = "",
         stats = stats,
         types = types,
+        isDefault = false,
+        locationAreaEncounters = "",
         species = Species(),
         sprites = Sprites(),
         abilities = listOf(),
