@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">TemplateApp</string>
     <string name="toolbar_title">TemplateApp</string>
-    <string name="pokemon_list_title">Pokedex</string>
+    <string name="pokedex_title">Pokedex</string>
+    <string name="pokemon_list_title">Listado</string>
     <string name="favorites_title">Favoritos</string>
     <string name="settings_title">Settings</string>
     <string name="pokemon_detail_title">Detail</string>

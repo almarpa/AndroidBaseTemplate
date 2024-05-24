@@ -9,8 +9,8 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,7 +58,7 @@ fun TemplateBottomAppBar(
             },
             label = {
                 Text(
-                    stringResource(R.string.favorites_title),
+                    stringResource(R.string.pokemon_list_title),
                     color = MaterialTheme.colorScheme.primary,
                 )
             },
@@ -73,9 +73,9 @@ fun TemplateBottomAppBar(
             icon = {
                 Icon(
                     if (currentRoute == Routes.Favorites.route) {
-                        Icons.Filled.Favorite
-                    } else {
                         Icons.Outlined.Favorite
+                    } else {
+                        Icons.Outlined.FavoriteBorder
                     },
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "Favorites",

@@ -6,4 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface PokemonUseCase {
 
     suspend fun getPokemons(): Flow<List<Pokemon>>
+
+    suspend fun getFavouritesPokemons(): Flow<List<Pokemon>>
+
+    suspend fun savePokemonToFavourites(pokemon: Pokemon)
 }

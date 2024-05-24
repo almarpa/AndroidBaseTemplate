@@ -12,6 +12,9 @@ interface PokemonDao {
     @Query("SELECT * from pokemon")
     suspend fun getAll(): List<Pokemon>
 
+    @Query("SELECT * from pokemon WHERE isFavourite")
+    suspend fun getAllFavourites(): List<Pokemon>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(pokemon: Pokemon)
 

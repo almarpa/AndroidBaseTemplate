@@ -12,7 +12,7 @@ import androidx.navigation.navArgument
 import com.example.androidbasetemplate.entity.Pokemon.Companion.getPokemonFromJson
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.navigation.Routes
-import com.example.androidbasetemplate.ui.favorites.FavoriteListScreen
+import com.example.androidbasetemplate.ui.favorites.FavouritesScreen
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.details.PokemonDetailsScreen
 
@@ -35,7 +35,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
         )
     }
     composable(Routes.Favorites.route) {
-        FavoriteListScreen(
+        FavouritesScreen(
             drawerState = drawerState,
             currentRoute = currentRoute,
             navigationActions = navigationActions,

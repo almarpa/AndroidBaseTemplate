@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 fun DrawerTopAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
     navigationActions: NavigationActions? = null,
-    title: Int = R.string.pokemon_list_title,
+    title: Int = R.string.pokedex_title,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,7 +39,7 @@ fun DrawerTopAppBar(
                 )
             }
         },
-        scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState()),
+        scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = Color.Transparent,
             titleContentColor = MaterialTheme.colorScheme.primary,

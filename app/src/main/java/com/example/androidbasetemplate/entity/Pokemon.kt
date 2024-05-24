@@ -24,6 +24,8 @@ data class Pokemon(
     var name: String,
     @ColumnInfo(name = "dominantColor")
     var dominantColor: Int? = null,
+    @ColumnInfo(name = "isFavourite")
+    var isFavourite: Boolean? = null,
 ) : Parcelable {
 
     companion object {
@@ -41,6 +43,4 @@ data class Pokemon(
         }
 
     private fun urlIsEncodedYet(url: String) = url.contains("%2")
-
-
 }
