@@ -31,11 +31,11 @@ fun PokemonStats(pokemonDetails: PokemonDetails) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(4.dp),
     ) {
         pokemonDetails.stats.forEach { stat ->
             PokemonStat(stat = stat)
-            CustomSpacer(height = 8)
+            CustomSpacer(height = 4)
         }
     }
 }
@@ -60,11 +60,12 @@ fun PokemonStat(stat: Stat) {
             text = LocalContext.current.getString(stat.statX.getAbbreviation()),
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp)
+                .height(30.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
@@ -82,7 +83,7 @@ fun PokemonStat(stat: Stat) {
                     text = (animatedStatValue * 100).toInt().toString(),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 15.sp,
+                    fontSize = 10.sp
                 )
             }
         }

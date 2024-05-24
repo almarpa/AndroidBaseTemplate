@@ -42,6 +42,7 @@ import com.example.androidbasetemplate.common.utils.pokemonSharedElement
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.entity.PokemonDetails
 import com.example.androidbasetemplate.entity.enums.AppTheme
+import com.example.androidbasetemplate.ui.common.mocks.getFavoritesViewModelMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonDetailsViewModelMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonMock
@@ -132,10 +133,10 @@ fun PokemonName(pokemon: Pokemon, onFavouriteClick: (Boolean) -> Unit) {
     ) {
         FavoriteButton(pokemon.isFavourite) { onFavouriteClick(it) }
         Text(
-            modifier = Modifier.fillMaxWidth(.9f).padding(vertical = 16.dp),
+            modifier = Modifier.fillMaxWidth(.9f).padding(top = 16.dp),
             text = "${pokemon.id} ${pokemon.name.uppercase(Locale.getDefault())}",
             fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
+            fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.primary
         )
@@ -153,6 +154,7 @@ fun FavoriteButton(isFavouriteYet: Boolean?, onFavouriteClick: (Boolean) -> Unit
     IconButton(
         modifier = Modifier
             .fillMaxWidth(.1f)
+            .padding(top = 16.dp)
             .scale(favScale),
         onClick = {
             isFavourite = !isFavourite
@@ -195,11 +197,11 @@ fun PokemonCard(
             .padding(top = imageSize.dp / 2 + 20.dp)
             .verticalScroll(scrollState)
     ) {
-        pokemonDetails?.let {
+        pokemonDetails?.let { pokemonDetailsNotNull ->
             PokemonName(pokemon) { onFavouriteClick(it) }
-            PokemonType(it.types)
-            PokemonMeasures(it.weight, it.height)
-            PokemonStats(it)
+            PokemonType(pokemonDetailsNotNull.types)
+            PokemonMeasures(pokemonDetailsNotNull.weight, pokemonDetailsNotNull.height)
+            PokemonStats(pokemonDetailsNotNull)
         }
     }
 }
@@ -302,6 +304,7 @@ fun PokemonDetailsScreenPreview() {
         PokemonDetailsScreen(
             animatedVisibilityScope = it,
             pokemonDetailsViewModel = getPokemonDetailsViewModelMock(),
+            favouritesViewModel = getFavoritesViewModelMock(),
             settingsViewModel = getSettingsViewModelMock(),
             pokemon = getPokemonMock(),
             imageSize = 300,

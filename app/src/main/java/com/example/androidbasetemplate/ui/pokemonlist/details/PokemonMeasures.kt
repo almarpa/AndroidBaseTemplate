@@ -33,7 +33,7 @@ fun PokemonMeasures(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PokemonMeasureItem(
@@ -72,13 +72,13 @@ fun PokemonMeasureItem(
     ) {
         Icon(
             modifier = Modifier
-                .width(50.dp)
+                .width(40.dp)
                 .aspectRatio(1f),
             imageVector = icon,
             contentDescription = stringResource(R.string.menu_drawer_btn),
             tint = MaterialTheme.colorScheme.primary
         )
-        CustomSpacer(height = 8)
+        CustomSpacer(height = 4)
         Text(
             text = "$value $unit",
             color = MaterialTheme.colorScheme.primary

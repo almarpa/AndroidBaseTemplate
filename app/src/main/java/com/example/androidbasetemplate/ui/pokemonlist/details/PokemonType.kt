@@ -22,17 +22,17 @@ import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 @Composable
 fun PokemonType(types: List<TypeX>) {
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)
+        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         for (type in types) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 8.dp)
+                    .padding(8.dp)
                     .clip(CircleShape)
                     .background(type.typeXX.getColor())
-                    .height(35.dp)
+                    .height(30.dp)
             ) {
                 Text(
                     text = type.typeXX.name.value.uppercase(), color = Color.White, fontSize = 18.sp

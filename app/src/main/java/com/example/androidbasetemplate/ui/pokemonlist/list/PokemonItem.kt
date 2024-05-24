@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
@@ -92,11 +93,10 @@ fun SharedTransitionScope.PokemonItem(
 
             Text(
                 text = pokemon.name.uppercase(),
-                style = MaterialTheme.typography.titleLarge,
                 color = Color.White,
-                fontWeight = FontWeight(1000),
-                modifier = Modifier
-                    .padding(horizontal = 5.dp, vertical = 10.dp),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(horizontal = 2.dp),
             )
         }
     }

@@ -17,7 +17,10 @@ object DataBaseModule {
     @Singleton
     @Provides
     fun provideAppDataBase(@ApplicationContext appContext: Context): AppDataBase {
-        return Room.databaseBuilder(appContext, AppDataBase::class.java, "base.db").build()
+        return Room
+            .databaseBuilder(appContext, AppDataBase::class.java, "base.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     /** DAOs */
