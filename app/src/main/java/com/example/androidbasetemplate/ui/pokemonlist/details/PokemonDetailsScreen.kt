@@ -4,35 +4,26 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
@@ -52,7 +43,6 @@ import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidbasetemplate.ui.favorites.FavouritesViewModel
 import com.example.androidbasetemplate.ui.settings.SettingsViewModel
 import java.net.URLDecoder
-import java.util.Locale
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -62,7 +52,6 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     favouritesViewModel: FavouritesViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     pokemon: Pokemon,
-    imageSize: Int = 300,
     navigateBack: () -> Unit = {},
 ) {
     val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
@@ -73,7 +62,6 @@ fun SharedTransitionScope.PokemonDetailsScreen(
         settingsViewModel = settingsViewModel,
         pokemon = pokemon,
         pokemonDetails = pokemonDetails,
-        imageSize = imageSize,
         navigateBack = { navigateBack() }
     ) {
         favouritesViewModel.savePokemonToFavourites(pokemon.apply { isFavourite = it })
@@ -87,7 +75,6 @@ fun SharedTransitionScope.PokemonDetailsContent(
     settingsViewModel: SettingsViewModel,
     pokemonDetails: PokemonDetails?,
     pokemon: Pokemon,
-    imageSize: Int,
     navigateBack: () -> Unit,
     onFavouriteClick: (Boolean) -> Unit,
 ) {
@@ -105,7 +92,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = imageSize.dp / 2 - 16.dp,
+                    top = 150.dp,
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 30.dp
@@ -116,57 +103,10 @@ fun SharedTransitionScope.PokemonDetailsContent(
                 .padding(16.dp),
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
-            imageSize = imageSize,
         ) {
             onFavouriteClick(it)
         }
-        PokemonImageAnimation(animatedVisibilityScope, pokemon, imageSize)
-    }
-}
-
-@Composable
-fun PokemonName(pokemon: Pokemon, onFavouriteClick: (Boolean) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        FavoriteButton(pokemon.isFavourite) { onFavouriteClick(it) }
-        Text(
-            modifier = Modifier.fillMaxWidth(.9f).padding(top = 16.dp),
-            text = "${pokemon.id} ${pokemon.name.uppercase(Locale.getDefault())}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-}
-
-@Composable
-fun FavoriteButton(isFavouriteYet: Boolean?, onFavouriteClick: (Boolean) -> Unit) {
-    var isFavourite by remember { mutableStateOf(isFavouriteYet ?: false) }
-    val favScale by animateFloatAsState(
-        targetValue = if (isFavourite) 1.5f else 1f,
-        label = "Favourite Button Scale"
-    )
-
-    IconButton(
-        modifier = Modifier
-            .fillMaxWidth(.1f)
-            .padding(top = 16.dp)
-            .scale(favScale),
-        onClick = {
-            isFavourite = !isFavourite
-            onFavouriteClick(isFavourite)
-        },
-    ) {
-        Icon(
-            modifier = Modifier.fillMaxSize(),
-            imageVector = if (isFavourite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-            contentDescription = "Favorite icon",
-            tint = if (isFavourite) Color.Red else MaterialTheme.colorScheme.primary,
-        )
+        PokemonImageAnimation(animatedVisibilityScope, pokemon)
     }
 }
 
@@ -186,7 +126,6 @@ fun PokemonCard(
     modifier: Modifier = Modifier,
     pokemon: Pokemon,
     pokemonDetails: PokemonDetails?,
-    imageSize: Int = 300,
     onFavouriteClick: (Boolean) -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -194,7 +133,7 @@ fun PokemonCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .wrapContentHeight()
-            .padding(top = imageSize.dp / 2 + 20.dp)
+            .padding(top = 100.dp)
             .verticalScroll(scrollState)
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
@@ -210,18 +149,14 @@ fun PokemonCard(
 @Composable
 fun SharedTransitionScope.PokemonImageAnimation(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    pokemon: Pokemon = Pokemon(
-        id = 1,
-        url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-        name = "Bulbasour"
-    ),
-    imageSize: Int = 300,
+    pokemon: Pokemon,
 ) {
-    Box(
-        contentAlignment = Alignment.TopCenter,
+    Column(
         modifier = Modifier
+            .fillMaxWidth()
             .wrapContentHeight()
-            .padding(top = 25.dp)
+            .padding(top = 25.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -231,8 +166,8 @@ fun SharedTransitionScope.PokemonImageAnimation(
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .size(imageSize.dp)
+                .fillMaxWidth(.8f)
+                .aspectRatio(1f)
                 .pokemonSharedElement(
                     isLocalInspectionMode = LocalInspectionMode.current,
                     state = rememberSharedContentState(key = "item-image${pokemon.id}"),
@@ -279,7 +214,10 @@ private fun getDarkGradient(dominantColor: Color) =
 @Preview("Pokemon Image Animation")
 fun PokemonImageAnimationPreview() {
     TemplatePreviewTheme {
-        PokemonImageAnimation(animatedVisibilityScope = it)
+        PokemonImageAnimation(
+            animatedVisibilityScope = it,
+            pokemon = getPokemonMock(),
+        )
     }
 }
 
@@ -307,7 +245,6 @@ fun PokemonDetailsScreenPreview() {
             favouritesViewModel = getFavoritesViewModelMock(),
             settingsViewModel = getSettingsViewModelMock(),
             pokemon = getPokemonMock(),
-            imageSize = 300,
         ) {}
     }
 }
