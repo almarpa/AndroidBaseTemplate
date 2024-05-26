@@ -1,26 +1,17 @@
 package com.example.androidbasetemplate.ui.common.bottomappbar
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,17 +29,11 @@ fun TemplateBottomAppBar(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    // TODO: migrate to Material 3 NavigationBar
-    BottomNavigation(
-        modifier = Modifier
-            .background(Color.Transparent)
-            .padding(vertical = 4.dp)
-            .clip(
-                RoundedCornerShape(20.dp)
-            ),
-        backgroundColor = MaterialTheme.colorScheme.surface,
+    NavigationBar(
+        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+        containerColor = MaterialTheme.colorScheme.surface,
     ) {
-        BottomNavigationItem(
+        NavigationBarItem(
             icon = {
                 Icon(
                     if (currentRoute == Routes.PokemonList.route) {
@@ -67,13 +52,12 @@ fun TemplateBottomAppBar(
                 )
             },
             selected = currentRoute == Routes.PokemonList.route,
-            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             onClick = {
                 navigationActions?.navigateToPokemonList?.invoke()
                 coroutineScope.launch { drawerState.close() }
             }
         )
-        BottomNavigationItem(
+        NavigationBarItem(
             icon = {
                 Icon(
                     if (currentRoute == Routes.Favorites.route) {
@@ -92,8 +76,7 @@ fun TemplateBottomAppBar(
                 )
             },
             selected = currentRoute == Routes.Favorites.route,
-            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            onClick = {
+            onClick =  {
                 navigationActions?.navigateToFavoriteList?.invoke()
                 coroutineScope.launch { drawerState.close() }
             }

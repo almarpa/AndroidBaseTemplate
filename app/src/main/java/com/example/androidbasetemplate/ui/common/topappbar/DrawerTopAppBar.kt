@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -55,11 +54,8 @@ fun DrawerTopAppBar(
                 }
             },
             actions = {
-                if (allowSearch) {
-                    SearchIcon(isSearchBarVisible) {
-                        isSearchBarVisible = it
-                        if (!it) onDismissSearch()
-                    }
+                if (allowSearch && !isSearchBarVisible) {
+                    SearchIcon { isSearchBarVisible = true }
                 }
             },
             scrollBehavior = scrollBehavior,
@@ -68,19 +64,23 @@ fun DrawerTopAppBar(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
         )
-        PokemonSearchBar(isSearchBarVisible) { onSearch(it) }
+        if (isSearchBarVisible) {
+            PokemonSearchBar(
+                onCancel = {
+                    onDismissSearch()
+                    isSearchBarVisible = false
+                },
+                onSearch = { onSearch(it) }
+            )
+        }
     }
 }
 
 @Composable
-fun SearchIcon(isSearchBarVisible: Boolean, onValueChange: (Boolean) -> Unit) {
-    IconButton(onClick = { onValueChange(!isSearchBarVisible) }) {
+fun SearchIcon(onIconClick: () -> Unit) {
+    IconButton(onClick = { onIconClick() }) {
         Icon(
-            imageVector = if (isSearchBarVisible) {
-                Icons.Default.SearchOff
-            } else {
-                Icons.Default.Search
-            },
+            imageVector = Icons.Default.Search,
             contentDescription = stringResource(R.string.menu_drawer_btn),
             tint = MaterialTheme.colorScheme.primary,
         )
@@ -89,54 +89,50 @@ fun SearchIcon(isSearchBarVisible: Boolean, onValueChange: (Boolean) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PokemonSearchBar(isSearchBarVisible: Boolean, onSearch: (String) -> Unit) {
-    if (isSearchBarVisible) {
-        var text by remember { mutableStateOf("") }
-        var isSearchInputActive by remember { mutableStateOf(false) }
-        val focusRequester = remember { FocusRequester() }
-        val keyboard = LocalSoftwareKeyboardController.current
+fun PokemonSearchBar(
+    onCancel: () -> Unit,
+    onSearch: (String) -> Unit,
+) {
+    var text by remember { mutableStateOf("") }
+    var isSearchInputActive by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
 
-        SearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 0.dp, start = 16.dp, bottom = 8.dp, end = 16.dp)
-                .focusRequester(focusRequester),
-            query = text,
-            onQueryChange = { text = it },
-            onSearch = {
-                onSearch(text)
-                isSearchInputActive = false
-            },
-            active = isSearchInputActive,
-            onActiveChange = { isSearchInputActive = it },
-            placeholder = { Text(text = stringResource(id = R.string.search_title)) },
-            trailingIcon = {
-                if (text.isNotEmpty() && !isSearchInputActive) {
-                    IconButton(onClick = { text = "" }) {
-                        Icon(imageVector = Icons.Default.Cancel, contentDescription = null)
-                    }
-                } else {
-                    IconButton(onClick = {
-                        onSearch(text)
-                        isSearchInputActive = false
-                    }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
-                    }
-                }
+    SearchBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 0.dp, start = 16.dp, bottom = 8.dp, end = 16.dp)
+            .focusRequester(focusRequester),
+        query = text,
+        onQueryChange = { text = it },
+        onSearch = {
+            onSearch(text)
+            isSearchInputActive = false
+        },
+        active = isSearchInputActive,
+        onActiveChange = { isSearchInputActive = it },
+        placeholder = { Text(text = stringResource(id = R.string.search_title)) },
+        shadowElevation = 12.dp,
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            dividerColor = Color.Transparent,
+        ),
+        trailingIcon = {
+            IconButton(onClick = { onCancel() }) {
+                Icon(imageVector = Icons.Default.Cancel, contentDescription = null)
             }
-        ) {}
-
-        LaunchedEffect(focusRequester) {
-            focusRequester.requestFocus()
-            keyboard?.show()
         }
+    ) {}
+
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+        keyboard?.show()
     }
 }
 
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview("Drawer Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("Drawer Top App Bar", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DrawerTopAppBarPreview() {
     TemplatePreviewTheme {
@@ -164,8 +160,9 @@ fun DrawerSearchTopAppBarPreview() {
 fun PokemonSearchBarPreview() {
     TemplatePreviewTheme {
         PokemonSearchBar(
-            isSearchBarVisible = true,
-        ) {}
+            onCancel = {},
+            onSearch = {}
+        )
     }
 }
 
