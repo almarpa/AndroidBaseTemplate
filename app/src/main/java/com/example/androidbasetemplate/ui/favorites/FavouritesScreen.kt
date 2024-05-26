@@ -51,7 +51,7 @@ fun FavouritesScreen(
             DrawerTopAppBar(
                 drawerState = drawerState,
                 title = R.string.favorites_title,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
         content = {
@@ -134,7 +134,7 @@ fun FavouritesList(paddingValues: PaddingValues, pokemonList: List<Pokemon>) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview("Favourites Screen")
 fun FavouritesScreenPreview() {

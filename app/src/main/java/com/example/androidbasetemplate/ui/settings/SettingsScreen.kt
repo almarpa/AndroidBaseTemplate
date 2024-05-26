@@ -3,7 +3,11 @@ package com.example.androidbasetemplate.ui.settings
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,7 +25,6 @@ import com.example.androidbasetemplate.ui.common.mocks.getSettingsViewModelMock
 import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel(),

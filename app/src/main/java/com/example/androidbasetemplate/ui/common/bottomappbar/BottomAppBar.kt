@@ -11,7 +11,11 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.*
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -26,7 +30,6 @@ import com.example.androidbasetemplate.ui.common.navigation.Routes
 import com.example.androidbasetemplate.ui.theme.TemplateTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TemplateBottomAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
@@ -35,6 +38,7 @@ fun TemplateBottomAppBar(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    // TODO: migrate to Material 3 NavigationBar
     BottomNavigation(
         modifier = Modifier
             .background(Color.Transparent)
@@ -58,7 +62,7 @@ fun TemplateBottomAppBar(
             },
             label = {
                 Text(
-                    stringResource(R.string.pokemon_list_title),
+                    stringResource(R.string.pokedex_title),
                     color = MaterialTheme.colorScheme.primary,
                 )
             },
@@ -98,7 +102,6 @@ fun TemplateBottomAppBar(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview("Bottom App Bar")
 @Preview("Bottom App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)

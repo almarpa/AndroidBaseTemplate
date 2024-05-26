@@ -45,4 +45,11 @@ class PokemonListViewModel @Inject constructor(
                 }
         }
     }
+
+    fun onPokemonSearch(pokemon: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.tryEmit(PokemonListUiState.Loading)
+            // TODO:
+        }
+    }
 }

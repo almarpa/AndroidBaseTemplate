@@ -50,10 +50,13 @@ fun SharedTransitionScope.PokemonListScreen(
         topBar = {
             DrawerTopAppBar(
                 drawerState = drawerState,
-                navigationActions = navigationActions,
                 title = R.string.pokedex_title,
-                scrollBehavior = scrollBehavior
-            )
+                scrollBehavior = scrollBehavior,
+                allowSearch = true,
+                onDismissSearch = { pokemonListViewModel.getPokemonList() }
+            ) { pokemonSearch ->
+                pokemonListViewModel.onPokemonSearch(pokemonSearch)
+            }
         },
         content = { paddingValues ->
             val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle(initialValue = PokemonListUiState.Loading)

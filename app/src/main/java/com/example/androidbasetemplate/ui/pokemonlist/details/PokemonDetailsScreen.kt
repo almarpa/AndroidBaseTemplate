@@ -166,7 +166,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth(.8f)
+                .fillMaxWidth(.75f)
                 .aspectRatio(1f)
                 .pokemonSharedElement(
                     isLocalInspectionMode = LocalInspectionMode.current,
