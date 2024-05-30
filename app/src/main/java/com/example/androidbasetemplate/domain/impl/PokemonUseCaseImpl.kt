@@ -18,4 +18,8 @@ class PokemonUseCaseImpl(private val pokemonRepository: PokemonRepository) : Pok
     override suspend fun savePokemonToFavourites(pokemon: Pokemon) {
         pokemonRepository.savePokemonToFavourites(pokemon)
     }
+
+    override suspend fun searchPokemonsByName(name: String): Flow<List<Pokemon>> =
+        pokemonRepository.searchPokemonsByName(name)
+    
 }

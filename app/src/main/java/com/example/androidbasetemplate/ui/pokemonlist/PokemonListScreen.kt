@@ -30,6 +30,7 @@ import com.example.androidbasetemplate.ui.common.mocks.getPokemonListMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonListViewModelMock
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.navigation.Routes
+import com.example.androidbasetemplate.ui.common.notfound.NotFoundView
 import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import com.example.androidbasetemplate.ui.common.topappbar.DrawerTopAppBar
 import com.example.androidbasetemplate.ui.pokemonlist.list.PokemonList
@@ -53,7 +54,11 @@ fun SharedTransitionScope.PokemonListScreen(
                 title = R.string.pokedex_title,
                 scrollBehavior = scrollBehavior,
                 allowSearch = true,
-                onDismissSearch = { pokemonListViewModel.getPokemonList() }
+                textSearched = pokemonListViewModel.pokemonSearched.value ?: "",
+                onDismissSearch = {
+                    pokemonListViewModel.getPokemonList()
+                    pokemonListViewModel.removeCurrentSearch()
+                }
             ) { pokemonSearch ->
                 pokemonListViewModel.onPokemonSearch(pokemonSearch)
             }
@@ -111,6 +116,10 @@ fun SharedTransitionScope.PokemonListContent(
                     navigateToPokemonDetail(onPokemonItemClick)
                 }
             }
+
+            is PokemonListUiState.NotFound -> {
+                NotFoundView()
+            }
         }
     }
 }
@@ -124,8 +133,8 @@ fun PokemonListScreenPreview() {
             animatedVisibilityScope = it,
             pokemonListViewModel = getPokemonListViewModelMock(),
             drawerState = DrawerState(DrawerValue.Closed),
-            Routes.PokemonList.route,
-            NavigationActions(rememberNavController())
+            currentRoute = Routes.PokemonList.route,
+            navigationActions = NavigationActions(rememberNavController())
         )
     }
 }

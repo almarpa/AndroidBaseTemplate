@@ -10,4 +10,6 @@ interface PokemonUseCase {
     suspend fun getFavouritesPokemons(): Flow<List<Pokemon>>
 
     suspend fun savePokemonToFavourites(pokemon: Pokemon)
+
+    suspend fun searchPokemonsByName(name: String): Flow<List<Pokemon>>
 }

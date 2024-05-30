@@ -37,6 +37,9 @@ class PokemonRepositoryImpl(
         emit(getLocalFavouriteList())
     }
 
+    override suspend fun searchPokemonsByName(name: String) = flow {
+        emit(searchLocalPokemonsByName(name))
+    }
 
     private suspend fun savePokemons(pokemonList: List<Pokemon>) {
         withContext(Dispatchers.IO) {
@@ -59,6 +62,12 @@ class PokemonRepositoryImpl(
     private suspend fun getLocalFavouriteList(): List<Pokemon> {
         return withContext(Dispatchers.IO) {
             pokemonDao.getAllFavourites()
+        }
+    }
+
+    private suspend fun searchLocalPokemonsByName(name: String): List<Pokemon> {
+        return withContext(Dispatchers.IO) {
+            pokemonDao.searchPokemonByName(name.lowercase())
         }
     }
 }
