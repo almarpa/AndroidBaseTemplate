@@ -24,8 +24,8 @@ data class Pokemon(
     var name: String,
     @ColumnInfo(name = "dominantColor")
     var dominantColor: Int? = null,
-    @ColumnInfo(name = "isFavourite")
-    var isFavourite: Boolean? = null,
+    @ColumnInfo(name = "isTeamMember")
+    var isTeamMember: Boolean = false,
 ) : Parcelable {
 
     companion object {

@@ -3,10 +3,9 @@ package com.example.androidbasetemplate.ui.common.bottomappbar
 import android.content.res.Configuration
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.automirrored.outlined.ManageSearch
+import androidx.compose.material.icons.filled.PeopleOutline
+import androidx.compose.material.icons.outlined.PeopleOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,11 +35,7 @@ fun TemplateBottomAppBar(
         NavigationBarItem(
             icon = {
                 Icon(
-                    if (currentRoute == Routes.PokemonList.route) {
-                        Icons.AutoMirrored.Filled.List
-                    } else {
-                        Icons.AutoMirrored.Outlined.List
-                    },
+                    Icons.AutoMirrored.Outlined.ManageSearch,
                     contentDescription = "List",
                     tint = MaterialTheme.colorScheme.primary,
                 )
@@ -60,24 +55,24 @@ fun TemplateBottomAppBar(
         NavigationBarItem(
             icon = {
                 Icon(
-                    if (currentRoute == Routes.Favorites.route) {
-                        Icons.Outlined.Favorite
+                    if (currentRoute == Routes.Team.route) {
+                        Icons.Outlined.PeopleOutline
                     } else {
-                        Icons.Outlined.FavoriteBorder
+                        Icons.Default.PeopleOutline
                     },
                     tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "Favorites",
+                    contentDescription = "Team",
                 )
             },
             label = {
                 Text(
-                    stringResource(R.string.favorites_title),
+                    stringResource(R.string.team_title),
                     color = MaterialTheme.colorScheme.primary,
                 )
             },
-            selected = currentRoute == Routes.Favorites.route,
-            onClick =  {
-                navigationActions?.navigateToFavoriteList?.invoke()
+            selected = currentRoute == Routes.Team.route,
+            onClick = {
+                navigationActions?.navigateToTeamList?.invoke()
                 coroutineScope.launch { drawerState.close() }
             }
         )

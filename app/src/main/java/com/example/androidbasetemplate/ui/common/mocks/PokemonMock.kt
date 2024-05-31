@@ -7,7 +7,7 @@ import com.example.androidbasetemplate.domain.mock.UserDataUseCaseImplMock
 import com.example.androidbasetemplate.entity.*
 import com.example.androidbasetemplate.entity.enums.PokemonTypeEnum
 import com.example.androidbasetemplate.entity.enums.StatNameEnum
-import com.example.androidbasetemplate.ui.favorites.FavouritesViewModel
+import com.example.androidbasetemplate.ui.team.TeamViewModel
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListViewModel
 import com.example.androidbasetemplate.ui.pokemonlist.details.PokemonDetailsViewModel
 import com.example.androidbasetemplate.ui.settings.SettingsViewModel
@@ -21,7 +21,7 @@ fun getSettingsViewModelMock() = SettingsViewModel(UserDataUseCaseImplMock())
 fun getPokemonDetailsViewModelMock() =
     PokemonDetailsViewModel(PokemonDetailsUseCaseImplMock(), SavedStateHandle())
 
-fun getFavoritesViewModelMock() = FavouritesViewModel(PokemonUseCaseImplMock())
+fun getTeamViewModelMock() = TeamViewModel(PokemonUseCaseImplMock())
 
 /****************************
  *********   DATA   *********

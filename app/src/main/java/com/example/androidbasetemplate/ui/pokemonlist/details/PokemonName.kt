@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.filled.PersonRemove
+import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,13 +33,13 @@ import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import java.util.Locale
 
 @Composable
-fun PokemonName(pokemon: Pokemon, onFavouriteClick: (Boolean) -> Unit) {
+fun PokemonName(pokemon: Pokemon, onMemberClick: (Boolean) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        FavoriteButton(pokemon.isFavourite) { onFavouriteClick(it) }
+        AddMemberButton(pokemon.isTeamMember) { onMemberClick(it) }
         Text(
             modifier = Modifier.fillMaxWidth(.9f),
             text = "${pokemon.id} ${pokemon.name.uppercase(Locale.getDefault())}",
@@ -53,27 +52,27 @@ fun PokemonName(pokemon: Pokemon, onFavouriteClick: (Boolean) -> Unit) {
 }
 
 @Composable
-fun FavoriteButton(isFavouriteYet: Boolean?, onFavouriteClick: (Boolean) -> Unit) {
-    var isFavourite by remember { mutableStateOf(isFavouriteYet ?: false) }
-    val favScale by animateFloatAsState(
-        targetValue = if (isFavourite) 1.5f else 1f,
-        label = "Favourite Button Scale"
+fun AddMemberButton(isMemberYet: Boolean, onMemberClick: (Boolean) -> Unit) {
+    var isTeamMember by remember { mutableStateOf(isMemberYet) }
+    val memberIconScale by animateFloatAsState(
+        targetValue = if (isTeamMember) 1.5f else 1f,
+        label = "Member Button Scale"
     )
     IconButton(
         modifier = Modifier
             .fillMaxWidth(.1f)
             .padding(vertical = 4.dp)
-            .scale(favScale),
+            .scale(memberIconScale),
         onClick = {
-            isFavourite = !isFavourite
-            onFavouriteClick(isFavourite)
+            isTeamMember = !isTeamMember
+            onMemberClick(isTeamMember)
         },
     ) {
         Icon(
             modifier = Modifier.fillMaxSize(),
-            imageVector = if (isFavourite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-            contentDescription = "Favorite icon",
-            tint = if (isFavourite) Color.Red else MaterialTheme.colorScheme.primary,
+            imageVector = if (isTeamMember) Icons.Filled.PersonRemove else Icons.Outlined.PersonAdd,
+            contentDescription = "Add member icon",
+            tint = MaterialTheme.colorScheme.primary,
         )
     }
 }

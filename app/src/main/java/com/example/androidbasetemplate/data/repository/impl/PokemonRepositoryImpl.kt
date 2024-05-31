@@ -33,8 +33,8 @@ class PokemonRepositoryImpl(
             throw Exception(error)
         }
 
-    override suspend fun getFavouritesPokemons() = flow {
-        emit(getLocalFavouriteList())
+    override suspend fun getTeamMembers() = flow {
+        emit(getLocalTeamMembers())
     }
 
     override suspend fun searchPokemonsByName(name: String) = flow {
@@ -47,7 +47,7 @@ class PokemonRepositoryImpl(
         }
     }
 
-    override suspend fun savePokemonToFavourites(pokemon: Pokemon) {
+    override suspend fun addPokemonToTeam(pokemon: Pokemon) {
         withContext(Dispatchers.IO) {
             pokemonDao.update(pokemon)
         }
@@ -59,9 +59,9 @@ class PokemonRepositoryImpl(
         }
     }
 
-    private suspend fun getLocalFavouriteList(): List<Pokemon> {
+    private suspend fun getLocalTeamMembers(): List<Pokemon> {
         return withContext(Dispatchers.IO) {
-            pokemonDao.getAllFavourites()
+            pokemonDao.getAllTeamMembers()
         }
     }
 

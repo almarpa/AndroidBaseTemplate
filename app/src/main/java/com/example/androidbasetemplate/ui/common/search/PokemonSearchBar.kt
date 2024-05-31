@@ -36,7 +36,10 @@ fun PokemonSearchBar(
             .fillMaxWidth()
             .padding(top = 4.dp, start = 16.dp, bottom = 10.dp, end = 16.dp),
         query = searchText,
-        onQueryChange = { searchText = it },
+        onQueryChange = {
+            searchText = it
+            if (searchText.length > 1) onSearch(searchText)
+        },
         onSearch = { onSearch(searchText) },
         active = false,
         onActiveChange = {},

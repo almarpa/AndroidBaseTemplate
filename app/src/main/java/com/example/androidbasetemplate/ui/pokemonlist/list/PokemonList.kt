@@ -59,7 +59,7 @@ fun SharedTransitionScope.PokemonList(
                 ) { pokemonItem ->
                     onPokemonItemClick(pokemonItem)
                 }
-                CustomSpacer(16, 16)
+                CustomSpacer(height = 16, width = 16)
             }
         }
     }

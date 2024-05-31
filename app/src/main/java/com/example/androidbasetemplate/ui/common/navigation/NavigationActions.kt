@@ -12,7 +12,7 @@ sealed class Routes(val route: String) {
     data object Splash : Routes("/splash")
     data object PokemonList : Routes("/pokemonList")
     data object PokemonDetail : Routes("/pokemonDetail/{pokemon}")
-    data object Favorites : Routes("/favoriteList")
+    data object Team : Routes("/team")
     data object Settings : Routes("/settings")
 }
 
@@ -30,8 +30,8 @@ class NavigationActions(private val navController: NavHostController) {
             restoreState = true
         }
     }
-    val navigateToFavoriteList: () -> Unit = {
-        navController.navigate(Routes.Favorites.route) {
+    val navigateToTeamList: () -> Unit = {
+        navController.navigate(Routes.Team.route) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }

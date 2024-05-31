@@ -33,15 +33,15 @@ import com.example.androidbasetemplate.common.utils.pokemonSharedElement
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.entity.PokemonDetails
 import com.example.androidbasetemplate.entity.enums.AppTheme
-import com.example.androidbasetemplate.ui.common.mocks.getFavoritesViewModelMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonDetailsViewModelMock
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonMock
 import com.example.androidbasetemplate.ui.common.mocks.getSettingsViewModelMock
+import com.example.androidbasetemplate.ui.common.mocks.getTeamViewModelMock
 import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import com.example.androidbasetemplate.ui.common.topappbar.DefaultTopAppBar
-import com.example.androidbasetemplate.ui.favorites.FavouritesViewModel
 import com.example.androidbasetemplate.ui.settings.SettingsViewModel
+import com.example.androidbasetemplate.ui.team.TeamViewModel
 import java.net.URLDecoder
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -49,7 +49,7 @@ import java.net.URLDecoder
 fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
-    favouritesViewModel: FavouritesViewModel = hiltViewModel(),
+    teamViewModel: TeamViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     pokemon: Pokemon,
     navigateBack: () -> Unit = {},
@@ -64,7 +64,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
         pokemonDetails = pokemonDetails,
         navigateBack = { navigateBack() }
     ) {
-        favouritesViewModel.savePokemonToFavourites(pokemon.apply { isFavourite = it })
+        teamViewModel.addPokemonToTeam(pokemon.apply { isTeamMember = it })
     }
 }
 
@@ -76,7 +76,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
     pokemonDetails: PokemonDetails?,
     pokemon: Pokemon,
     navigateBack: () -> Unit,
-    onFavouriteClick: (Boolean) -> Unit,
+    onMemberClick: (Boolean) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -104,7 +104,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
         ) {
-            onFavouriteClick(it)
+            onMemberClick(it)
         }
         PokemonImageAnimation(animatedVisibilityScope, pokemon)
     }
@@ -126,7 +126,7 @@ fun PokemonCard(
     modifier: Modifier = Modifier,
     pokemon: Pokemon,
     pokemonDetails: PokemonDetails?,
-    onFavouriteClick: (Boolean) -> Unit,
+    onMemberClick: (Boolean) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -137,7 +137,7 @@ fun PokemonCard(
             .verticalScroll(scrollState)
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
-            PokemonName(pokemon) { onFavouriteClick(it) }
+            PokemonName(pokemon) { onMemberClick(it) }
             PokemonType(pokemonDetailsNotNull.types)
             PokemonMeasures(pokemonDetailsNotNull.weight, pokemonDetailsNotNull.height)
             PokemonStats(pokemonDetailsNotNull)
@@ -229,7 +229,7 @@ fun PokemonCardPreview() {
         PokemonCard(
             pokemonDetails = getPokemonDetailsMock(),
             pokemon = getPokemonMock(),
-            onFavouriteClick = { }
+            onMemberClick = { }
         )
     }
 }
@@ -242,7 +242,7 @@ fun PokemonDetailsScreenPreview() {
         PokemonDetailsScreen(
             animatedVisibilityScope = it,
             pokemonDetailsViewModel = getPokemonDetailsViewModelMock(),
-            favouritesViewModel = getFavoritesViewModelMock(),
+            teamViewModel = getTeamViewModelMock(),
             settingsViewModel = getSettingsViewModelMock(),
             pokemon = getPokemonMock(),
         ) {}

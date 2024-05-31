@@ -12,8 +12,8 @@ interface PokemonDao {
     @Query("SELECT * from pokemon")
     suspend fun getAll(): List<Pokemon>
 
-    @Query("SELECT * from pokemon WHERE isFavourite")
-    suspend fun getAllFavourites(): List<Pokemon>
+    @Query("SELECT * from pokemon WHERE isTeamMember")
+    suspend fun getAllTeamMembers(): List<Pokemon>
 
     @Query("SELECT * from pokemon WHERE name LIKE '%' || :name || '%'")
     suspend fun searchPokemonByName(name: String): List<Pokemon>

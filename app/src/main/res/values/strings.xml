@@ -3,7 +3,7 @@
     <string name="toolbar_title">TemplateApp</string>
     <string name="pokedex_title">Pokedex</string>
     <string name="pokemon_list_title">List</string>
-    <string name="favorites_title">Favourites</string>
+    <string name="team_title">Team</string>
     <string name="settings_title">Settings</string>
     <string name="pokemon_detail_title">Detail</string>
     <string name="search_title">Search</string>

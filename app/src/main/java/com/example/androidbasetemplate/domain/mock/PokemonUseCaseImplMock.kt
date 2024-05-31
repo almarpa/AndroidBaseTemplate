@@ -11,11 +11,11 @@ class PokemonUseCaseImplMock : PokemonUseCase {
         return flowOf()
     }
 
-    override suspend fun getFavouritesPokemons(): Flow<List<Pokemon>> {
+    override suspend fun getTeamMembers(): Flow<List<Pokemon>> {
         return flowOf()
     }
 
-    override suspend fun savePokemonToFavourites(pokemon: Pokemon) {}
+    override suspend fun addPokemonToTeam(pokemon: Pokemon) {}
 
     override suspend fun searchPokemonsByName(name: String): Flow<List<Pokemon>> {
         return flowOf()
