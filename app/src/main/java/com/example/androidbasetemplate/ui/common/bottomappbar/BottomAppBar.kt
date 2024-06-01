@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.navigation.Routes
@@ -23,20 +24,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun TemplateBottomAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
-    currentRoute: String = Routes.PokemonList.route,
-    navigationActions: NavigationActions? = null,
+    currentRoute: String,
+    navigationActions: NavigationActions,
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    NavigationBar(
-        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
-        containerColor = MaterialTheme.colorScheme.surface,
-    ) {
+    NavigationBar(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
         NavigationBarItem(
             icon = {
                 Icon(
                     Icons.AutoMirrored.Outlined.ManageSearch,
-                    contentDescription = "List",
+                    contentDescription = "Pokedex",
                     tint = MaterialTheme.colorScheme.primary,
                 )
             },
@@ -48,7 +45,7 @@ fun TemplateBottomAppBar(
             },
             selected = currentRoute == Routes.PokemonList.route,
             onClick = {
-                navigationActions?.navigateToPokemonList?.invoke()
+                navigationActions.navigateToPokemonList()
                 coroutineScope.launch { drawerState.close() }
             }
         )
@@ -72,7 +69,7 @@ fun TemplateBottomAppBar(
             },
             selected = currentRoute == Routes.Team.route,
             onClick = {
-                navigationActions?.navigateToTeamList?.invoke()
+                navigationActions.navigateToTeamList()
                 coroutineScope.launch { drawerState.close() }
             }
         )
@@ -87,7 +84,8 @@ fun TemplateBottomAppBarPreview() {
     TemplateTheme {
         TemplateBottomAppBar(
             drawerState = DrawerState(DrawerValue.Closed),
-            Routes.PokemonList.route,
+            currentRoute = Routes.PokemonList.route,
+            navigationActions = NavigationActions(rememberNavController())
         )
     }
 }

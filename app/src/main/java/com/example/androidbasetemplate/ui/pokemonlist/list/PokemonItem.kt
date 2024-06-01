@@ -1,6 +1,5 @@
 package com.example.androidbasetemplate.ui.pokemonlist.list
 
-import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -74,7 +73,7 @@ fun SharedTransitionScope.PokemonItem(
                 contentDescription = "Pokemon Image",
                 contentScale = ContentScale.FillBounds,
                 onSuccess = { success ->
-                    calculateDominantColor(success.result.drawable) {
+                    getDominantColorFromDrawable(success.result.drawable) {
                         dominantColor = it
                         pokemon.dominantColor = it.toArgb()
                     }
@@ -83,7 +82,7 @@ fun SharedTransitionScope.PokemonItem(
                     .clip(CircleShape)
                     .fillMaxWidth(.8f)
                     .aspectRatio(1f)
-                    .padding(8.dp)
+                    .padding(top = 8.dp)
                     .pokemonSharedElement(
                         isLocalInspectionMode = LocalInspectionMode.current,
                         state = rememberSharedContentState(key = "item-image${pokemon.id}"),
@@ -96,15 +95,9 @@ fun SharedTransitionScope.PokemonItem(
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(horizontal = 2.dp),
+                modifier = Modifier.padding(bottom = 6.dp),
             )
         }
-    }
-}
-
-fun calculateDominantColor(drawable: Drawable, onDominantColorCalculated: (Color) -> Unit) {
-    getDominantColorFromDrawable(drawable) {
-        onDominantColorCalculated(it)
     }
 }
 

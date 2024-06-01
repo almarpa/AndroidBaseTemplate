@@ -86,7 +86,7 @@ fun SearchIcon(onIconClick: () -> Unit) {
 
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview("Drawer Top App Bar", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("Dark Drawer Search Top App Bar", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DrawerTopAppBarPreview() {
     TemplatePreviewTheme {

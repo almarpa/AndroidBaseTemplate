@@ -29,6 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
+import com.example.androidbasetemplate.common.utils.getDarkGradientByColor
+import com.example.androidbasetemplate.common.utils.getLightGradientByColor
 import com.example.androidbasetemplate.common.utils.pokemonSharedElement
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.entity.PokemonDetails
@@ -55,16 +57,19 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     navigateBack: () -> Unit = {},
 ) {
     val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
+    val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
 
     BackHandler { navigateBack() }
     PokemonDetailsContent(
         animatedVisibilityScope = animatedVisibilityScope,
-        settingsViewModel = settingsViewModel,
+        userAppTheme = userAppTheme,
         pokemon = pokemon,
         pokemonDetails = pokemonDetails,
         navigateBack = { navigateBack() }
-    ) {
-        teamViewModel.addPokemonToTeam(pokemon.apply { isTeamMember = it })
+    ) { isAddedToTeam ->
+        teamViewModel.addPokemonToTeam(pokemon = pokemon, isAdded = isAddedToTeam)
     }
 }
 
@@ -72,7 +77,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
 @Composable
 fun SharedTransitionScope.PokemonDetailsContent(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    settingsViewModel: SettingsViewModel,
+    userAppTheme: AppTheme,
     pokemonDetails: PokemonDetails?,
     pokemon: Pokemon,
     navigateBack: () -> Unit,
@@ -83,11 +88,12 @@ fun SharedTransitionScope.PokemonDetailsContent(
             .fillMaxSize()
             .background(
                 getBackgroundColor(
-                    settingsViewModel,
-                    pokemon.dominantColor?.let { Color(it) } ?: Color.White)
+                    userAppTheme = userAppTheme,
+                    dominantColor = pokemon.dominantColor
+                )
             ),
     ) {
-        PokemonDetailTopAppBar { navigateBack() }
+        PokemonDetailsTopAppBar { navigateBack() }
         PokemonCard(
             modifier = Modifier
                 .fillMaxSize()
@@ -112,7 +118,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
 
 @Preview("Pokemon Details TopAppBar")
 @Composable
-fun PokemonDetailTopAppBar(navigateBack: () -> Unit = {}) {
+fun PokemonDetailsTopAppBar(navigateBack: () -> Unit = {}) {
     DefaultTopAppBar(
         modifier = Modifier,
         title = R.string.empty_string
@@ -178,35 +184,19 @@ fun SharedTransitionScope.PokemonImageAnimation(
 }
 
 @Composable
-fun getBackgroundColor(settingsViewModel: SettingsViewModel, dominantColor: Color): Brush {
-    val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
-
+fun getBackgroundColor(userAppTheme: AppTheme, dominantColor: Int?): Brush {
+    val color = dominantColor?.let { Color(it) } ?: Color.White
     return when (userAppTheme) {
         AppTheme.AUTO -> if (isSystemInDarkTheme()) {
-            getDarkGradient(dominantColor)
+            getDarkGradientByColor(color)
         } else {
-            getLightGradient(dominantColor)
+            getLightGradientByColor(color)
         }
 
-        AppTheme.DARK -> getDarkGradient(dominantColor)
-        AppTheme.LIGHT -> getLightGradient(dominantColor)
+        AppTheme.DARK -> getDarkGradientByColor(color)
+        AppTheme.LIGHT -> getLightGradientByColor(color)
     }
 }
-
-private fun getLightGradient(dominantColor: Color) =
-    Brush.verticalGradient(
-        listOf(Color.White, dominantColor),
-        startY = 0.0f,
-        endY = 400.0f
-    )
-
-private fun getDarkGradient(dominantColor: Color) =
-    Brush.verticalGradient(
-        listOf(Color.Black, dominantColor),
-        startY = 0.0f,
-        endY = 400.0f
-    )
 
 
 @Composable

@@ -1,5 +1,6 @@
 package com.example.androidbasetemplate.ui.common.search
 
+import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -60,10 +61,12 @@ fun PokemonSearchBar(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon Search Bar")
+@Preview("Dark Pokemon Search Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PokemonSearchBarPreview() {
     TemplatePreviewTheme {
         PokemonSearchBar(
+            textSearched = "Char",
             onCancel = {},
             onSearch = {}
         )

@@ -46,15 +46,13 @@ fun TeamScreen(
         },
         content = {
             val uiState by teamViewModel.uiState.collectAsStateWithLifecycle()
-            TeamListContent(it, uiState) {
-                teamViewModel.getTeamList()
-            }
+            TeamListContent(it, uiState) { teamViewModel.getTeamList() }
         },
         bottomBar = {
             TemplateBottomAppBar(
                 drawerState = drawerState,
                 currentRoute = currentRoute,
-                navigationActions
+                navigationActions = navigationActions
             )
         }
     )
@@ -76,7 +74,7 @@ fun TeamListContent(
         }
 
         is TeamUiState.Success -> {
-            TeamList(paddingValues, pokemonList = uiState.teamList)
+            TeamList(paddingValues = paddingValues, pokemonList = uiState.teamList)
         }
     }
 }
