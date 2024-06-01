@@ -53,7 +53,7 @@ fun TeamList(paddingValues: PaddingValues, pokemonList: List<Pokemon>) {
                 MemberName(pokemon, dominantColorOrDefault)
 
                 if (pokemonList.last() != pokemon) {
-                    CustomSpacer(modifier = Modifier.background(dominantColorOrDefault), 40, 15)
+                    CustomSpacer(modifier = Modifier.background(dominantColorOrDefault), 30, 15)
                 }
             }
         }
