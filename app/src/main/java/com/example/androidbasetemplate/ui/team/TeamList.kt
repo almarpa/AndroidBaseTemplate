@@ -1,5 +1,6 @@
 package com.example.androidbasetemplate.ui.team
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,20 +21,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.Pokemon
+import com.example.androidbasetemplate.ui.common.mocks.getPokemonListMock
+import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
 import com.example.androidbasetemplate.ui.common.spacer.CustomSpacer
 import java.net.URLDecoder
 
 @Composable
-fun TeamList(paddingValues: PaddingValues, pokemonList: List<Pokemon>) {
+fun TeamList(pokemonList: List<Pokemon>) {
     LazyColumn(
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -106,5 +108,14 @@ fun MemberName(pokemon: Pokemon, dominantColorOrDefault: Color) {
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight(1000),
         )
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+@Preview("Team List")
+fun TeamListPreview() {
+    TemplatePreviewTheme {
+        TeamList(getPokemonListMock())
     }
 }

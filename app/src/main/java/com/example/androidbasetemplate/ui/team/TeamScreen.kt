@@ -1,17 +1,19 @@
 package com.example.androidbasetemplate.ui.team
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -74,8 +76,27 @@ fun TeamListContent(
         }
 
         is TeamUiState.Success -> {
-            TeamList(paddingValues = paddingValues, pokemonList = uiState.teamList)
+            Box(
+                modifier = Modifier.padding(paddingValues = paddingValues),
+                contentAlignment = Alignment.BottomEnd,
+            ) {
+                TeamList(pokemonList = uiState.teamList)
+                AddPokemonFloatingButton { /* TODO: navigationActions.navigateToCreatePokemon( )*/ }
+            }
         }
+    }
+}
+
+@Composable
+fun AddPokemonFloatingButton(onFloatingButtonPressed: () -> Unit) {
+    ExtendedFloatingActionButton(
+        modifier = Modifier.padding(16.dp),
+        onClick = { onFloatingButtonPressed() },
+        containerColor = MaterialTheme.colorScheme.primary
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add, contentDescription = null,
+        )
     }
 }
 
@@ -103,5 +124,14 @@ fun PokemonListContentPreview() {
             uiState = TeamUiState.Success(getPokemonListMock()),
             paddingValues = PaddingValues(),
         ) {}
+    }
+}
+
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Add Pokemon Floating Button")
+fun AddPokemonFloatingButton() {
+    TemplatePreviewTheme {
+        AddPokemonFloatingButton {}
     }
 }
