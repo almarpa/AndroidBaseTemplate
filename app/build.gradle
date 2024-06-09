@@ -1,10 +1,10 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
-    id 'org.jetbrains.kotlin.plugin.serialization'
-    id 'kotlin-parcelize'
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -52,7 +52,7 @@ android {
         dev {
             dimension "environment"
             applicationIdSuffix ".dev"
-            buildConfigField "String", "BASE_URL", '"http://10.0.2.2"'
+            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
         }
 
         itg {
@@ -79,7 +79,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 
     packagingOptions {
@@ -91,70 +91,53 @@ android {
 
 dependencies {
 
-    def composeVersion = '2.7.0'
+    // compose
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.constraintlayout)
 
-    implementation 'androidx.core:core-ktx:1.12.0'
+    // material
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.compose.material3)
 
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$composeVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:$composeVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$composeVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$composeVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$composeVersion"
+    api(libs.androidx.lifecycle)
 
-    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+    // navigation
+    api(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation)
+    implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation 'androidx.activity:activity-compose:1.8.0'
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    // di
+    implementation(libs.hilt.android)
+    ksp(libs.dagger.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.testing)
 
-    implementation 'androidx.room:room-common:2.6.1'
-    implementation 'androidx.room:room-ktx:2.6.1'
-    kapt "androidx.room:room-compiler:2.6.1"
+    // database
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.datastore)
 
+    // images
+    implementation(libs.palette)
+    implementation(libs.coil.kt)
 
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation "androidx.compose.material:material:1.6.7"
-    implementation "androidx.compose.material:material-icons-extended:1.6.7"
-    implementation 'androidx.compose.material3:material3-android:1.2.1'
-    implementation("androidx.compose.animation:animation:1.7.0-SNAPSHOT")
+    // unit test
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 
-    implementation 'androidx.hilt:hilt-navigation:1.2.0'
-    implementation "com.google.dagger:hilt-android:2.51.1"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.2.0'
-    kapt "com.google.dagger:dagger-compiler:2.51.1"
-    kapt "com.google.dagger:hilt-android-compiler:2.51"
-    kapt "com.google.dagger:hilt-compiler:2.51.1"
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-
-    implementation("io.coil-kt:coil-compose:2.5.0")
-
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-
-    implementation 'androidx.palette:palette-ktx:1.0.0'
-
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-
-    testImplementation 'junit:junit:4.13.2'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-
-    implementation platform('androidx.compose:compose-bom:2022.10.00')
-
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
+    // others
+    implementation(libs.converter.gson)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp.interceptor)
 }
