@@ -22,7 +22,7 @@ import com.example.androidbasetemplate.ui.theme.TemplateTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun TemplateBottomAppBar(
+fun BottomAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
     currentRoute: String,
     navigationActions: NavigationActions,
@@ -82,7 +82,7 @@ fun TemplateBottomAppBar(
 @Preview("Bottom App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun TemplateBottomAppBarPreview() {
     TemplateTheme {
-        TemplateBottomAppBar(
+        BottomAppBar(
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.PokemonList.route,
             navigationActions = NavigationActions(rememberNavController())

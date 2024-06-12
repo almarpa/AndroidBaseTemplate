@@ -1,4 +1,4 @@
-package com.example.androidbasetemplate.common.utils
+package com.example.androidbasetemplate.common.anim
 
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.Composable

@@ -17,8 +17,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.androidbasetemplate.common.anim.getLazyGridAnimation
 import com.example.androidbasetemplate.common.utils.applyIfCurrentLocalInspectionMode
-import com.example.androidbasetemplate.common.utils.getLazyGridAnimation
 import com.example.androidbasetemplate.domain.mock.PokemonUseCaseImplMock
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.lazylist.rememberLazyScrollState

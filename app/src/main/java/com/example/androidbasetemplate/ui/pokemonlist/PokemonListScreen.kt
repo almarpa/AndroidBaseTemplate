@@ -23,7 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.Pokemon
-import com.example.androidbasetemplate.ui.common.bottomappbar.TemplateBottomAppBar
+import com.example.androidbasetemplate.ui.common.bottomappbar.BottomAppBar
 import com.example.androidbasetemplate.ui.common.error.GenericRetryView
 import com.example.androidbasetemplate.ui.common.loader.FullScreenLoader
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonListMock
@@ -75,7 +75,7 @@ fun SharedTransitionScope.PokemonListScreen(
             }
         },
         bottomBar = {
-            TemplateBottomAppBar(
+            BottomAppBar(
                 drawerState = drawerState,
                 currentRoute = currentRoute,
                 navigationActions = navigationActions

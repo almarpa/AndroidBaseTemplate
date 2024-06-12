@@ -3,7 +3,6 @@ package com.example.androidbasetemplate.ui.common.bottomappbar
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -12,14 +11,12 @@ import androidx.navigation.navArgument
 import com.example.androidbasetemplate.entity.Pokemon.Companion.getPokemonFromJson
 import com.example.androidbasetemplate.ui.common.navigation.NavigationActions
 import com.example.androidbasetemplate.ui.common.navigation.Routes
-import com.example.androidbasetemplate.ui.team.TeamScreen
 import com.example.androidbasetemplate.ui.pokemonlist.PokemonListScreen
 import com.example.androidbasetemplate.ui.pokemonlist.details.PokemonDetailsScreen
+import com.example.androidbasetemplate.ui.team.TeamScreen
 
 context(SharedTransitionScope)
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class
-)
+@OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.bottomAppBarNavGraph(
     drawerState: DrawerState,
     currentRoute: String,
