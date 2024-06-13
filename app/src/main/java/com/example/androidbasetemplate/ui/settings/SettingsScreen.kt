@@ -45,12 +45,6 @@ fun SettingsScreen(
                 .wrapContentSize()
                 .fillMaxWidth(),
         ) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .height(1.dp)
-            )
             DarkModeSection(themeState) { isChecked ->
                 settingsViewModel.setUserAppTheme(isChecked)
             }
@@ -58,14 +52,14 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primary)
-                    .height(1.dp)
+                    .height(2.dp)
             )
             AboutSection()
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primary)
-                    .height(1.dp)
+                    .height(2.dp)
             )
         }
     }
