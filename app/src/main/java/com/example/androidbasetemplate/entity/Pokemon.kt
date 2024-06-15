@@ -1,6 +1,9 @@
 package com.example.androidbasetemplate.entity
 
 import android.os.Parcelable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -27,6 +30,9 @@ data class Pokemon(
     @ColumnInfo(name = "isTeamMember")
     var isTeamMember: Boolean = false,
 ) : Parcelable {
+
+    @Composable
+    fun getDominantColorOrDefault()  = dominantColor?.let { Color(it) } ?: MaterialTheme.colorScheme.primary
 
     companion object {
         fun String.getPokemonFromJson(): Pokemon =

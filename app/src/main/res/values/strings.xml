@@ -22,4 +22,5 @@
     <string name="common_cancel">Cancel</string>
     <string name="about">About</string>
     <string name="data_not_found">Pokemon Not Found</string>
+    <string name="common_save">Save</string>
 </resources>

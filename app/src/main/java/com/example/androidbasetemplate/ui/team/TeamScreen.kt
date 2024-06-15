@@ -3,23 +3,26 @@ package com.example.androidbasetemplate.ui.team
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.androidbasetemplate.R
+import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.bottomappbar.AnimatedBottomAppBar
 import com.example.androidbasetemplate.ui.common.error.GenericRetryView
 import com.example.androidbasetemplate.ui.common.loader.FullScreenLoader
@@ -44,17 +47,13 @@ fun TeamScreen(
     currentRoute: String,
     navigationActions: NavigationActions,
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var fabContainerState by remember { mutableStateOf<FabContainerState>(Fab) }
-
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             AnimatedDrawerTopAppBar(
                 isVisible = fabContainerState == Fab,
                 drawerState = drawerState,
                 title = R.string.team_title,
-                scrollBehavior = scrollBehavior
             )
         },
         content = { paddingValues ->
@@ -65,7 +64,7 @@ fun TeamScreen(
                 fabContainerState = fabContainerState,
                 onRetry = { teamViewModel.getTeamList() },
                 onFabContainerStateChanged = { fabContainerState = it },
-                onSavePokemon = { /* TODO: teamViewModel.savePokemon() */ }
+                onSavePokemon = { /* TODO: teamViewModel.savePokemon(it) */ }
             )
         },
         bottomBar = {
@@ -86,51 +85,37 @@ private fun TeamContent(
     fabContainerState: FabContainerState,
     onRetry: () -> Unit,
     onFabContainerStateChanged: (FabContainerState) -> Unit,
-    onSavePokemon: () -> Unit,
+    onSavePokemon: (Pokemon) -> Unit,
 ) {
-    Box(
-        modifier = Modifier.fillMaxHeight(),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        TeamList(paddingValues, uiState) { onRetry() }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .padding(paddingValues)
+            .align(Alignment.Center)
+        ) {
+            when (uiState) {
+                is TeamUiState.Loading -> {
+                    FullScreenLoader()
+                }
+
+                is TeamUiState.Error -> {
+                    GenericRetryView { onRetry() }
+                }
+
+                is TeamUiState.Success -> {
+                    TeamPager(pokemonList = uiState.teamList)
+                }
+            }
+        }
         AnimatedFabContainer(
-            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            modifier = Modifier
+                .padding(bottom = paddingValues.calculateBottomPadding())
+                .align(Alignment.BottomEnd),
             fabContainerState = fabContainerState,
             onFabContainerStateChanged = { onFabContainerStateChanged(it) },
-            onSave = { onSavePokemon() }
+            onSave = { onSavePokemon(it) }
         )
     }
 }
-
-@Composable
-fun TeamList(
-    paddingValues: PaddingValues,
-    uiState: TeamUiState,
-    onRetrySelected: () -> Unit,
-) {
-    when (uiState) {
-        is TeamUiState.Loading -> {
-            FullScreenLoader()
-        }
-
-        is TeamUiState.Error -> {
-            GenericRetryView { onRetrySelected() }
-        }
-
-        is TeamUiState.Success -> {
-            val paddingTop by remember { derivedStateOf { paddingValues.calculateTopPadding() } }
-            Box(
-                modifier = Modifier.padding(
-                    top = paddingTop,
-                    bottom = paddingValues.calculateBottomPadding(),
-                )
-            ) {
-                TeamList(pokemonList = uiState.teamList)
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

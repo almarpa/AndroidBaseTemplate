@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -94,43 +95,63 @@ fun AddPokemonContent(onCancel: () -> Unit, onSave: (Pokemon) -> Unit) {
             .padding(20.dp)
             .fillMaxSize(),
     ) {
-        IconButton(
-            modifier = Modifier.padding(bottom = 20.dp),
-            onClick = { onCancel() },
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
-        ) {
-            Icon(
-                modifier = Modifier.fillMaxSize(),
-                imageVector = Icons.Outlined.Cancel,
-                contentDescription = null
-            )
+        CancelIconButton { onCancel() }
+        PokemonForm { pokemon ->
+            onSave(pokemon)
         }
-        Column(
+    }
+}
+
+@Composable
+fun PokemonForm(onSave: (Pokemon) -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+
+        CustomSpacer(height = 40)
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = "Test 1",
+            onValueChange = {},
+            label = { Text(text = "Test 1") },
+        )
+        CustomSpacer(height = 16)
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = "Test 2",
+            onValueChange = {},
+            label = { Text(text = "Test 2") },
+        )
+        CustomSpacer(height = 16)
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = "Test 3",
+            onValueChange = {},
+            label = { Text(text = "Test 3") },
+        )
+        Button(
+            modifier = Modifier.padding(16.dp),
+            onClick = { onSave(Pokemon(1, "Test 1", "Test 2", Color.Red.toArgb())) },
+        ) {
+            Text(text = stringResource(R.string.common_save))
+        }
+    }
+}
+
+@Composable
+fun CancelIconButton(onCancel: () -> Unit) {
+    IconButton(
+        modifier = Modifier.padding(bottom = 20.dp),
+        onClick = { onCancel() },
+        colors = IconButtonDefaults.iconButtonColors(
+            contentColor = MaterialTheme.colorScheme.onSurface
+        )
+    ) {
+        Icon(
             modifier = Modifier.fillMaxSize(),
-        ) {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = "Test 1",
-                onValueChange = {},
-                label = { Text(text = "Test 1") },
-            )
-            CustomSpacer(height = 16)
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = "Test 2",
-                onValueChange = {},
-                label = { Text(text = "Test 2") },
-            )
-            CustomSpacer(height = 16)
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = "Test 3",
-                onValueChange = {},
-                label = { Text(text = "Test 3") },
-            )
-        }
+            imageVector = Icons.Outlined.Cancel,
+            contentDescription = null
+        )
     }
 }
 
@@ -160,6 +181,23 @@ fun AddPokemonFloatingButton(onFabButtonPressed: () -> Unit) {
     }
 }
 
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Fab Container Button", showBackground = true)
+@Preview(
+    "Dark Fab Container Button",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun AddPokemonFloatingButtonPreview() {
+    TemplatePreviewTheme {
+        AnimatedFabContainer(
+            fabContainerState = FabContainerState.Fab,
+            onFabContainerStateChanged = {},
+            onSave = {}
+        )
+    }
+}
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -173,24 +211,6 @@ fun FabContainerFullscreenPreview() {
     TemplatePreviewTheme {
         AnimatedFabContainer(
             fabContainerState = FabContainerState.Fullscreen,
-            onFabContainerStateChanged = {},
-            onSave = {}
-        )
-    }
-}
-
-@Composable
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Fab Container Button", showBackground = true)
-@Preview(
-    "Dark Fab Container Button",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-fun AddPokemonFloatingButtonPreview() {
-    TemplatePreviewTheme {
-        AnimatedFabContainer(
-            fabContainerState = FabContainerState.Fab,
             onFabContainerStateChanged = {},
             onSave = {}
         )
