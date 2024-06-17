@@ -31,7 +31,7 @@ fun GenericRetryView(
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.error_getting_pokemon_list),
+            text = stringResource(id = errorDescription),
         )
         Button(
             contentPadding = PaddingValues(16.dp),

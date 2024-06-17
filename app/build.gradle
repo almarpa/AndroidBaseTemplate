@@ -49,16 +49,16 @@ android {
 
     flavorDimensions "environment"
     productFlavors {
-        dev {
-            dimension "environment"
-            applicationIdSuffix ".dev"
-            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
-        }
-
         itg {
             dimension "environment"
             applicationIdSuffix ".itg"
             buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        }
+
+        local {
+            dimension "environment"
+            applicationIdSuffix ".local"
+            buildConfigField "String", "BASE_URL", '"http://10.0.2.2/"'
         }
 
         pre {

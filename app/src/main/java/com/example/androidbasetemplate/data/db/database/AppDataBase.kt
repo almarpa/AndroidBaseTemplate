@@ -9,7 +9,7 @@ import com.example.androidbasetemplate.data.db.database.dao.PokemonDetailsDao
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.entity.PokemonDetails
 
-@Database(entities = [Pokemon::class, PokemonDetails::class], version = 2)
+@Database(entities = [Pokemon::class, PokemonDetails::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
