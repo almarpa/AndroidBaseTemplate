@@ -1,5 +1,6 @@
 package com.example.androidbasetemplate.ui.team
 
+import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
@@ -7,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -34,7 +36,6 @@ import com.example.androidbasetemplate.R
 import com.example.androidbasetemplate.entity.Pokemon
 import com.example.androidbasetemplate.ui.common.mocks.getPokemonListMock
 import com.example.androidbasetemplate.ui.common.preview.TemplatePreviewTheme
-import com.example.androidbasetemplate.ui.common.spacer.CustomSpacer
 import java.net.URLDecoder
 import kotlin.math.absoluteValue
 
@@ -42,14 +43,18 @@ import kotlin.math.absoluteValue
 @Composable
 fun TeamPager(pokemonList: List<Pokemon>) {
     val pagerState = rememberPagerState(pageCount = { pokemonList.size })
+
     CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
         HorizontalPager(
             state = pagerState,
-            pageSpacing = 15.dp,
             contentPadding = PaddingValues(horizontal = 40.dp),
         ) { page ->
             pokemonList.getOrNull(page % (pokemonList.size))?.let { pokemon ->
-                MemberItem(pokemon = pokemon, pagerState = pagerState, page = page)
+                MemberItem(
+                    pokemon = pokemon,
+                    pagerState = pagerState,
+                    page = page
+                )
             }
         }
     }
@@ -61,6 +66,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
     Card(
         modifier = Modifier
             .wrapContentHeight()
+            .padding(20.dp)
             .graphicsLayer {
                 val pageOffset =
                     ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
@@ -70,14 +76,14 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
                     fraction = 1f - pageOffset.coerceIn(0f, 1f)
                 )
             },
-        shape = RoundedCornerShape(30.dp),
+        shape = AbsoluteCutCornerShape(40.dp),
         colors = CardDefaults.cardColors(containerColor = pokemon.getDominantColorOrDefault())
     ) {
         Column(
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             MemberImage(pokemon)
-            CustomSpacer(height = 30)
             MemberName(pokemon)
         }
     }
@@ -96,7 +102,7 @@ fun MemberImage(pokemon: Pokemon) {
         modifier = Modifier
             .clip(CircleShape)
             .aspectRatio(1f)
-            .padding(16.dp)
+            .padding(8.dp)
     )
 }
 
@@ -104,19 +110,21 @@ fun MemberImage(pokemon: Pokemon) {
 fun MemberName(pokemon: Pokemon) {
     Text(
         modifier = Modifier
-            .padding(horizontal = 5.dp, vertical = 10.dp)
+            .padding(horizontal = 15.dp, vertical = 40.dp)
             .fillMaxWidth(),
         text = pokemon.name.uppercase(),
         textAlign = TextAlign.Center,
         color = Color.White,
         style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight(1000),
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
     )
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-@Preview("Team Pager")
+@Preview("Team Pager", showBackground = true)
+@Preview("Dark Team Pager", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun TeamPagerPreview() {
     TemplatePreviewTheme {
         TeamPager(pokemonList = getPokemonListMock())

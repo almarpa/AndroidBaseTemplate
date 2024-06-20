@@ -32,7 +32,8 @@ data class Pokemon(
 ) : Parcelable {
 
     @Composable
-    fun getDominantColorOrDefault()  = dominantColor?.let { Color(it) } ?: MaterialTheme.colorScheme.primary
+    fun getDominantColorOrDefault() =
+        dominantColor?.let { Color(it) } ?: MaterialTheme.colorScheme.primary
 
     companion object {
         fun String.getPokemonFromJson(): Pokemon =

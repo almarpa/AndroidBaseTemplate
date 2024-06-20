@@ -1,10 +1,7 @@
 package com.example.androidbasetemplate.ui.team
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,10 +84,14 @@ private fun TeamContent(
     onFabContainerStateChanged: (FabContainerState) -> Unit,
     onSavePokemon: (Pokemon) -> Unit,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier
-            .padding(paddingValues)
-            .align(Alignment.Center)
+    Column(modifier = Modifier.fillMaxSize(),
+) {
+        val initialPaddingValues by remember { mutableStateOf(paddingValues) }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(initialPaddingValues)
+                .padding(top = 50.dp)
         ) {
             when (uiState) {
                 is TeamUiState.Loading -> {
@@ -106,14 +107,17 @@ private fun TeamContent(
                 }
             }
         }
-        AnimatedFabContainer(
-            modifier = Modifier
-                .padding(bottom = paddingValues.calculateBottomPadding())
-                .align(Alignment.BottomEnd),
-            fabContainerState = fabContainerState,
-            onFabContainerStateChanged = { onFabContainerStateChanged(it) },
-            onSave = { onSavePokemon(it) }
-        )
+        if (uiState !is TeamUiState.Error) {
+            AnimatedFabContainer(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.End)
+                    .padding(bottom = paddingValues.calculateBottomPadding()),
+                fabContainerState = fabContainerState,
+                onFabContainerStateChanged = { onFabContainerStateChanged(it) },
+                onSave = { onSavePokemon(it) }
+            )
+        }
     }
 }
 
