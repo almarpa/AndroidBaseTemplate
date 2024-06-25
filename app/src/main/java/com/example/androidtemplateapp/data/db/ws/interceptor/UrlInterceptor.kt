@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class UrlInterceptor : Interceptor {
 
     companion object {
-        private const val MOCK_SERVER_PORT = 3000
+        private const val LOCAL_SERVER_PORT = 3000
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -25,7 +25,7 @@ class UrlInterceptor : Interceptor {
                     if (BuildConfig.FLAVOR == "dev") {
                         scheme("http")
                         host(httpUrl.toUrl().toURI().host)
-                        port(MOCK_SERVER_PORT)
+                        port(LOCAL_SERVER_PORT)
                     } else {
                         scheme(httpUrl.scheme)
                         host(httpUrl.toUrl().toURI().host)

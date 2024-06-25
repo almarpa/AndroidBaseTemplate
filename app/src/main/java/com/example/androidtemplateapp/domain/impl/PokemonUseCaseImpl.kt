@@ -21,5 +21,8 @@ class PokemonUseCaseImpl(private val pokemonRepository: PokemonRepository) : Pok
 
     override suspend fun searchPokemonsByName(name: String): Flow<List<Pokemon>> =
         pokemonRepository.searchPokemonsByName(name)
-    
+
+    override suspend fun createTeamMember(pokemon: Pokemon) =
+        pokemonRepository.createTeamMember(pokemon)
+
 }

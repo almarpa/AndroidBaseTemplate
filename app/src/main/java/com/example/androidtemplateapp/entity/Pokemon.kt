@@ -4,9 +4,7 @@ import android.os.Parcelable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.example.androidtemplateapp.data.db.database.entity.PokemonEntity
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.parcelize.Parcelize
@@ -14,22 +12,37 @@ import kotlinx.serialization.Serializable
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-@Entity(tableName = "pokemon")
 @Parcelize
 @Serializable
 data class Pokemon(
-    @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int,
-    @ColumnInfo(name = "url")
     var url: String,
-    @ColumnInfo(name = "name")
     var name: String,
-    @ColumnInfo(name = "dominantColor")
     var dominantColor: Int? = null,
-    @ColumnInfo(name = "isTeamMember")
-    var isTeamMember: Boolean = false,
+    var isTeamMember: Boolean,
 ) : Parcelable {
+
+    constructor(
+        url: String,
+        name: String,
+        dominantColor: Int,
+    ) : this(
+        id = 0,
+        url = url,
+        name = name,
+        dominantColor = dominantColor,
+        isTeamMember = true
+    )
+
+    fun asEntity(): PokemonEntity {
+        return PokemonEntity(
+            id = id,
+            url = url,
+            name = name,
+            dominantColor = dominantColor,
+            isTeamMember = isTeamMember
+        )
+    }
 
     @Composable
     fun getDominantColorOrDefault() =

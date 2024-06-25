@@ -37,37 +37,43 @@ class PokemonRepositoryImpl(
         emit(getLocalTeamMembers())
     }
 
+    override suspend fun addPokemonToTeam(pokemon: Pokemon) {
+        withContext(Dispatchers.IO) {
+            pokemonDao.update(pokemon.asEntity())
+        }
+    }
+
     override suspend fun searchPokemonsByName(name: String) = flow {
         emit(searchLocalPokemonsByName(name))
     }
 
-    private suspend fun savePokemons(pokemonList: List<Pokemon>) {
+    override suspend fun createTeamMember(pokemon: Pokemon) {
         withContext(Dispatchers.IO) {
-            pokemonDao.insertAll(pokemonList)
+            pokemonDao.insert(pokemon.asEntity())
         }
     }
 
-    override suspend fun addPokemonToTeam(pokemon: Pokemon) {
+    private suspend fun savePokemons(pokemonList: List<Pokemon>) {
         withContext(Dispatchers.IO) {
-            pokemonDao.update(pokemon)
+            pokemonDao.insertAll(pokemonList.map { it.asEntity() })
         }
     }
 
     private suspend fun getLocalPokemonList(): List<Pokemon> {
         return withContext(Dispatchers.IO) {
-            pokemonDao.getAll()
+            pokemonDao.getAll().map { pokemonEntity -> pokemonEntity.asDomain() }
         }
     }
 
     private suspend fun getLocalTeamMembers(): List<Pokemon> {
         return withContext(Dispatchers.IO) {
-            pokemonDao.getAllTeamMembers()
+            pokemonDao.getAllTeamMembers().map { it.asDomain() }
         }
     }
 
     private suspend fun searchLocalPokemonsByName(name: String): List<Pokemon> {
         return withContext(Dispatchers.IO) {
-            pokemonDao.searchPokemonByName(name.lowercase())
+            pokemonDao.searchPokemonByName(name.lowercase()).map { it.asDomain() }
         }
     }
 }

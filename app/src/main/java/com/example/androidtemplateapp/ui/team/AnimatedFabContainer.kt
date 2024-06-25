@@ -5,8 +5,11 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -21,16 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
+import coil.compose.AsyncImage
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.common.utils.getDominantColorFromDrawable
 import com.example.androidtemplateapp.entity.Pokemon
@@ -114,19 +117,31 @@ fun AddPokemonFullscreen(onCancel: () -> Unit, onSave: (Pokemon) -> Unit) {
 @Composable
 fun PokemonForm(onSave: (Pokemon) -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         var pokemonImageUrl: String by remember { mutableStateOf("") }
         var pokemonName: String by remember { mutableStateOf("") }
-        val primaryColor = MaterialTheme.colorScheme.primary
-        var pokemonColor: Color by remember { mutableStateOf(primaryColor) }
+        var pokemonColor: Color by remember { mutableStateOf(Color.Transparent) }
+        var validImageURL: Boolean by remember { mutableStateOf(false) }
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            PokemonImage(pokemonImageUrl) { pokemonColor = it }
+            PokemonImage(
+                pokemonImageURL = pokemonImageUrl,
+                onError = {
+                    pokemonColor = Color.Transparent
+                    validImageURL = false
+                },
+                onSuccess = {
+                    pokemonColor = it
+                    validImageURL = true
+                }
+            )
             CustomSpacer(50)
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(.9f),
@@ -134,6 +149,9 @@ fun PokemonForm(onSave: (Pokemon) -> Unit) {
                 onValueChange = { pokemonImageUrl = it },
                 placeholder = { Text(text = stringResource(R.string.add_photo)) },
                 label = { Text(text = stringResource(R.string.pokemon_photo)) },
+                maxLines = 3,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                isError = !validImageURL && pokemonImageUrl.isNotEmpty(),
             )
             CustomSpacer(height = 30)
             OutlinedTextField(
@@ -142,15 +160,25 @@ fun PokemonForm(onSave: (Pokemon) -> Unit) {
                 onValueChange = { pokemonName = it },
                 placeholder = { Text(text = stringResource(R.string.insert_name)) },
                 label = { Text(text = stringResource(R.string.pokemon_name)) },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                maxLines = 1,
             )
         }
 
         Button(
             modifier = Modifier
-                .fillMaxWidth(.7f)
+                .fillMaxWidth(.6f)
                 .padding(bottom = 20.dp),
             enabled = checkFields(pokemonName, pokemonImageUrl),
-            onClick = { /* TODO : onSave(Pokemon(url = pokemonImageUrl, name = pokemonName)) */ },
+            onClick = {
+                onSave(
+                    Pokemon(
+                        url = pokemonImageUrl,
+                        name = pokemonName,
+                        dominantColor = pokemonColor.toArgb(),
+                    )
+                )
+            },
         ) {
             Text(
                 modifier = Modifier.padding(vertical = 6.dp),
@@ -161,8 +189,12 @@ fun PokemonForm(onSave: (Pokemon) -> Unit) {
 }
 
 @Composable
-fun PokemonImage(pokemonImage: String, dominantColor: (Color) -> Unit) {
-    var cardDominantColor by remember { mutableStateOf(Color.Transparent) }
+fun PokemonImage(
+    pokemonImageURL: String,
+    onError: () -> Unit,
+    onSuccess: (Color) -> Unit,
+) {
+    var cardDominantColor: Color by remember { mutableStateOf(Color.Transparent) }
     Card(
         modifier = Modifier
             .wrapContentHeight()
@@ -174,31 +206,31 @@ fun PokemonImage(pokemonImage: String, dominantColor: (Color) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(pokemonImage)
-                    .crossfade(true)
-                    .placeholder(R.drawable.add_a_photo)
-                    .build(),
-                contentDescription = "Member Image",
-                contentScale = ContentScale.FillBounds,
-                loading = { CircularProgressIndicator() },
-                onSuccess = { success ->
-                    getDominantColorFromDrawable(success.result.drawable) {
-                        cardDominantColor = it
-                        dominantColor(it)
-                    }
-                },
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth(.9f)
                     .aspectRatio(1f),
+                model = pokemonImageURL,
+                contentDescription = "Member Image",
+                contentScale = ContentScale.FillBounds,
+                error = painterResource(id = R.drawable.add_a_photo),
+                onError = {
+                    onError()
+                    cardDominantColor = Color.Transparent
+                },
+                onSuccess = { success ->
+                    getDominantColorFromDrawable(success.result.drawable) {
+                        cardDominantColor = it
+                        onSuccess(it)
+                    }
+                },
             )
         }
     }
 }
 
-fun checkFields(pokemonName: String, pokemonImageUrl: String) =
-    pokemonName.isNotEmpty() && pokemonImageUrl.isNotEmpty()
+fun checkFields(pokemonName: String, pokemonImageUrl: String?) =
+    !pokemonImageUrl.isNullOrEmpty() && pokemonName.isNotEmpty()
 
 @Composable
 fun CustomBackButton(onCancel: () -> Unit) {

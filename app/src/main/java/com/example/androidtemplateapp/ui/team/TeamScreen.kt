@@ -61,7 +61,10 @@ fun TeamScreen(
                 fabContainerState = fabContainerState,
                 onRetry = { teamViewModel.getTeamList() },
                 onFabContainerStateChanged = { fabContainerState = it },
-                onSavePokemon = { /* TODO: teamViewModel.savePokemon(it) */ }
+                onSavePokemon = {
+                    teamViewModel.createPokemonMemberAndRefresh(it)
+                    fabContainerState = Fab
+                }
             )
         },
         bottomBar = {
