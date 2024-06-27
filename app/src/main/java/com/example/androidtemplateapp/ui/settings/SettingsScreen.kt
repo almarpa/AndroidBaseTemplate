@@ -10,24 +10,22 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.enums.AppTheme
-import com.example.androidtemplateapp.ui.common.mocks.getSettingsViewModelMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
 
 @Composable
 fun SettingsScreen(
-    settingsViewModel: SettingsViewModel = hiltViewModel(),
+    themeState: AppTheme,
+    getUserAppTheme: () -> Unit,
+    onSetUserAppTheme: (Boolean) -> Unit,
     onBackPressed: () -> Unit,
 ) {
     Scaffold(
@@ -35,9 +33,7 @@ fun SettingsScreen(
             DefaultTopAppBar(title = R.string.settings_title) { onBackPressed() }
         }
     ) { paddingValues ->
-        val themeState by settingsViewModel.themeState.collectAsStateWithLifecycle()
-        LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
-
+        LaunchedEffect(Unit) { getUserAppTheme() }
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -45,9 +41,10 @@ fun SettingsScreen(
                 .wrapContentSize()
                 .fillMaxWidth(),
         ) {
-            DarkModeSection(themeState) { isChecked ->
-                settingsViewModel.setUserAppTheme(isChecked)
-            }
+            DarkModeSection(
+                themeState = themeState,
+                onChange = { isChecked -> onSetUserAppTheme(isChecked) },
+            )
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,7 +63,7 @@ fun SettingsScreen(
 }
 
 @Composable
-fun DarkModeSection(themeState: AppTheme, onSwitchChange: (Boolean) -> Unit) {
+fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,7 +78,7 @@ fun DarkModeSection(themeState: AppTheme, onSwitchChange: (Boolean) -> Unit) {
         )
         Switch(
             checked = themeState == AppTheme.DARK,
-            onCheckedChange = { onSwitchChange(it) },
+            onCheckedChange = { onChange(it) },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = MaterialTheme.colorScheme.primary
@@ -112,6 +109,11 @@ fun AboutSection() {
 @Composable
 fun SettingsScreenPreview() {
     TemplatePreviewTheme {
-        SettingsScreen(settingsViewModel = getSettingsViewModelMock()) {}
+        SettingsScreen(
+            themeState = AppTheme.DARK,
+            getUserAppTheme = {},
+            onSetUserAppTheme = {},
+            onBackPressed = {}
+        )
     }
 }

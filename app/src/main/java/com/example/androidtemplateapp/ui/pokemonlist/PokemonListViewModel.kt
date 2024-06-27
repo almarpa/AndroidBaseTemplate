@@ -32,8 +32,8 @@ class PokemonListViewModel @Inject constructor(
     private val _pokemonSearched = MutableLiveData("")
     val pokemonSearched: LiveData<String> = _pokemonSearched
 
-    var firstVisibleItemIdx: Int = 0
-    var firstVisibleItemOffset: Int = 0
+    private var _visibleItems: Pair<Int, Int> = 0 to 0
+    val visibleItems: Pair<Int, Int> = _visibleItems
 
     init {
         getPokemonList()
@@ -79,8 +79,11 @@ class PokemonListViewModel @Inject constructor(
         _pokemonSearched.value = ""
     }
 
+    fun setCurrentScrollPosition(visibleItems: Pair<Int, Int>) {
+        _visibleItems = visibleItems
+    }
+
     private fun resetCurrentScroll() {
-        firstVisibleItemIdx = 0
-        firstVisibleItemOffset = 0
+        _visibleItems = 0 to 0
     }
 }

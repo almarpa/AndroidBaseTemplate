@@ -21,5 +21,5 @@ class PokemonUseCaseImplMock : PokemonUseCase {
         return flowOf()
     }
 
-    override suspend fun createTeamMember(pokemon: Pokemon) {}
+    override suspend fun createPokemonMember(pokemon: Pokemon) {}
 }

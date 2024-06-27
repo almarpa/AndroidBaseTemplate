@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp.ui.pokemonlist
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -13,13 +14,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
@@ -27,7 +25,6 @@ import com.example.androidtemplateapp.ui.common.bottomappbar.BottomAppBar
 import com.example.androidtemplateapp.ui.common.error.GenericRetryView
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
-import com.example.androidtemplateapp.ui.common.mocks.getPokemonListViewModelMock
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.notfound.NotFoundView
@@ -39,10 +36,16 @@ import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
 @Composable
 fun SharedTransitionScope.PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,
+    uiState: PokemonListUiState,
+    getPokemonList: () -> Unit,
+    textSearched: String,
+    onSearch: (text: String) -> Unit,
+    onDismissSearch: () -> Unit,
+    visibleItems: Pair<Int, Int>,
+    onDisposeItems: (Pair<Int, Int>) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -54,22 +57,19 @@ fun SharedTransitionScope.PokemonListScreen(
                 title = R.string.pokedex_title,
                 scrollBehavior = scrollBehavior,
                 allowSearch = true,
-                textSearched = pokemonListViewModel.pokemonSearched.value ?: "",
-                onDismissSearch = {
-                    pokemonListViewModel.getPokemonList()
-                    pokemonListViewModel.removeCurrentSearch()
-                }
-            ) { pokemonSearch ->
-                pokemonListViewModel.onPokemonSearch(pokemonSearch)
-            }
+                textSearched = textSearched,
+                onDismissSearch = { onDismissSearch() },
+                onSearch = { text -> onSearch(text) }
+            )
         },
         content = { paddingValues ->
-            val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle(initialValue = PokemonListUiState.Loading)
             PokemonListContent(
                 modifier = Modifier.padding(paddingValues = paddingValues),
-                pokemonListViewModel = pokemonListViewModel,
                 animatedVisibilityScope = animatedVisibilityScope,
                 uiState = uiState,
+                getPokemonList = { getPokemonList() },
+                visibleItems = visibleItems,
+                onDisposeItems = onDisposeItems
             ) { pokemon ->
                 navigationActions.navigateToDetailNavGraph(pokemon)
             }
@@ -88,10 +88,12 @@ fun SharedTransitionScope.PokemonListScreen(
 @Composable
 fun SharedTransitionScope.PokemonListContent(
     modifier: Modifier = Modifier,
-    pokemonListViewModel: PokemonListViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
     uiState: PokemonListUiState,
-    navigateToPokemonDetail: (Pokemon) -> Unit = {},
+    getPokemonList: () -> Unit,
+    visibleItems: Pair<Int, Int>,
+    onDisposeItems: (Pair<Int, Int>) -> Unit,
+    navigateToPokemonDetail: (Pokemon) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -104,13 +106,14 @@ fun SharedTransitionScope.PokemonListContent(
             }
 
             is PokemonListUiState.Error -> {
-                GenericRetryView { pokemonListViewModel.getPokemonList() }
+                GenericRetryView { getPokemonList() }
             }
 
             is PokemonListUiState.Success -> {
                 PokemonList(
                     animatedVisibilityScope = animatedVisibilityScope,
-                    pokemonListViewModel = pokemonListViewModel,
+                    visibleItems = visibleItems,
+                    onDisposeItems = { onDisposeItems(it) },
                     pokemonList = uiState.pokemonList,
                 ) { onPokemonItemClick ->
                     navigateToPokemonDetail(onPokemonItemClick)
@@ -125,30 +128,23 @@ fun SharedTransitionScope.PokemonListContent(
 }
 
 @Composable
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon List Screen")
+@Preview("Pokemon List Screen", uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun PokemonListScreenPreview() {
     TemplatePreviewTheme {
         PokemonListScreen(
             animatedVisibilityScope = it,
-            pokemonListViewModel = getPokemonListViewModelMock(),
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.PokemonList.route,
-            navigationActions = NavigationActions(rememberNavController())
-        )
-    }
-}
-
-@Composable
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Pokemon List Content")
-fun PokemonListContentPreview() {
-    TemplatePreviewTheme {
-        PokemonListContent(
-            modifier = Modifier,
-            animatedVisibilityScope = it,
-            pokemonListViewModel = getPokemonListViewModelMock(),
-            uiState = PokemonListUiState.Success(getPokemonListMock())
+            navigationActions = NavigationActions(rememberNavController()),
+            uiState = PokemonListUiState.Success(getPokemonListMock()),
+            getPokemonList = {},
+            textSearched = "",
+            onDismissSearch = {},
+            onSearch = {},
+            visibleItems = 0 to 0,
+            onDisposeItems = {}
         )
     }
 }

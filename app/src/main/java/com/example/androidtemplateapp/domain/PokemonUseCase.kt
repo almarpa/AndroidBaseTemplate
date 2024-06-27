@@ -13,5 +13,5 @@ interface PokemonUseCase {
 
     suspend fun searchPokemonsByName(name: String): Flow<List<Pokemon>>
 
-    suspend fun createTeamMember(pokemon: Pokemon)
+    suspend fun createPokemonMember(pokemon: Pokemon)
 }

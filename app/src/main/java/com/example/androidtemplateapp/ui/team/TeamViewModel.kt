@@ -49,10 +49,10 @@ class TeamViewModel @Inject constructor(
         }
     }
 
-    fun createPokemonMemberAndRefresh(pokemon: Pokemon) {
+    fun createPokemonMemberAndReload(pokemon: Pokemon) {
         viewModelScope.launch(Dispatchers.IO) {
-            pokemonUseCase.createTeamMember(pokemon)
-            pokemonUseCase.getTeamMembers()
+            pokemonUseCase.createPokemonMember(pokemon)
+            getTeamList()
         }
     }
 }

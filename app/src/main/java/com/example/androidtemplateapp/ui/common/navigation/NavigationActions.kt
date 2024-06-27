@@ -52,4 +52,8 @@ class NavigationActions(private val navController: NavHostController) {
             "/pokemonDetail/${pokemon.pokemonToJSONString()}"
         )
     }
+
+    val navigateBack: () -> Unit = {
+        navController.navigateUp()
+    }
 }

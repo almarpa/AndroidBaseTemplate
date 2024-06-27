@@ -15,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
@@ -24,7 +22,6 @@ import com.example.androidtemplateapp.ui.common.bottomappbar.AnimatedBottomAppBa
 import com.example.androidtemplateapp.ui.common.error.GenericRetryView
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
-import com.example.androidtemplateapp.ui.common.mocks.getTeamViewModelMock
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
@@ -39,10 +36,12 @@ sealed interface FabContainerState {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeamScreen(
-    teamViewModel: TeamViewModel = hiltViewModel(),
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,
+    uiState: TeamUiState,
+    onRetry: () -> Unit,
+    onSave: (pokemon: Pokemon) -> Unit,
 ) {
     var fabContainerState by remember { mutableStateOf<FabContainerState>(Fab) }
     Scaffold(
@@ -54,16 +53,15 @@ fun TeamScreen(
             )
         },
         content = { paddingValues ->
-            val uiState by teamViewModel.uiState.collectAsStateWithLifecycle()
             TeamContent(
                 paddingValues = paddingValues,
                 uiState = uiState,
                 fabContainerState = fabContainerState,
-                onRetry = { teamViewModel.getTeamList() },
+                onRetry = { onRetry() },
                 onFabContainerStateChanged = { fabContainerState = it },
-                onSavePokemon = {
-                    teamViewModel.createPokemonMemberAndRefresh(it)
+                onSavePokemon = { pokemon ->
                     fabContainerState = Fab
+                    onSave(pokemon)
                 }
             )
         },
@@ -131,10 +129,12 @@ private fun TeamContent(
 fun TeamScreenPreview() {
     TemplatePreviewTheme {
         TeamScreen(
-            teamViewModel = getTeamViewModelMock(),
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.Team.route,
-            navigationActions = NavigationActions(rememberNavController())
+            navigationActions = NavigationActions(rememberNavController()),
+            uiState = TeamUiState.Success(getPokemonListMock()),
+            onRetry = {},
+            onSave = {}
         )
     }
 }

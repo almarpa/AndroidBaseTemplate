@@ -13,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,8 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidtemplateapp.R
@@ -36,41 +33,32 @@ import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
 import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
-import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsViewModelMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
-import com.example.androidtemplateapp.ui.common.mocks.getSettingsViewModelMock
-import com.example.androidtemplateapp.ui.common.mocks.getTeamViewModelMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
-import com.example.androidtemplateapp.ui.settings.SettingsViewModel
-import com.example.androidtemplateapp.ui.team.TeamViewModel
 import java.net.URLDecoder
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
-    teamViewModel: TeamViewModel = hiltViewModel(),
-    settingsViewModel: SettingsViewModel = hiltViewModel(),
     pokemon: Pokemon,
-    navigateBack: () -> Unit = {},
+    pokemonDetails: PokemonDetails?,
+    userAppTheme: AppTheme,
+    onAddTeamMember: (Pokemon, Boolean) -> Unit,
+    getUserAppTheme: () -> Unit,
+    navigateBack: () -> Unit,
 ) {
-    val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
-    val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
-
     BackHandler { navigateBack() }
+    LaunchedEffect(Unit) { getUserAppTheme() }
     PokemonDetailsContent(
         animatedVisibilityScope = animatedVisibilityScope,
         userAppTheme = userAppTheme,
         pokemon = pokemon,
         pokemonDetails = pokemonDetails,
+        onAddTeamMember = { isAddedToTeam -> onAddTeamMember(pokemon, isAddedToTeam) },
         navigateBack = { navigateBack() }
-    ) { isAddedToTeam ->
-        teamViewModel.addPokemonToTeam(pokemon = pokemon, isAdded = isAddedToTeam)
-    }
+    )
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -80,8 +68,8 @@ fun SharedTransitionScope.PokemonDetailsContent(
     userAppTheme: AppTheme,
     pokemonDetails: PokemonDetails?,
     pokemon: Pokemon,
+    onAddTeamMember: (Boolean) -> Unit,
     navigateBack: () -> Unit,
-    onMemberClick: (Boolean) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -109,8 +97,8 @@ fun SharedTransitionScope.PokemonDetailsContent(
                 .padding(16.dp),
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
-        ) {
-            onMemberClick(it)
+        ) { isAdded ->
+            onAddTeamMember(isAdded)
         }
         PokemonImageAnimation(animatedVisibilityScope, pokemon)
     }
@@ -231,10 +219,12 @@ fun PokemonDetailsScreenPreview() {
     TemplatePreviewTheme {
         PokemonDetailsScreen(
             animatedVisibilityScope = it,
-            pokemonDetailsViewModel = getPokemonDetailsViewModelMock(),
-            teamViewModel = getTeamViewModelMock(),
-            settingsViewModel = getSettingsViewModelMock(),
             pokemon = getPokemonMock(),
-        ) {}
+            pokemonDetails = getPokemonDetailsMock(),
+            onAddTeamMember = { _, _ -> },
+            navigateBack = {},
+            getUserAppTheme = {},
+            userAppTheme = AppTheme.DARK
+        )
     }
 }

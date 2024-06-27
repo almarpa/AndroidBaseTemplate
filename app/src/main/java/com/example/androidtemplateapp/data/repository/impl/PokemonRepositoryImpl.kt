@@ -47,7 +47,7 @@ class PokemonRepositoryImpl(
         emit(searchLocalPokemonsByName(name))
     }
 
-    override suspend fun createTeamMember(pokemon: Pokemon) {
+    override suspend fun createPokemonMember(pokemon: Pokemon) {
         withContext(Dispatchers.IO) {
             pokemonDao.insert(pokemon.asEntity())
         }

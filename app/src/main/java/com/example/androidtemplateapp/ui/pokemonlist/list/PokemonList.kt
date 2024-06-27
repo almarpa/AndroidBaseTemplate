@@ -16,23 +16,21 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.androidtemplateapp.common.anim.getLazyGridAnimation
 import com.example.androidtemplateapp.common.utils.applyIfCurrentLocalInspectionMode
-import com.example.androidtemplateapp.domain.mock.PokemonUseCaseImplMock
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.lazylist.rememberLazyScrollState
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
-import com.example.androidtemplateapp.ui.pokemonlist.PokemonListViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonList(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemonList: List<Pokemon>,
-    pokemonListViewModel: PokemonListViewModel = hiltViewModel(),
+    visibleItems: Pair<Int, Int>,
+    onDisposeItems: (Pair<Int, Int>) -> Unit = { },
     onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
     val currentOrientation = LocalConfiguration.current.orientation
@@ -40,7 +38,10 @@ fun SharedTransitionScope.PokemonList(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
-        state = rememberLazyScrollState(pokemonListViewModel),
+        state = rememberLazyScrollState(
+            visibleItems = visibleItems,
+            onDisposeItems = { onDisposeItems(it) }
+        ),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -73,7 +74,9 @@ fun PokemonListPreview() {
         PokemonList(
             animatedVisibilityScope = it,
             pokemonList = getPokemonListMock(),
-            pokemonListViewModel = PokemonListViewModel(PokemonUseCaseImplMock())
+            visibleItems = 0 to 0,
+            onPokemonItemClick = { },
+            onDisposeItems = { },
         )
     }
 }
