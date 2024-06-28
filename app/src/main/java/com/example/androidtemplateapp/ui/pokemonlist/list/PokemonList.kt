@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.androidtemplateapp.common.anim.getLazyGridAnimation
 import com.example.androidtemplateapp.common.utils.applyIfCurrentLocalInspectionMode
 import com.example.androidtemplateapp.entity.Pokemon
-import com.example.androidtemplateapp.ui.common.lazylist.rememberLazyScrollState
+import com.example.androidtemplateapp.ui.common.lazyscroll.rememberLazyScrollState
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
@@ -57,9 +57,8 @@ fun SharedTransitionScope.PokemonList(
                     },
                     animatedVisibilityScope = animatedVisibilityScope,
                     pokemon = pokemonList[index],
-                ) { pokemonItem ->
-                    onPokemonItemClick(pokemonItem)
-                }
+                    onPokemonItemClick = { onPokemonItemClick(it) },
+                )
                 CustomSpacer(height = 16, width = 16)
             }
         }
@@ -69,6 +68,7 @@ fun SharedTransitionScope.PokemonList(
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon List")
+@Preview("Pokemon List", uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun PokemonListPreview() {
     TemplatePreviewTheme {
         PokemonList(

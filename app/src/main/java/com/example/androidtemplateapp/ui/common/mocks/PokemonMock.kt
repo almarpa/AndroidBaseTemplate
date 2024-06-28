@@ -1,27 +1,8 @@
 package com.example.androidtemplateapp.ui.common.mocks
 
-import androidx.lifecycle.SavedStateHandle
-import com.example.androidtemplateapp.domain.mock.PokemonDetailsUseCaseImplMock
-import com.example.androidtemplateapp.domain.mock.PokemonUseCaseImplMock
-import com.example.androidtemplateapp.domain.mock.UserDataUseCaseImplMock
 import com.example.androidtemplateapp.entity.*
 import com.example.androidtemplateapp.entity.enums.PokemonTypeEnum
 import com.example.androidtemplateapp.entity.enums.StatNameEnum
-import com.example.androidtemplateapp.ui.pokemonlist.PokemonListViewModel
-import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsViewModel
-import com.example.androidtemplateapp.ui.settings.SettingsViewModel
-import com.example.androidtemplateapp.ui.team.TeamViewModel
-
-
-/****************************
- *******   VIEWMODEL  *******
- ***************************/
-fun getPokemonListViewModelMock() = PokemonListViewModel(PokemonUseCaseImplMock())
-fun getSettingsViewModelMock() = SettingsViewModel(UserDataUseCaseImplMock())
-fun getPokemonDetailsViewModelMock() =
-    PokemonDetailsViewModel(PokemonDetailsUseCaseImplMock(), SavedStateHandle())
-
-fun getTeamViewModelMock() = TeamViewModel(PokemonUseCaseImplMock())
 
 /****************************
  *********   DATA   *********

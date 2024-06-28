@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.ui.common.lazylist
+package com.example.androidtemplateapp.ui.common.lazyscroll
 
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable

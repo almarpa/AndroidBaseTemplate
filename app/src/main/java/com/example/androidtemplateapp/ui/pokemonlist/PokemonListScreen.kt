@@ -40,7 +40,7 @@ fun SharedTransitionScope.PokemonListScreen(
     currentRoute: String,
     navigationActions: NavigationActions,
     uiState: PokemonListUiState,
-    getPokemonList: () -> Unit,
+    onGetPokemonList: () -> Unit,
     textSearched: String,
     onSearch: (text: String) -> Unit,
     onDismissSearch: () -> Unit,
@@ -67,12 +67,11 @@ fun SharedTransitionScope.PokemonListScreen(
                 modifier = Modifier.padding(paddingValues = paddingValues),
                 animatedVisibilityScope = animatedVisibilityScope,
                 uiState = uiState,
-                getPokemonList = { getPokemonList() },
+                getPokemonList = { onGetPokemonList() },
                 visibleItems = visibleItems,
-                onDisposeItems = onDisposeItems
-            ) { pokemon ->
-                navigationActions.navigateToDetailNavGraph(pokemon)
-            }
+                onDisposeItems = onDisposeItems,
+                onNavigateToPokemonDetail = { navigationActions.navigateToDetailNavGraph(it) }
+            )
         },
         bottomBar = {
             BottomAppBar(
@@ -93,7 +92,7 @@ fun SharedTransitionScope.PokemonListContent(
     getPokemonList: () -> Unit,
     visibleItems: Pair<Int, Int>,
     onDisposeItems: (Pair<Int, Int>) -> Unit,
-    navigateToPokemonDetail: (Pokemon) -> Unit,
+    onNavigateToPokemonDetail: (Pokemon) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -115,9 +114,8 @@ fun SharedTransitionScope.PokemonListContent(
                     visibleItems = visibleItems,
                     onDisposeItems = { onDisposeItems(it) },
                     pokemonList = uiState.pokemonList,
-                ) { onPokemonItemClick ->
-                    navigateToPokemonDetail(onPokemonItemClick)
-                }
+                    onPokemonItemClick = { onNavigateToPokemonDetail(it) }
+                )
             }
 
             is PokemonListUiState.NotFound -> {
@@ -139,7 +137,7 @@ fun PokemonListScreenPreview() {
             currentRoute = Routes.PokemonList.route,
             navigationActions = NavigationActions(rememberNavController()),
             uiState = PokemonListUiState.Success(getPokemonListMock()),
-            getPokemonList = {},
+            onGetPokemonList = {},
             textSearched = "",
             onDismissSearch = {},
             onSearch = {},

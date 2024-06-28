@@ -14,6 +14,7 @@ fun NavGraphBuilder.drawerNavGraph(navigationActions: NavigationActions) {
     composable(Routes.Settings.route) {
         val settingsViewModel: SettingsViewModel = hiltViewModel()
         val themeState by settingsViewModel.themeState.collectAsStateWithLifecycle()
+        
         SettingsScreen(
             themeState = themeState,
             getUserAppTheme = { settingsViewModel.getUserAppTheme() },

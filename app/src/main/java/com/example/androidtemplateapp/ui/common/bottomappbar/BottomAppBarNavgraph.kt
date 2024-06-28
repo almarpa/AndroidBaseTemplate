@@ -40,7 +40,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             currentRoute = currentRoute,
             navigationActions = navigationActions,
             uiState = uiState,
-            getPokemonList = { pokemonListViewModel.getPokemonList() },
+            onGetPokemonList = { pokemonListViewModel.getPokemonList() },
             textSearched = pokemonListViewModel.pokemonSearched.value ?: "",
             onSearch = { text -> pokemonListViewModel.onPokemonSearch(text) },
             onDismissSearch = {
@@ -54,6 +54,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
     composable(Routes.Team.route) {
         val teamViewModel: TeamViewModel = hiltViewModel()
         val uiState: TeamUiState by teamViewModel.uiState.collectAsStateWithLifecycle()
+
         TeamScreen(
             drawerState = drawerState,
             currentRoute = currentRoute,
