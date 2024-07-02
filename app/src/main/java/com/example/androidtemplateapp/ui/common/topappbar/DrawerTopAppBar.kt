@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
-import com.example.androidtemplateapp.ui.common.search.PokemonSearchBar
+import com.example.androidtemplateapp.ui.common.search.CustomSearchBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +58,7 @@ fun DrawerTopAppBar(
             ),
         )
         if (isSearchBarVisible) {
-            PokemonSearchBar(
+            CustomSearchBar(
                 textSearched = textSearched,
                 onSearch = {
                     onSearch(it)

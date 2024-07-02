@@ -25,6 +25,7 @@ androidxTestJunit = "1.1.5"
 mockito = "5.11.0"
 mockito-kotlin = "5.2.1"
 androidxComposeConstraintLayout = "1.0.1"
+appcompat = "1.7.0"
 
 [libraries]
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidxCompose" }
@@ -66,6 +67,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

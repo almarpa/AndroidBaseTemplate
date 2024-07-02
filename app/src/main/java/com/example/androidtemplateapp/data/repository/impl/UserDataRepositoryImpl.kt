@@ -8,7 +8,15 @@ import kotlinx.coroutines.flow.Flow
 class UserDataRepositoryImpl(private val dataStoreSource: DataStoreSource) : UserDataRepository {
 
     private companion object {
+        const val USER_APP_LOCALE = "user_app_locale"
         const val USER_APP_THEME = "user_app_theme"
+    }
+
+    override suspend fun getAppLocale(): Flow<String?> =
+        dataStoreSource.getString(USER_APP_LOCALE)
+
+    override suspend fun setAppLocale(locale: String) {
+        dataStoreSource.putString(USER_APP_LOCALE, locale)
     }
 
     override suspend fun getAppTheme(): Flow<String?> =

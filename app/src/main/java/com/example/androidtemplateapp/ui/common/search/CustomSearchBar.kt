@@ -26,7 +26,7 @@ import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PokemonSearchBar(
+fun CustomSearchBar(
     textSearched: String = "",
     onSearch: (String) -> Unit,
     onCancel: () -> Unit,
@@ -60,12 +60,12 @@ fun PokemonSearchBar(
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Pokemon Search Bar")
-@Preview("Dark Pokemon Search Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("Custom Search Bar")
+@Preview("Dark Custom Search Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PokemonSearchBarPreview() {
+fun CustomSearchBarPreview() {
     TemplatePreviewTheme {
-        PokemonSearchBar(
+        CustomSearchBar(
             textSearched = "Char",
             onCancel = {},
             onSearch = {}

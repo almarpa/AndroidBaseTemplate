@@ -1,8 +1,8 @@
 package com.example.androidtemplateapp
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,13 +13,13 @@ import com.example.androidtemplateapp.ui.theme.TemplateTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val themeUserSetting by settingsViewModel.themeState.collectAsStateWithLifecycle()
+            val themeUserSetting by settingsViewModel.userTheme.collectAsStateWithLifecycle()
 
             LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
             TemplateTheme(themeUserSetting) {

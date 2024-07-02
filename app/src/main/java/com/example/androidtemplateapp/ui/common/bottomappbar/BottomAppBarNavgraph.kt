@@ -82,7 +82,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             val settingsViewModel: SettingsViewModel = hiltViewModel()
 
             val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
-            val userAppTheme by settingsViewModel.themeState.collectAsStateWithLifecycle()
+            val userAppTheme by settingsViewModel.userTheme.collectAsStateWithLifecycle()
             PokemonDetailsScreen(
                 animatedVisibilityScope = this,
                 pokemon = pokemon.getPokemonFromJson(),

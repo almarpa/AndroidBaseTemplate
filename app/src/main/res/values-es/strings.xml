@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">TemplateApp</string>
+    <string name="toolbar_title">TemplateApp</string>
+    <string name="pokedex_title">Pokedex</string>
+    <string name="pokemon_list_title">Listadp</string>
+    <string name="team_title">Equipo</string>
+    <string name="settings_title">Ajustes</string>
+    <string name="pokemon_detail_title">Detalle</string>
+    <string name="search_title">Búsqueda</string>
+    <string name="menu_drawer_btn">Drawer menu</string>
+    <string name="retry_btn">Reintentar</string>
+    <string name="error_getting_pokemon_list">No se ha podido obtener la información</string>
+    <string name="stat_hp">HP</string>
+    <string name="stat_attack">Atk</string>
+    <string name="stat_defense">Def</string>
+    <string name="stat_speed">Spd</string>
+    <string name="stat_special_attack">S. Atk</string>
+    <string name="stat_special_defense">S. Def</string>
+    <string name="empty_string">""</string>
+    <string name="dark_mode">Modo oscuro</string>
+    <string name="common_accept">Aceptar</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="about">Sobre</string>
+    <string name="data_not_found">Pokemon no encontrado</string>
+    <string name="common_save">Guardar</string>
+    <string name="pokemon_photo">Foto</string>
+    <string name="pokemon_name">Nombre</string>
+    <string name="insert_name">Añadir nombre</string>
+    <string name="add_photo">Añadir URL de la imagen</string>
+    <string name="language_english">Inglés</string>
+    <string name="language_spanish">Español</string>
+    <string name="language">Idioma</string>
+</resources>

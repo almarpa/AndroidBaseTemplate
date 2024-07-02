@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp.ui.common.drawer
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,12 +14,17 @@ import com.example.androidtemplateapp.ui.settings.SettingsViewModel
 fun NavGraphBuilder.drawerNavGraph(navigationActions: NavigationActions) {
     composable(Routes.Settings.route) {
         val settingsViewModel: SettingsViewModel = hiltViewModel()
-        val themeState by settingsViewModel.themeState.collectAsStateWithLifecycle()
-        
+        val uiState by settingsViewModel.settingsUiState.collectAsStateWithLifecycle()
+
+        LaunchedEffect(Unit) {
+            settingsViewModel.getUserAppData()
+        }
+
         SettingsScreen(
-            themeState = themeState,
-            getUserAppTheme = { settingsViewModel.getUserAppTheme() },
-            onSetUserAppTheme = { isChecked -> settingsViewModel.setUserAppTheme(isChecked) },
+            uiState = uiState,
+            locales = settingsViewModel.locales,
+            onLanguageChange = { settingsViewModel.setUserAppLocale(it) },
+            onThemeChanged = { isChecked -> settingsViewModel.setUserAppTheme(isChecked) },
             onBackPressed = { navigationActions.navigateBack() },
         )
     }

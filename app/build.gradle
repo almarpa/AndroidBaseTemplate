@@ -113,6 +113,7 @@ dependencies {
 
     // di
     implementation(libs.hilt.android)
+    implementation libs.androidx.appcompat
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
