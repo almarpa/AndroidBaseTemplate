@@ -3,8 +3,10 @@ package com.example.androidtemplateapp.common.utils
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.core.os.LocaleListCompat
 import androidx.palette.graphics.Palette
 
 fun getDominantColorFromDrawable(drawable: Drawable, onFinish: (Color) -> Unit) {
@@ -30,3 +32,7 @@ fun getDarkGradientByColor(dominantColor: Color) =
         startY = 0.0f,
         endY = 400.0f
     )
+
+fun setAppLanguage(locale: String?) {
+    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locale))
+}

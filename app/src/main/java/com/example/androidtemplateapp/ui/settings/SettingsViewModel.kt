@@ -16,20 +16,20 @@ import javax.inject.Inject
 sealed interface SettingsUiState {
     data object Loading : SettingsUiState
     data class Success(val userData: UserData) : SettingsUiState
-    data object Error : SettingsUiState
 }
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDataUseCase) :
     ViewModel() {
 
-    private val _locales: Map<String, Int> = getAppLocales()
-    val locales: Map<String, Int> = _locales
-
     private val _userLocale: MutableStateFlow<String?> = MutableStateFlow(null)
 
     private val _userTheme = MutableStateFlow(AppTheme.AUTO)
     val userTheme: StateFlow<AppTheme> = _userTheme
+
+    init {
+        getUserAppData()
+    }
 
     val settingsUiState = combine(
         _userLocale,
@@ -40,11 +40,14 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
         } ?: SettingsUiState.Loading
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(5000L),
         initialValue = SettingsUiState.Loading
     )
 
-    fun getUserAppData() {
+    private val _locales: Map<String, Int> = getAppLocales()
+    val locales: Map<String, Int> = _locales
+
+    private fun getUserAppData() {
         getUserAppLocale()
         getUserAppTheme()
     }

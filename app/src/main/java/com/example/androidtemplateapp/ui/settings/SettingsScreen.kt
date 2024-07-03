@@ -1,6 +1,5 @@
 package com.example.androidtemplateapp.ui.settings
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,8 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.os.LocaleListCompat
+import androidx.compose.ui.unit.sp
 import com.example.androidtemplateapp.R
+import com.example.androidtemplateapp.common.utils.setAppLanguage
 import com.example.androidtemplateapp.entity.UserData
 import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.entity.enums.LocaleEnum
@@ -30,7 +30,7 @@ fun SettingsScreen(
     uiState: SettingsUiState,
     locales: Map<String, Int>,
     onLanguageChange: (String) -> Unit,
-    onThemeChanged: (Boolean) -> Unit,
+    onThemeChange: (Boolean) -> Unit,
     onBackPressed: () -> Unit,
 ) {
     Scaffold(
@@ -47,40 +47,76 @@ fun SettingsScreen(
                         .wrapContentSize()
                         .fillMaxWidth(),
                 ) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.primary)
+                            .height(1.dp)
+                    )
                     LanguagesSection(
                         languages = locales,
                         currentLanguage = locales[uiState.userData.locale]!!,
-                        onLanguageChange = { onLanguageChange(it) }
+                        onLanguageChange = {
+                            onLanguageChange(it)
+                            setAppLanguage(it)
+                        }
                     )
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.primary)
-                            .height(2.dp)
+                            .height(1.dp)
                     )
                     DarkModeSection(
                         themeState = uiState.userData.theme,
-                        onChange = { isChecked -> onThemeChanged(isChecked) },
+                        onChange = { isChecked -> onThemeChange(isChecked) },
                     )
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.primary)
-                            .height(2.dp)
+                            .height(1.dp)
                     )
                     AboutSection()
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.primary)
-                            .height(2.dp)
+                            .height(1.dp)
                     )
                 }
             }
 
-            SettingsUiState.Error -> {}// TODO()
-            SettingsUiState.Loading -> {}// TODO()
+            else -> {
+                // Do nothing
+            }
         }
+    }
+}
+
+@Composable
+fun LanguagesSection(
+    languages: Map<String, Int>,
+    currentLanguage: Int,
+    onLanguageChange: (String) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 32.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            modifier = Modifier.padding(end = 40.dp),
+            text = stringResource(R.string.language),
+            style = MaterialTheme.typography.titleMedium,
+            fontSize = 18.sp
+        )
+        CustomDropdown(
+            items = languages,
+            selected = currentLanguage,
+            onClickItem = { selection -> onLanguageChange(selection) }
+        )
     }
 }
 
@@ -89,14 +125,15 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp),
+            .padding(vertical = 8.dp, horizontal = 32.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             modifier = Modifier.padding(vertical = 16.dp),
             text = stringResource(R.string.dark_mode),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            fontSize = 18.sp
         )
         Switch(
             checked = themeState == AppTheme.DARK,
@@ -110,48 +147,19 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
 }
 
 @Composable
-fun LanguagesSection(
-    languages: Map<String, Int>,
-    currentLanguage: Int,
-    onLanguageChange: (String) -> Unit,
-) {
-    val availableLanguages = languages.mapValues { stringResource(it.value) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        CustomDropdown(
-            items = availableLanguages,
-            selected = stringResource(id = currentLanguage),
-            onClickItem = { selection ->
-                setAppLanguage(selection)
-                onLanguageChange(selection)
-            }
-        )
-    }
-}
-
-fun setAppLanguage(locale: String?) {
-    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locale))
-}
-
-@Composable
 fun AboutSection() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp),
+            .padding(vertical = 8.dp, horizontal = 32.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             modifier = Modifier.padding(vertical = 16.dp),
             text = stringResource(R.string.about),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            fontSize = 18.sp
         )
     }
 }
@@ -168,9 +176,9 @@ fun SettingsScreenPreview() {
                     theme = AppTheme.DARK
                 )
             ),
-            onThemeChanged = {},
+            onThemeChange = {},
             onBackPressed = {},
-            locales = mapOf(),
+            locales = mapOf(LocaleEnum.EN.name to R.string.language_english),
             onLanguageChange = {}
         )
     }
