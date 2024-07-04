@@ -40,6 +40,8 @@ fun SettingsScreen(
     ) { paddingValues ->
         when (uiState) {
             is SettingsUiState.Success -> {
+                val currentLanguage =
+                    locales.getOrDefault(uiState.userData.locale, R.string.language_english)
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
@@ -55,7 +57,7 @@ fun SettingsScreen(
                     )
                     LanguagesSection(
                         languages = locales,
-                        currentLanguage = locales[uiState.userData.locale]!!,
+                        currentLanguage = currentLanguage,
                         onLanguageChange = {
                             onLanguageChange(it)
                             setAppLanguage(it)
@@ -101,22 +103,22 @@ fun LanguagesSection(
     onLanguageChange: (String) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 32.dp),
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            modifier = Modifier.padding(end = 40.dp),
+            modifier = Modifier.weight(1f),
             text = stringResource(R.string.language),
             style = MaterialTheme.typography.titleMedium,
             fontSize = 18.sp
         )
-        CustomDropdown(
-            items = languages,
-            selected = currentLanguage,
-            onClickItem = { selection -> onLanguageChange(selection) }
-        )
+        Row(modifier = Modifier.weight(1f)) {
+            CustomDropdown(
+                items = languages,
+                selected = currentLanguage,
+                onClickItem = { selection -> onLanguageChange(selection) }
+            )
+        }
     }
 }
 
@@ -125,7 +127,7 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 32.dp),
+            .padding(vertical = 16.dp, horizontal = 32.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -151,7 +153,7 @@ fun AboutSection() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 32.dp),
+            .padding(vertical = 16.dp, horizontal = 32.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

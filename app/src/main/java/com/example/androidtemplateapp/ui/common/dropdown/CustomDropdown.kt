@@ -35,8 +35,7 @@ fun CustomDropdown(
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
-            modifier = Modifier
-                .menuAnchor(),
+            modifier = Modifier.menuAnchor(),
             readOnly = true,
             value = stringResource(id = selected),
             onValueChange = { },
