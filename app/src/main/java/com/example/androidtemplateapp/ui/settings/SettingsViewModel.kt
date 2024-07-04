@@ -27,10 +27,6 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     private val _userTheme = MutableStateFlow(AppTheme.AUTO)
     val userTheme: StateFlow<AppTheme> = _userTheme
 
-    init {
-        getUserAppData()
-    }
-
     val settingsUiState = combine(
         _userLocale,
         _userTheme,
@@ -47,6 +43,10 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     private val _locales: Map<String, Int> = getAppLocales()
     val locales: Map<String, Int> = _locales
 
+    init {
+        getUserAppData()
+    }
+    
     private fun getUserAppData() {
         getUserAppLocale()
         getUserAppTheme()

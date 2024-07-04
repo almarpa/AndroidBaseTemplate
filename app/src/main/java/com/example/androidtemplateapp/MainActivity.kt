@@ -3,7 +3,6 @@ package com.example.androidtemplateapp
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,7 +20,6 @@ class MainActivity : AppCompatActivity() {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             val themeUserSetting by settingsViewModel.userTheme.collectAsStateWithLifecycle()
 
-            LaunchedEffect(Unit) { settingsViewModel.getUserAppTheme() }
             TemplateTheme(themeUserSetting) {
                 TemplateApp()
             }

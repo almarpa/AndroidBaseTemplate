@@ -22,7 +22,7 @@ import com.example.androidtemplateapp.R
 fun DefaultTopAppBar(
     modifier: Modifier = Modifier,
     title: Int = R.string.settings_title,
-    onBackButton: () -> Unit = {},
+    onBackPressed: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -34,7 +34,7 @@ fun DefaultTopAppBar(
         },
         navigationIcon = {
             IconButton(
-                onClick = { onBackButton.invoke() }
+                onClick = { onBackPressed.invoke() }
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,

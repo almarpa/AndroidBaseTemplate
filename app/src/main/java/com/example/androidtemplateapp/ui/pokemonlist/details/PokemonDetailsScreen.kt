@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,18 +45,16 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     pokemonDetails: PokemonDetails?,
     userAppTheme: AppTheme,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
-    getUserAppTheme: () -> Unit,
-    navigateBack: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
-    BackHandler { navigateBack() }
-    LaunchedEffect(Unit) { getUserAppTheme() }
+    BackHandler { onBackPressed() }
     PokemonDetailsContent(
         animatedVisibilityScope = animatedVisibilityScope,
         userAppTheme = userAppTheme,
         pokemon = pokemon,
         pokemonDetails = pokemonDetails,
         onAddTeamMember = { isAddedToTeam -> onAddTeamMember(pokemon, isAddedToTeam) },
-        navigateBack = { navigateBack() }
+        onBackPressed = { onBackPressed() }
     )
 }
 
@@ -69,7 +66,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
     pokemonDetails: PokemonDetails?,
     pokemon: Pokemon,
     onAddTeamMember: (Boolean) -> Unit,
-    navigateBack: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -81,7 +78,7 @@ fun SharedTransitionScope.PokemonDetailsContent(
                 )
             ),
     ) {
-        PokemonDetailsTopAppBar { navigateBack() }
+        PokemonDetailsTopAppBar { onBackPressed() }
         PokemonCard(
             modifier = Modifier
                 .fillMaxSize()
@@ -106,12 +103,12 @@ fun SharedTransitionScope.PokemonDetailsContent(
 
 @Preview("Pokemon Details TopAppBar")
 @Composable
-fun PokemonDetailsTopAppBar(navigateBack: () -> Unit = {}) {
+fun PokemonDetailsTopAppBar(onBackPressed: () -> Unit = {}) {
     DefaultTopAppBar(
         modifier = Modifier,
         title = R.string.empty_string
     ) {
-        navigateBack()
+        onBackPressed()
     }
 }
 
@@ -222,8 +219,7 @@ fun PokemonDetailsScreenPreview() {
             pokemon = getPokemonMock(),
             pokemonDetails = getPokemonDetailsMock(),
             onAddTeamMember = { _, _ -> },
-            navigateBack = {},
-            getUserAppTheme = {},
+            onBackPressed = {},
             userAppTheme = AppTheme.DARK
         )
     }
