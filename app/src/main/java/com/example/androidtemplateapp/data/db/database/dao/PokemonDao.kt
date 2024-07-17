@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp.data.db.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.example.androidtemplateapp.data.db.database.entity.PokemonEntity
 
@@ -10,8 +11,8 @@ interface PokemonDao {
     suspend fun get(id: String): PokemonEntity?
 
     @Query("SELECT * from pokemon")
-    suspend fun getAll(): List<PokemonEntity>
-
+    fun getAllPaged(): PagingSource<Int, PokemonEntity>
+    
     @Query("SELECT * from pokemon WHERE isTeamMember")
     suspend fun getAllTeamMembers(): List<PokemonEntity>
 

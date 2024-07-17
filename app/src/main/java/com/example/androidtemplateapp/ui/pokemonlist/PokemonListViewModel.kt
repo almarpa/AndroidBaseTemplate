@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.androidtemplateapp.domain.PokemonUseCase
 import com.example.androidtemplateapp.entity.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -26,6 +29,10 @@ class PokemonListViewModel @Inject constructor(
     private val pokemonUseCase: PokemonUseCase,
 ) : ViewModel() {
 
+    companion object {
+        const val PAGE_SIZE = 20
+    }
+
     private val _uiState = MutableStateFlow<PokemonListUiState>(PokemonListUiState.Loading)
     val uiState: StateFlow<PokemonListUiState> = _uiState
 
@@ -35,39 +42,25 @@ class PokemonListViewModel @Inject constructor(
     private var _visibleItems: Pair<Int, Int> = 0 to 0
     val visibleItems: Pair<Int, Int> = _visibleItems
 
-    init {
-        getPokemonList()
-    }
-
-    fun getPokemonList() {
-        resetCurrentScroll()
-        viewModelScope.launch(Dispatchers.IO) {
-            _uiState.tryEmit(PokemonListUiState.Loading)
-            pokemonUseCase.getPokemons()
-                .catch {
-                    _uiState.tryEmit(PokemonListUiState.Error)
-                }
-                .collect { pokemonList ->
-                    _uiState.tryEmit(PokemonListUiState.Success(pokemonList))
-                }
-        }
-    }
+    val pokemonList: Flow<PagingData<Pokemon>> =
+        pokemonUseCase.getPokemons(pageSize = PAGE_SIZE).cachedIn(viewModelScope)
 
     fun onPokemonSearch(name: String) {
-        saveCurrentSearch(name)
-        viewModelScope.launch(Dispatchers.IO) {
-            _uiState.tryEmit(PokemonListUiState.Loading)
-            pokemonUseCase.searchPokemonsByName(name)
-                .catch {
-                    _uiState.tryEmit(PokemonListUiState.Error)
-                }
-                .collect { pokemonList ->
-                    if (pokemonList.isEmpty()) {
-                        _uiState.tryEmit(PokemonListUiState.NotFound)
-                    } else {
-                        _uiState.tryEmit(PokemonListUiState.Success(pokemonList))
+        if (name.length > 2) {
+            saveCurrentSearch(name)
+            viewModelScope.launch(Dispatchers.IO) {
+                pokemonUseCase.searchPokemonByName(name)
+                    .catch {
+                        _uiState.tryEmit(PokemonListUiState.Error)
                     }
-                }
+                    .collect { searchList ->
+                        if (searchList.isEmpty()) {
+                            _uiState.tryEmit(PokemonListUiState.NotFound)
+                        } else {
+                            _uiState.tryEmit(PokemonListUiState.Success(searchList))
+                        }
+                    }
+            }
         }
     }
 

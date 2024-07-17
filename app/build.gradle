@@ -114,6 +114,7 @@ dependencies {
     // di
     implementation(libs.hilt.android)
     implementation libs.androidx.appcompat
+
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
@@ -122,12 +123,17 @@ dependencies {
     // database
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
     ksp(libs.androidx.room.compiler)
     implementation(libs.datastore)
 
     // images
     implementation(libs.palette)
     implementation(libs.coil.kt)
+
+    // pagination
+    implementation libs.androidx.paging.runtime
+    implementation libs.androidx.paging.compose
 
     // unit test
     testImplementation(libs.junit)

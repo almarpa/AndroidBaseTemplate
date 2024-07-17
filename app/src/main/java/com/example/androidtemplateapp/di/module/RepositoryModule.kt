@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp.di.module
 
+import com.example.androidtemplateapp.data.db.database.PokemonDataBase
 import com.example.androidtemplateapp.data.db.database.dao.PokemonDao
 import com.example.androidtemplateapp.data.db.database.dao.PokemonDetailsDao
 import com.example.androidtemplateapp.data.db.datastore.DataStoreSource
@@ -25,8 +26,9 @@ class RepositoryModule {
     fun providePokemonRepository(
         pokemonApi: PokemonApi,
         pokemonDao: PokemonDao,
+        pokemonDataBase: PokemonDataBase,
     ): PokemonRepository {
-        return PokemonRepositoryImpl(pokemonApi, pokemonDao)
+        return PokemonRepositoryImpl(pokemonApi, pokemonDao, pokemonDataBase)
     }
 
     @Provides

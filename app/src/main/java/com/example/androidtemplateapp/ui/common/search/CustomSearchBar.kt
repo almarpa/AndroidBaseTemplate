@@ -56,7 +56,7 @@ fun CustomSearchBar(
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
         }
-    ) {}
+    ) { }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)

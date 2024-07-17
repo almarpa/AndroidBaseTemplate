@@ -10,11 +10,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.androidtemplateapp.entity.Pokemon.Companion.getPokemonFromJson
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListScreen
-import com.example.androidtemplateapp.ui.pokemonlist.PokemonListUiState
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListViewModel
 import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsScreen
 import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsViewModel
@@ -32,21 +32,18 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
 ) {
     composable(Routes.PokemonList.route) {
         val pokemonListViewModel: PokemonListViewModel = hiltViewModel()
-        val uiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle(initialValue = PokemonListUiState.Loading)
+        val paginatedPokemonList = pokemonListViewModel.pokemonList.collectAsLazyPagingItems()
 
         PokemonListScreen(
             animatedVisibilityScope = this,
             drawerState = drawerState,
             currentRoute = currentRoute,
             navigationActions = navigationActions,
-            uiState = uiState,
-            onGetPokemonList = { pokemonListViewModel.getPokemonList() },
+            paginatedPokemonList = paginatedPokemonList,
+            onGetPokemonList = { /* TODO: call retry service */ },
             textSearched = pokemonListViewModel.pokemonSearched.value ?: "",
             onSearch = { text -> pokemonListViewModel.onPokemonSearch(text) },
-            onDismissSearch = {
-                pokemonListViewModel.getPokemonList()
-                pokemonListViewModel.removeCurrentSearch()
-            },
+            onDismissSearch = { pokemonListViewModel.removeCurrentSearch() },
             visibleItems = pokemonListViewModel.visibleItems,
             onDisposeItems = { pokemonListViewModel.setCurrentScrollPosition(it) }
         )
@@ -75,7 +72,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             },
         ),
     ) { navBackStackEntry ->
-        // TODO: use typed safe navigation (PokemonNavType)
+// TODO: use typed safe navigation (PokemonNavType)
         navBackStackEntry.arguments?.getString("pokemon")?.let { pokemon ->
             val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
             val teamViewModel: TeamViewModel = hiltViewModel()

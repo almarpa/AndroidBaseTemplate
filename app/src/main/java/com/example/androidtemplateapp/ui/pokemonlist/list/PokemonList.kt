@@ -49,7 +49,10 @@ fun SharedTransitionScope.PokemonList(
             .fillMaxHeight()
             .fillMaxWidth(),
     ) {
-        items(count = pokemonList.size, key = { pokemonList[it].id }) { index ->
+        items(
+            count = pokemonList.size,
+            key = { pokemonList[it].id }
+        ) { index ->
             with(getLazyGridAnimation(index, columns)) {
                 PokemonItem(
                     modifier = Modifier.applyIfCurrentLocalInspectionMode {

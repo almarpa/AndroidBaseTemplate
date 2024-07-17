@@ -26,6 +26,7 @@ mockito = "5.11.0"
 mockito-kotlin = "5.2.1"
 androidxComposeConstraintLayout = "1.0.1"
 appcompat = "1.7.0"
+androidxPaging = "3.3.0"
 
 [libraries]
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidxCompose" }
@@ -47,6 +48,7 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 androidx-room-common = { module = "androidx.room:room-common", version.ref = "androidxRoom" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidxRoom" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidxRoom" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidxRoom" }
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "hilt" }
@@ -68,6 +70,8 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "androidxPaging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidxPaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

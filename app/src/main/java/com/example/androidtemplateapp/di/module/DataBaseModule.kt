@@ -2,7 +2,7 @@ package com.example.androidtemplateapp.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.androidtemplateapp.data.db.database.AppDataBase
+import com.example.androidtemplateapp.data.db.database.PokemonDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,9 +16,9 @@ object DataBaseModule {
 
     @Singleton
     @Provides
-    fun provideAppDataBase(@ApplicationContext appContext: Context): AppDataBase {
+    fun provideAppDataBase(@ApplicationContext appContext: Context): PokemonDataBase {
         return Room
-            .databaseBuilder(appContext, AppDataBase::class.java, "base.db")
+            .databaseBuilder(appContext, PokemonDataBase::class.java, "base.db")
             .fallbackToDestructiveMigration()
             .build()
     }
@@ -27,9 +27,10 @@ object DataBaseModule {
 
     @Singleton
     @Provides
-    fun providePokemonDao(appDataBase: AppDataBase) = appDataBase.pokemonDao()
+    fun providePokemonDao(pokemonDataBase: PokemonDataBase) = pokemonDataBase.pokemonDao()
 
     @Singleton
     @Provides
-    fun providePokemonDetailsDao(appDataBase: AppDataBase) = appDataBase.pokemonDetailsDao()
+    fun providePokemonDetailsDao(pokemonDataBase: PokemonDataBase) =
+        pokemonDataBase.pokemonDetailsDao()
 }

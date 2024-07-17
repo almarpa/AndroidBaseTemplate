@@ -19,6 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.bottomappbar.BottomAppBar
@@ -27,10 +31,10 @@ import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
-import com.example.androidtemplateapp.ui.common.notfound.NotFoundView
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.DrawerTopAppBar
 import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
+import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -39,7 +43,7 @@ fun SharedTransitionScope.PokemonListScreen(
     drawerState: DrawerState,
     currentRoute: String,
     navigationActions: NavigationActions,
-    uiState: PokemonListUiState,
+    paginatedPokemonList: LazyPagingItems<Pokemon>,
     onGetPokemonList: () -> Unit,
     textSearched: String,
     onSearch: (text: String) -> Unit,
@@ -66,7 +70,7 @@ fun SharedTransitionScope.PokemonListScreen(
             PokemonListContent(
                 modifier = Modifier.padding(paddingValues = paddingValues),
                 animatedVisibilityScope = animatedVisibilityScope,
-                uiState = uiState,
+                paginatedPokemonList = paginatedPokemonList,
                 getPokemonList = { onGetPokemonList() },
                 visibleItems = visibleItems,
                 onDisposeItems = onDisposeItems,
@@ -88,7 +92,7 @@ fun SharedTransitionScope.PokemonListScreen(
 fun SharedTransitionScope.PokemonListContent(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    uiState: PokemonListUiState,
+    paginatedPokemonList: LazyPagingItems<Pokemon>,
     getPokemonList: () -> Unit,
     visibleItems: Pair<Int, Int>,
     onDisposeItems: (Pair<Int, Int>) -> Unit,
@@ -99,27 +103,23 @@ fun SharedTransitionScope.PokemonListContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        when (uiState) {
-            is PokemonListUiState.Loading -> {
+        when (paginatedPokemonList.loadState.refresh) {
+            is LoadState.Loading -> {
                 FullScreenLoader()
             }
 
-            is PokemonListUiState.Error -> {
+            is LoadState.Error -> {
                 GenericRetryView { getPokemonList() }
             }
 
-            is PokemonListUiState.Success -> {
+            is LoadState.NotLoading -> {
                 PokemonList(
                     animatedVisibilityScope = animatedVisibilityScope,
                     visibleItems = visibleItems,
                     onDisposeItems = { onDisposeItems(it) },
-                    pokemonList = uiState.pokemonList,
+                    pokemonList = paginatedPokemonList.itemSnapshotList.items,
                     onPokemonItemClick = { onNavigateToPokemonDetail(it) }
                 )
-            }
-
-            is PokemonListUiState.NotFound -> {
-                NotFoundView()
             }
         }
     }
@@ -136,7 +136,7 @@ fun PokemonListScreenPreview() {
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.PokemonList.route,
             navigationActions = NavigationActions(rememberNavController()),
-            uiState = PokemonListUiState.Success(getPokemonListMock()),
+            paginatedPokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),
             onGetPokemonList = {},
             textSearched = "",
             onDismissSearch = {},

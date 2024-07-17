@@ -15,7 +15,7 @@ import com.example.androidtemplateapp.entity.PokemonDetails
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class AppDataBase : RoomDatabase() {
+abstract class PokemonDataBase : RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
     abstract fun pokemonDetailsDao(): PokemonDetailsDao
 }
