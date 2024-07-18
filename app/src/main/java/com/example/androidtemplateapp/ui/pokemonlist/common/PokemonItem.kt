@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.ui.pokemonlist.list
+package com.example.androidtemplateapp.ui.pokemonlist.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi

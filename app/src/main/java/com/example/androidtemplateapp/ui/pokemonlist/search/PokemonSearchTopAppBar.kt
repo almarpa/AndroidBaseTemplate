@@ -1,40 +1,46 @@
-package com.example.androidtemplateapp.ui.common.topappbar
+package com.example.androidtemplateapp.ui.pokemonlist.search
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidtemplateapp.R
+import com.example.androidtemplateapp.entity.Pokemon
+import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
-import com.example.androidtemplateapp.ui.common.search.CustomSearchBar
+import com.example.androidtemplateapp.ui.pokemonlist.SearchUiState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun DrawerTopAppBar(
+fun SharedTransitionScope.PokemonSearchTopAppBar(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
-    title: Int = R.string.pokedex_title,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-    allowSearch: Boolean = false,
-    textSearched: String = "",
+    uiState: SearchUiState,
+    isSearchActive: Boolean = false,
+    onSearchActiveChange: (Boolean) -> Unit = {},
     onDismissSearch: () -> Unit = {},
     onSearch: (String) -> Unit = {},
+    onSelected: (Pokemon) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var isSearchBarVisible by remember { mutableStateOf(textSearched.isNotEmpty()) }
-    val keyboardController = LocalSoftwareKeyboardController.current
 
-    Column {
+    Box {
         CenterAlignedTopAppBar(
             title = {
-                Text(stringResource(id = title), style = MaterialTheme.typography.titleLarge)
+                Text(
+                    stringResource(id = R.string.pokedex_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
             },
             navigationIcon = {
                 IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
@@ -45,29 +51,24 @@ fun DrawerTopAppBar(
                     )
                 }
             },
-            actions = {
-                if (allowSearch && !isSearchBarVisible) {
-                    SearchIcon { isSearchBarVisible = true }
-                }
-            },
-            scrollBehavior = scrollBehavior,
+            actions = { SearchIcon { onSearchActiveChange(true) } },
+            scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 scrolledContainerColor = MaterialTheme.colorScheme.surface,
                 containerColor = MaterialTheme.colorScheme.surface,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
         )
-        if (isSearchBarVisible) {
-            CustomSearchBar(
-                textSearched = textSearched,
-                onSearch = {
-                    onSearch(it)
-                    keyboardController?.hide()
-                },
+        if (isSearchActive) {
+            PokemonSearchBar(
+                animatedVisibilityScope = animatedVisibilityScope,
+                uiState = uiState,
+                onSearch = { onSearch(it) },
                 onCancel = {
                     onDismissSearch()
-                    isSearchBarVisible = false
+                    onSearchActiveChange(false)
                 },
+                onSelected = { onSelected(it) }
             )
         }
     }
@@ -84,26 +85,31 @@ fun SearchIcon(onIconClick: () -> Unit) {
     }
 }
 
-
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview("Dark Drawer Search Top App Bar", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Inactive Search Top App Bar")
+@Preview("Inactive Dark Search Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun DrawerTopAppBarPreview() {
+fun InactiveSearchTopAppBarPreview() {
     TemplatePreviewTheme {
-        DrawerTopAppBar(
+        PokemonSearchTopAppBar(
+            animatedVisibilityScope = it,
+            uiState = SearchUiState.Success(getPokemonListMock()),
             drawerState = DrawerState(DrawerValue.Closed),
         ) {}
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview("Drawer Search Top App Bar")
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Active Search Top App Bar")
+@Preview("Active Dark Search Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun DrawerSearchTopAppBarPreview() {
+fun ActiveSearchTopAppBarPreview() {
     TemplatePreviewTheme {
-        DrawerTopAppBar(
+        PokemonSearchTopAppBar(
+            animatedVisibilityScope = it,
+            uiState = SearchUiState.Success(getPokemonListMock()),
             drawerState = DrawerState(DrawerValue.Closed),
-            allowSearch = true,
+            isSearchActive = true
         ) {}
     }
 }

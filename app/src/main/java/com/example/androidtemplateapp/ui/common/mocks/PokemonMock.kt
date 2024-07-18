@@ -4,9 +4,7 @@ import com.example.androidtemplateapp.entity.*
 import com.example.androidtemplateapp.entity.enums.PokemonTypeEnum
 import com.example.androidtemplateapp.entity.enums.StatNameEnum
 
-/****************************
- *********   DATA   *********
- ***************************/
+// region POKEMON_DATA_MOCKS
 fun getPokemonMock() =
     Pokemon(
         id = 1,
@@ -41,21 +39,42 @@ fun getPokemonListMock() =
         ),
         Pokemon(
             id = 4,
-            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
+            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
             name = "Pokemon 4",
             dominantColor = null,
             isTeamMember = false
         ),
         Pokemon(
             id = 5,
-            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
+            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png",
             name = "Pokemon 5",
             dominantColor = null,
             isTeamMember = false
         ),
         Pokemon(
             id = 6,
-            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
+            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
+            name = "Pokemon 6",
+            dominantColor = null,
+            isTeamMember = false
+        ),
+        Pokemon(
+            id = 7,
+            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
+            name = "Pokemon 4",
+            dominantColor = null,
+            isTeamMember = false
+        ),
+        Pokemon(
+            id = 8,
+            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png",
+            name = "Pokemon 5",
+            dominantColor = null,
+            isTeamMember = false
+        ),
+        Pokemon(
+            id = 9,
+            url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
             name = "Pokemon 6",
             dominantColor = null,
             isTeamMember = false
@@ -93,3 +112,4 @@ fun getPokemonDetailsMock() =
             )
         )
     )
+// endregion

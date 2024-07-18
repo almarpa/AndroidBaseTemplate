@@ -1,7 +1,5 @@
 package com.example.androidtemplateapp.ui.pokemonlist
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -17,11 +15,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface PokemonListUiState {
-    data object Loading : PokemonListUiState
-    data class Success(val pokemonList: List<Pokemon>) : PokemonListUiState
-    data object NotFound : PokemonListUiState
-    data object Error : PokemonListUiState
+sealed interface SearchUiState {
+    data object Idle : SearchUiState
+    data object Loading : SearchUiState
+    data class Success(val pokemonList: List<Pokemon>) : SearchUiState
+    data object NotFound : SearchUiState
+    data object Error : SearchUiState
 }
 
 @HiltViewModel
@@ -33,11 +32,8 @@ class PokemonListViewModel @Inject constructor(
         const val PAGE_SIZE = 20
     }
 
-    private val _uiState = MutableStateFlow<PokemonListUiState>(PokemonListUiState.Loading)
-    val uiState: StateFlow<PokemonListUiState> = _uiState
-
-    private val _pokemonSearched = MutableLiveData("")
-    val pokemonSearched: LiveData<String> = _pokemonSearched
+    private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
+    val uiState: StateFlow<SearchUiState> = _searchUiState
 
     private var _visibleItems: Pair<Int, Int> = 0 to 0
     val visibleItems: Pair<Int, Int> = _visibleItems
@@ -47,36 +43,32 @@ class PokemonListViewModel @Inject constructor(
 
     fun onPokemonSearch(name: String) {
         if (name.length > 2) {
-            saveCurrentSearch(name)
+            _searchUiState.tryEmit(SearchUiState.Loading)
             viewModelScope.launch(Dispatchers.IO) {
                 pokemonUseCase.searchPokemonByName(name)
                     .catch {
-                        _uiState.tryEmit(PokemonListUiState.Error)
+                        _searchUiState.tryEmit(SearchUiState.Error)
                     }
                     .collect { searchList ->
-                        if (searchList.isEmpty()) {
-                            _uiState.tryEmit(PokemonListUiState.NotFound)
-                        } else {
-                            _uiState.tryEmit(PokemonListUiState.Success(searchList))
-                        }
+                        _searchUiState.tryEmit(
+                            if (searchList.isEmpty()) {
+                                SearchUiState.NotFound
+                            } else {
+                                SearchUiState.Success(searchList)
+                            }
+                        )
                     }
             }
+        } else {
+            removeCurrentSearch()
         }
     }
 
-    private fun saveCurrentSearch(name: String) {
-        _pokemonSearched.value = name
-    }
-
     fun removeCurrentSearch() {
-        _pokemonSearched.value = ""
+        _searchUiState.tryEmit(SearchUiState.Idle)
     }
 
     fun setCurrentScrollPosition(visibleItems: Pair<Int, Int>) {
         _visibleItems = visibleItems
-    }
-
-    private fun resetCurrentScroll() {
-        _visibleItems = 0 to 0
     }
 }

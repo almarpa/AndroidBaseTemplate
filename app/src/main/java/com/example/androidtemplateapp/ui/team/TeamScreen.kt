@@ -25,7 +25,7 @@ import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
-import com.example.androidtemplateapp.ui.common.topappbar.AnimatedDrawerTopAppBar
+import com.example.androidtemplateapp.ui.common.topappbar.AnimatedTopAppBar
 import com.example.androidtemplateapp.ui.team.FabContainerState.Fab
 
 sealed interface FabContainerState {
@@ -46,7 +46,7 @@ fun TeamScreen(
     var fabContainerState by remember { mutableStateOf<FabContainerState>(Fab) }
     Scaffold(
         topBar = {
-            AnimatedDrawerTopAppBar(
+            AnimatedTopAppBar(
                 isVisible = fabContainerState == Fab,
                 drawerState = drawerState,
                 title = R.string.team_title,

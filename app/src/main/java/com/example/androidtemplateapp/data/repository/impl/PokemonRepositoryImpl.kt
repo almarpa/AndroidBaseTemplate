@@ -38,7 +38,6 @@ class PokemonRepositoryImpl(
                 pokemonDatabase.pokemonDao().getAllPaged()
             }
         ).flow.map { pagingData -> pagingData.map { it.asDomain() } }
-
     }
 
     override suspend fun getTeamMembers() = flow {

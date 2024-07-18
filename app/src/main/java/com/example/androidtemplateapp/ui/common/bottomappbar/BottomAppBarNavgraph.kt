@@ -16,6 +16,7 @@ import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListScreen
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListViewModel
+import com.example.androidtemplateapp.ui.pokemonlist.SearchUiState
 import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsScreen
 import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsViewModel
 import com.example.androidtemplateapp.ui.settings.SettingsViewModel
@@ -33,15 +34,16 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
     composable(Routes.PokemonList.route) {
         val pokemonListViewModel: PokemonListViewModel = hiltViewModel()
         val paginatedPokemonList = pokemonListViewModel.pokemonList.collectAsLazyPagingItems()
+        val searchUiState: SearchUiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
 
         PokemonListScreen(
             animatedVisibilityScope = this,
             drawerState = drawerState,
             currentRoute = currentRoute,
             navigationActions = navigationActions,
+            searchUiState = searchUiState,
             paginatedPokemonList = paginatedPokemonList,
-            onGetPokemonList = { /* TODO: call retry service */ },
-            textSearched = pokemonListViewModel.pokemonSearched.value ?: "",
+            onReload = { paginatedPokemonList.refresh() },
             onSearch = { text -> pokemonListViewModel.onPokemonSearch(text) },
             onDismissSearch = { pokemonListViewModel.removeCurrentSearch() },
             visibleItems = pokemonListViewModel.visibleItems,
@@ -58,9 +60,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             navigationActions = navigationActions,
             uiState = uiState,
             onRetry = { teamViewModel.getTeamList() },
-            onSave = {
-                teamViewModel.createPokemonMemberAndReload(it)
-            }
+            onSave = { pokemon -> teamViewModel.createPokemonMemberAndReload(pokemon) }
         )
     }
     composable(
@@ -72,7 +72,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             },
         ),
     ) { navBackStackEntry ->
-// TODO: use typed safe navigation (PokemonNavType)
+        // TODO: use typed safe navigation (PokemonNavType)
         navBackStackEntry.arguments?.getString("pokemon")?.let { pokemon ->
             val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
             val teamViewModel: TeamViewModel = hiltViewModel()
