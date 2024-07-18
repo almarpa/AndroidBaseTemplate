@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.ui.pokemonlist.details
+package com.example.androidtemplateapp.ui.pokemondetails
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState

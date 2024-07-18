@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.ui.pokemonlist.details
+package com.example.androidtemplateapp.ui.pokemondetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,7 +22,8 @@ import com.example.androidtemplateapp.entity.enums.PokemonTypeEnum
 @Composable
 fun PokemonType(types: List<TypeX>) {
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp)
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         for (type in types) {
             Box(

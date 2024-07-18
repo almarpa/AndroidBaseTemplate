@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.ui.pokemonlist.details
+package com.example.androidtemplateapp.ui.pokemondetails
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState

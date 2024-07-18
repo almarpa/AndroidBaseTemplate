@@ -14,11 +14,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.androidtemplateapp.entity.Pokemon.Companion.getPokemonFromJson
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
+import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsScreen
+import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsViewModel
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListScreen
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListViewModel
 import com.example.androidtemplateapp.ui.pokemonlist.SearchUiState
-import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsScreen
-import com.example.androidtemplateapp.ui.pokemonlist.details.PokemonDetailsViewModel
 import com.example.androidtemplateapp.ui.settings.SettingsViewModel
 import com.example.androidtemplateapp.ui.team.TeamScreen
 import com.example.androidtemplateapp.ui.team.TeamUiState

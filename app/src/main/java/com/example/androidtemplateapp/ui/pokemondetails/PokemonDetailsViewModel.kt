@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.ui.pokemonlist.details
+package com.example.androidtemplateapp.ui.pokemondetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
