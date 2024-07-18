@@ -18,4 +18,6 @@ import com.example.androidtemplateapp.entity.PokemonDetails
 abstract class PokemonDataBase : RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
     abstract fun pokemonDetailsDao(): PokemonDetailsDao
+
+    suspend fun getDatabaseCreationDate() = pokemonDao().getCreationDate() ?: 0L
 }

@@ -20,6 +20,7 @@ data class Pokemon(
     var name: String,
     var dominantColor: Int? = null,
     var isTeamMember: Boolean,
+    var createdAt: Long = System.currentTimeMillis(),
 ) : Parcelable {
 
     constructor(
@@ -31,7 +32,8 @@ data class Pokemon(
         url = url,
         name = name,
         dominantColor = dominantColor,
-        isTeamMember = true
+        isTeamMember = true,
+        createdAt = System.currentTimeMillis()
     )
 
     fun asEntity(): PokemonEntity {
@@ -40,7 +42,8 @@ data class Pokemon(
             url = url,
             name = name,
             dominantColor = dominantColor,
-            isTeamMember = isTeamMember
+            isTeamMember = isTeamMember,
+            createdAt = createdAt
         )
     }
 

@@ -10,6 +10,7 @@ import com.example.androidtemplateapp.data.db.database.entity.PokemonEntity
 import com.example.androidtemplateapp.data.db.ws.api.PokemonApi
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class PokemonRemoteMediator(
@@ -23,10 +24,15 @@ class PokemonRemoteMediator(
     }
 
     /**
-     * Re-fetch from the network every time on app init. Default behaviour.
+     * Re-fetch from the network every day on app init.
      */
     override suspend fun initialize(): InitializeAction {
-        return InitializeAction.LAUNCH_INITIAL_REFRESH
+        val cacheTimeout = TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS)
+        return if (System.currentTimeMillis() - pokemonDatabase.getDatabaseCreationDate() <= cacheTimeout) {
+            InitializeAction.SKIP_INITIAL_REFRESH
+        } else {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
     }
 
     /**
@@ -59,7 +65,6 @@ class PokemonRemoteMediator(
                 )
             ) {
                 pokemonDatabase.withTransaction {
-                    pokemonDatabase.pokemonDao().clearAll()
                     pokemonDatabase.pokemonDao().insertAll(
                         results.map { pokemonResponse -> pokemonResponse.map().asEntity() }
                     )

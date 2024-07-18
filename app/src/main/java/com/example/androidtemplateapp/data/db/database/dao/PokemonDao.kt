@@ -7,12 +7,12 @@ import com.example.androidtemplateapp.data.db.database.entity.PokemonEntity
 @Dao
 interface PokemonDao {
 
-    @Query("SELECT * from pokemon WHERE name = :id")
-    suspend fun get(id: String): PokemonEntity?
+    @Query("SELECT min(createdAt) from pokemon")
+    suspend fun getCreationDate(): Long?
 
     @Query("SELECT * from pokemon")
     fun getAllPaged(): PagingSource<Int, PokemonEntity>
-    
+
     @Query("SELECT * from pokemon WHERE isTeamMember")
     suspend fun getAllTeamMembers(): List<PokemonEntity>
 

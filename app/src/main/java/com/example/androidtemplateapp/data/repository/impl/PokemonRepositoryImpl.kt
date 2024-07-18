@@ -27,8 +27,7 @@ class PokemonRepositoryImpl(
     override fun getPokemons(pageSize: Int): Flow<PagingData<Pokemon>> {
         return Pager(
             config = PagingConfig(
-                pageSize = pageSize,
-                enablePlaceholders = false,
+                pageSize = pageSize
             ),
             remoteMediator = PokemonRemoteMediator(
                 pokemonDatabase = pokemonDatabase,

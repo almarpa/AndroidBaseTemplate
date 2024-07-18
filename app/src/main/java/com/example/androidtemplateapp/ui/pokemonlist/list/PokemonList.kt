@@ -22,7 +22,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.androidtemplateapp.common.anim.getLazyGridAnimation
 import com.example.androidtemplateapp.common.utils.applyIfCurrentLocalInspectionMode
 import com.example.androidtemplateapp.entity.Pokemon
-import com.example.androidtemplateapp.ui.common.lazyscroll.rememberLazyScrollState
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
@@ -43,10 +42,11 @@ fun SharedTransitionScope.PokemonList(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
-        state = rememberLazyScrollState(
-            visibleItems = visibleItems,
-            onDisposeItems = { onDisposeItems(it) }
-        ),
+//      TODO: necessary?
+//        state = rememberLazyScrollState(
+//            visibleItems = visibleItems,
+//            onDisposeItems = { onDisposeItems(it) }
+//        ),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -55,8 +55,8 @@ fun SharedTransitionScope.PokemonList(
             .fillMaxWidth(),
     ) {
         items(
-            count = pokemonList.itemCount
-            // TODO: key = { pokemonList.itemKey { item -> item.id } }
+            count = pokemonList.itemCount,
+            key = { pokemonList[it]?.id ?: 0 }
         ) { index ->
             with(getLazyGridAnimation(index, columns)) {
                 pokemonList[index]?.let { pokemon ->

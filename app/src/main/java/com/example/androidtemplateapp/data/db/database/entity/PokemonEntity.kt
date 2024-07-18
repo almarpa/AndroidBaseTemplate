@@ -23,6 +23,8 @@ data class PokemonEntity(
     var dominantColor: Int? = null,
     @ColumnInfo(name = "isTeamMember")
     var isTeamMember: Boolean = false,
+    @ColumnInfo(name = "createdAt")
+    var createdAt: Long = 0L,
 ) : Parcelable {
 
     fun asDomain(): Pokemon = Pokemon(id, url, name, dominantColor, isTeamMember)

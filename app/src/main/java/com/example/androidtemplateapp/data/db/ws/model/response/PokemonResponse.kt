@@ -16,7 +16,8 @@ class PokemonResponse(
             name = name,
             url = getPokemonImageURL(),
             dominantColor = null,
-            isTeamMember = false
+            isTeamMember = false,
+            createdAt = System.currentTimeMillis()
         )
     }
 
