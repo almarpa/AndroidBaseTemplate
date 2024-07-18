@@ -24,6 +24,7 @@ class PokemonDetailsRepositoryImpl(
                     return@with body()?.map()?.let { pokemonDetails ->
                         pokemonDetails.also { savePokemonDetails(it) }
                     } ?: run {
+                        // TODO: improve way to manage errors
                         throw Exception()
                     }
                 }
@@ -37,13 +38,13 @@ class PokemonDetailsRepositoryImpl(
 
     private suspend fun getLocalPokemonDetails(pokemonID: Int): PokemonDetails? {
         return withContext(Dispatchers.IO) {
-            pokemonDetailsDao.get(pokemonID.toString())
+            pokemonDetailsDao.get(pokemonID.toString())?.asDomain()
         }
     }
 
     private suspend fun savePokemonDetails(pokemonDetails: PokemonDetails) {
         withContext(Dispatchers.IO) {
-            pokemonDetailsDao.insert(pokemonDetails)
+            pokemonDetailsDao.insert(pokemonDetails.asEntity())
         }
     }
 }

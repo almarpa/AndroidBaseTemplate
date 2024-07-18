@@ -1,23 +1,46 @@
-package com.example.androidtemplateapp.entity
+package com.example.androidtemplateapp.data.db.database.entity
 
-import com.example.androidtemplateapp.data.db.database.entity.PokemonDetailsEntity
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import com.example.androidtemplateapp.entity.*
 
-data class PokemonDetails(
+@Entity(tableName = "pokemonDetails")
+data class PokemonDetailsEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     var id: Int,
+    @ColumnInfo(name = "name")
     var name: String,
+    @ColumnInfo(name = "order")
     var order: Int,
+    @ColumnInfo(name = "baseExperience")
     var baseExperience: Int,
+    @ColumnInfo(name = "height")
     var height: Int,
+    @ColumnInfo(name = "weight")
     var weight: Int,
+    @ColumnInfo(name = "imageURL")
     var imageURL: String,
+    @ColumnInfo(name = "stats")
     var stats: List<Stat>,
+    @ColumnInfo(name = "types")
     var types: List<TypeX>,
+
+    @Ignore
     var isDefault: Boolean,
+    @Ignore
     var locationAreaEncounters: String,
+    @Ignore
     var species: Species,
+    @Ignore
     var sprites: Sprites,
+    @Ignore
     var abilities: List<Ability>,
+    @Ignore
     var moves: List<Move>,
+    @Ignore
     var forms: List<Form>,
 ) {
     constructor(
@@ -49,23 +72,22 @@ data class PokemonDetails(
         forms = listOf(),
     )
 
-    fun asEntity(): PokemonDetailsEntity =
-        PokemonDetailsEntity(
-            id,
-            name,
-            order,
-            baseExperience,
-            height,
-            weight,
-            imageURL,
-            stats,
-            types,
-            isDefault,
-            locationAreaEncounters,
-            species,
-            sprites,
-            abilities,
-            moves,
-            forms
-        )
+    fun asDomain(): PokemonDetails = PokemonDetails(
+        id,
+        name,
+        order,
+        baseExperience,
+        height,
+        weight,
+        imageURL,
+        stats,
+        types,
+        isDefault,
+        locationAreaEncounters,
+        species,
+        sprites,
+        abilities,
+        moves,
+        forms
+    )
 }

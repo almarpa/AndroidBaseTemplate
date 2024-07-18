@@ -36,8 +36,8 @@ data class Pokemon(
         createdAt = System.currentTimeMillis()
     )
 
-    fun asEntity(): PokemonEntity {
-        return PokemonEntity(
+    fun asEntity(): PokemonEntity =
+        PokemonEntity(
             id = id,
             url = url,
             name = name,
@@ -45,7 +45,6 @@ data class Pokemon(
             isTeamMember = isTeamMember,
             createdAt = createdAt
         )
-    }
 
     @Composable
     fun getDominantColorOrDefault() =

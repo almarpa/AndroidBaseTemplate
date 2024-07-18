@@ -21,13 +21,15 @@ class PokemonRemoteMediator(
     companion object {
         private const val POKEMON_RESULTS_LIMIT = 1302
         private const val POKEMON_RESULTS_OFFSET = 0
+        private const val REFRESHING_TIME_FROM_REMOTE = 24L
     }
 
     /**
      * Re-fetch from the network every day on app init.
      */
     override suspend fun initialize(): InitializeAction {
-        val cacheTimeout = TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS)
+        val cacheTimeout =
+            TimeUnit.MILLISECONDS.convert(REFRESHING_TIME_FROM_REMOTE, TimeUnit.HOURS)
         return if (System.currentTimeMillis() - pokemonDatabase.getDatabaseCreationDate() <= cacheTimeout) {
             InitializeAction.SKIP_INITIAL_REFRESH
         } else {
