@@ -59,7 +59,7 @@ class PokemonRemoteMediator(
                 }
             }
 
-            // Request all data from network at first time to allow local caching search functionality
+            // Request all data from network at first time to allow local search functionality
             with(
                 pokemonApi.getPokemons(
                     limit = POKEMON_RESULTS_LIMIT,
