@@ -79,13 +79,6 @@ fun SettingsScreen(
                             .background(MaterialTheme.colorScheme.primary)
                             .height(1.dp)
                     )
-                    AboutSection()
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.primary)
-                            .height(1.dp)
-                    )
                 }
             }
 
@@ -144,24 +137,6 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
                 checkedThumbColor = Color.White,
                 checkedTrackColor = MaterialTheme.colorScheme.primary
             )
-        )
-    }
-}
-
-@Composable
-fun AboutSection() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 32.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            modifier = Modifier.padding(vertical = 16.dp),
-            text = stringResource(R.string.about),
-            style = MaterialTheme.typography.titleMedium,
-            fontSize = 18.sp
         )
     }
 }
