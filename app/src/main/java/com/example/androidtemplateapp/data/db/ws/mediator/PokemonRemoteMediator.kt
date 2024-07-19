@@ -47,7 +47,15 @@ class PokemonRemoteMediator(
         return try {
             when (loadType) {
                 LoadType.REFRESH -> {
-                    // Continue execution
+                    // Request all data from network at first time to allow local search
+                    with(pokemonApi.getPokemons(POKEMON_RESULTS_LIMIT, POKEMON_RESULTS_OFFSET)) {
+                        pokemonDatabase.withTransaction {
+                            pokemonDatabase.pokemonDao().insertAll(
+                                results.map { pokemonResponse -> pokemonResponse.map().asEntity() }
+                            )
+                        }
+                        MediatorResult.Success(endOfPaginationReached = results.isEmpty())
+                    }
                 }
 
                 LoadType.PREPEND -> {
@@ -57,21 +65,6 @@ class PokemonRemoteMediator(
                 LoadType.APPEND -> {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
-            }
-
-            // Request all data from network at first time to allow local search functionality
-            with(
-                pokemonApi.getPokemons(
-                    limit = POKEMON_RESULTS_LIMIT,
-                    offset = POKEMON_RESULTS_OFFSET
-                )
-            ) {
-                pokemonDatabase.withTransaction {
-                    pokemonDatabase.pokemonDao().insertAll(
-                        results.map { pokemonResponse -> pokemonResponse.map().asEntity() }
-                    )
-                }
-                MediatorResult.Success(endOfPaginationReached = results.isEmpty())
             }
         } catch (e: IOException) {
             MediatorResult.Error(e)
