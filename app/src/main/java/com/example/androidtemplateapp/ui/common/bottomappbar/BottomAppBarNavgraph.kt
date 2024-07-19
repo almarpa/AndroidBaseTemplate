@@ -46,8 +46,6 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             onReload = { paginatedPokemonList.refresh() },
             onSearch = { text -> pokemonListViewModel.onPokemonSearch(text) },
             onDismissSearch = { pokemonListViewModel.removeCurrentSearch() },
-            visibleItems = pokemonListViewModel.visibleItems,
-            onDisposeItems = { pokemonListViewModel.setCurrentScrollPosition(it) }
         )
     }
     composable(Routes.Team.route) {

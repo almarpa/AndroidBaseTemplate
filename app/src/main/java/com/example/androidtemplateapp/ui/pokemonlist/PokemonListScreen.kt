@@ -5,9 +5,14 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Scaffold
@@ -36,7 +41,7 @@ import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
 import com.example.androidtemplateapp.ui.pokemonlist.search.PokemonSearchTopAppBar
 import kotlinx.coroutines.flow.flowOf
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun SharedTransitionScope.PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -48,8 +53,6 @@ fun SharedTransitionScope.PokemonListScreen(
     onReload: () -> Unit,
     onSearch: (text: String) -> Unit,
     onDismissSearch: () -> Unit,
-    visibleItems: Pair<Int, Int>,
-    onDisposeItems: (Pair<Int, Int>) -> Unit,
 ) {
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
 
@@ -72,8 +75,6 @@ fun SharedTransitionScope.PokemonListScreen(
                 animatedVisibilityScope = animatedVisibilityScope,
                 paginatedPokemonList = paginatedPokemonList,
                 onReload = { onReload() },
-                visibleItems = visibleItems,
-                onDisposeItems = onDisposeItems,
                 onNavigateToPokemonDetail = { navigationActions.navigateToDetailNavGraph(it) }
             )
         },
@@ -88,41 +89,52 @@ fun SharedTransitionScope.PokemonListScreen(
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun SharedTransitionScope.PokemonListContent(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
     paginatedPokemonList: LazyPagingItems<Pokemon>,
     onReload: () -> Unit,
-    visibleItems: Pair<Int, Int>,
-    onDisposeItems: (Pair<Int, Int>) -> Unit,
     onNavigateToPokemonDetail: (Pokemon) -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        when (paginatedPokemonList.loadState.refresh) {
-            is LoadState.Loading -> {
-                FullScreenLoader()
-            }
+    Box {
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = false,
+            onRefresh = { onReload() }
+        )
 
-            is LoadState.Error -> {
-                GenericRetryView { onReload() }
-            }
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            when (paginatedPokemonList.loadState.refresh) {
+                is LoadState.Loading -> {
+                    FullScreenLoader()
+                }
 
-            is LoadState.NotLoading -> {
-                PokemonList(
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    visibleItems = visibleItems,
-                    onDisposeItems = { onDisposeItems(it) },
-                    pokemonList = paginatedPokemonList,
-                    onPokemonItemClick = { onNavigateToPokemonDetail(it) }
-                )
+                is LoadState.Error -> {
+                    GenericRetryView { onReload() }
+                }
+
+                is LoadState.NotLoading -> {
+                    PokemonList(
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        pokemonList = paginatedPokemonList,
+                        onPokemonItemClick = { onNavigateToPokemonDetail(it) }
+                    )
+                }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -142,8 +154,6 @@ fun PokemonListScreenPreview() {
             onReload = {},
             onDismissSearch = {},
             onSearch = {},
-            visibleItems = 0 to 0,
-            onDisposeItems = {}
         )
     }
 }
@@ -164,8 +174,6 @@ fun PokemonListScreenWithSearchActivePreview() {
             onReload = {},
             onDismissSearch = {},
             onSearch = {},
-            visibleItems = 0 to 0,
-            onDisposeItems = {}
         )
     }
 }

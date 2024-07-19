@@ -33,8 +33,6 @@ import kotlinx.coroutines.flow.flowOf
 fun SharedTransitionScope.PokemonList(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemonList: LazyPagingItems<Pokemon>,
-    visibleItems: Pair<Int, Int> = Pair(0, 0),
-    onDisposeItems: (Pair<Int, Int>) -> Unit = { },
     onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
     val currentOrientation = LocalConfiguration.current.orientation
@@ -42,11 +40,6 @@ fun SharedTransitionScope.PokemonList(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
-//      TODO: necessary?
-//        state = rememberLazyScrollState(
-//            visibleItems = visibleItems,
-//            onDisposeItems = { onDisposeItems(it) }
-//        ),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -56,7 +49,6 @@ fun SharedTransitionScope.PokemonList(
     ) {
         items(
             count = pokemonList.itemCount,
-            key = { pokemonList[it]?.id ?: 0 }
         ) { index ->
             with(getLazyGridAnimation(index, columns)) {
                 pokemonList[index]?.let { pokemon ->
@@ -84,9 +76,7 @@ fun PokemonListPreview() {
         PokemonList(
             animatedVisibilityScope = it,
             pokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),
-            visibleItems = 0 to 0,
             onPokemonItemClick = { },
-            onDisposeItems = { },
         )
     }
 }
