@@ -113,8 +113,6 @@ dependencies {
 
     // di
     implementation(libs.hilt.android)
-    implementation libs.androidx.appcompat
-
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
@@ -143,6 +141,9 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
 
     // others
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.activity.ktx
+    implementation libs.accompanist
     implementation(libs.converter.gson)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
