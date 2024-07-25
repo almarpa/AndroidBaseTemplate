@@ -46,7 +46,7 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     init {
         getUserAppData()
     }
-    
+
     private fun getUserAppData() {
         getUserAppLocale()
         getUserAppTheme()
@@ -70,7 +70,7 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
         }
     }
 
-    fun getUserAppTheme() {
+    private fun getUserAppTheme() {
         viewModelScope.launch(Dispatchers.IO) {
             userDataUseCase.getAppTheme()
                 .catch {

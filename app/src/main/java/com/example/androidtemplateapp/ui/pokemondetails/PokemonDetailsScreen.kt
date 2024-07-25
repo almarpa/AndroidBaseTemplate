@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
@@ -35,6 +36,7 @@ import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
+import com.example.androidtemplateapp.ui.common.utils.isTablet
 import java.net.URLDecoder
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -48,37 +50,17 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     onBackPressed: () -> Unit,
 ) {
     BackHandler { onBackPressed() }
-    PokemonDetailsContent(
-        animatedVisibilityScope = animatedVisibilityScope,
-        userAppTheme = userAppTheme,
-        pokemon = pokemon,
-        pokemonDetails = pokemonDetails,
-        onAddTeamMember = { isAddedToTeam -> onAddTeamMember(pokemon, isAddedToTeam) },
-        onBackPressed = { onBackPressed() }
-    )
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun SharedTransitionScope.PokemonDetailsContent(
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    userAppTheme: AppTheme,
-    pokemonDetails: PokemonDetails?,
-    pokemon: Pokemon,
-    onAddTeamMember: (Boolean) -> Unit,
-    onBackPressed: () -> Unit,
-) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                getBackgroundColor(
-                    userAppTheme = userAppTheme,
-                    dominantColor = pokemon.dominantColor
-                )
-            ),
+            .background(getBackgroundColor(userAppTheme, pokemon.dominantColor))
+            .statusBarsPadding().systemBarsPadding(),
     ) {
-        PokemonDetailsTopAppBar { onBackPressed() }
+        DefaultTopAppBar(
+            modifier = Modifier,
+            title = R.string.empty_string,
+            onBackPressed = { onBackPressed() }
+        )
         PokemonCard(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,24 +73,12 @@ fun SharedTransitionScope.PokemonDetailsContent(
                 .shadow(10.dp, RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
-        ) { isAdded ->
-            onAddTeamMember(isAdded)
-        }
+            onMemberClick = { isAdded -> onAddTeamMember(pokemon, isAdded) }
+        )
         PokemonImageAnimation(animatedVisibilityScope, pokemon)
-    }
-}
-
-@Preview("Pokemon Details TopAppBar")
-@Composable
-fun PokemonDetailsTopAppBar(onBackPressed: () -> Unit = {}) {
-    DefaultTopAppBar(
-        modifier = Modifier,
-        title = R.string.empty_string
-    ) {
-        onBackPressed()
     }
 }
 
@@ -124,7 +94,9 @@ fun PokemonCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .wrapContentHeight()
-            .padding(top = 100.dp)
+            .padding(
+                top = if (isTablet()) 230.dp else 50.dp,
+            )
             .verticalScroll(scrollState)
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
@@ -142,12 +114,12 @@ fun SharedTransitionScope.PokemonImageAnimation(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(top = 25.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(if (isTablet()) 4.dp else 12.dp),
+        contentAlignment = Alignment.Center,
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -157,7 +129,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth(.75f)
+                .fillMaxWidth(if (isTablet()) 0.3f else 0.75f)
                 .aspectRatio(1f)
                 .pokemonSharedElement(
                     isLocalInspectionMode = LocalInspectionMode.current,
@@ -182,7 +154,6 @@ fun getBackgroundColor(userAppTheme: AppTheme, dominantColor: Int?): Brush {
         AppTheme.LIGHT -> getLightGradientByColor(color)
     }
 }
-
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -211,7 +182,8 @@ fun PokemonCardPreview() {
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Pokemon Details Screen")
+@Preview(name = "Phone Pokemon Details Screen", device = Devices.PHONE)
+@Preview(name = "Tablet Pokemon Details Screen", device = Devices.TABLET)
 fun PokemonDetailsScreenPreview() {
     TemplatePreviewTheme {
         PokemonDetailsScreen(

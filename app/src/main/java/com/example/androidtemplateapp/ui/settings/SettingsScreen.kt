@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -105,7 +106,10 @@ fun LanguagesSection(
             style = MaterialTheme.typography.titleMedium,
             fontSize = 18.sp
         )
-        Row(modifier = Modifier.weight(1f)) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.End
+        ) {
             CustomDropdown(
                 items = languages,
                 selected = currentLanguage,
@@ -142,7 +146,8 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-@Preview
+@Preview(name = "Pokemon Details Screen")
+@Preview(name = "Tablet Pokemon Details Screen", device = Devices.TABLET)
 @Composable
 fun SettingsScreenPreview() {
     TemplatePreviewTheme {

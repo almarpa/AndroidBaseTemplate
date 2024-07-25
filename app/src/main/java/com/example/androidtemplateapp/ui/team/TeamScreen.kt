@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -26,7 +27,6 @@ import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.AnimatedTopAppBar
-import com.example.androidtemplateapp.ui.team.FabContainerState.Fab
 
 sealed interface FabContainerState {
     data object Fab : FabContainerState
@@ -43,11 +43,11 @@ fun TeamScreen(
     onRetry: () -> Unit,
     onSave: (pokemon: Pokemon) -> Unit,
 ) {
-    var fabContainerState by remember { mutableStateOf<FabContainerState>(Fab) }
+    var fabContainerState by remember { mutableStateOf<FabContainerState>(FabContainerState.Fab) }
     Scaffold(
         topBar = {
             AnimatedTopAppBar(
-                isVisible = fabContainerState == Fab,
+                isVisible = fabContainerState == FabContainerState.Fab,
                 drawerState = drawerState,
                 title = R.string.team_title,
             )
@@ -60,14 +60,14 @@ fun TeamScreen(
                 onRetry = { onRetry() },
                 onFabContainerStateChanged = { fabContainerState = it },
                 onSavePokemon = { pokemon ->
-                    fabContainerState = Fab
+                    fabContainerState = FabContainerState.Fab
                     onSave(pokemon)
                 }
             )
         },
         bottomBar = {
             AnimatedBottomAppBar(
-                isVisible = fabContainerState == Fab,
+                isVisible = fabContainerState == FabContainerState.Fab,
                 drawerState = drawerState,
                 currentRoute = currentRoute,
                 navigationActions = navigationActions,
@@ -85,12 +85,11 @@ private fun TeamContent(
     onFabContainerStateChanged: (FabContainerState) -> Unit,
     onSavePokemon: (Pokemon) -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-    ) {
+    Column {
         val initialPaddingValues by remember { mutableStateOf(paddingValues) }
         Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .padding(initialPaddingValues)
                 .padding(top = 50.dp)
@@ -126,6 +125,7 @@ private fun TeamContent(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview("Team Screen")
+@Preview(name = "Tablet Team Screen", device = Devices.TABLET)
 fun TeamScreenPreview() {
     TemplatePreviewTheme {
         TeamScreen(
@@ -141,29 +141,14 @@ fun TeamScreenPreview() {
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Team Content List Preview", showBackground = true)
-fun TeamContentPreview() {
+@Preview("Team Content Fullscreen Preview", showBackground = true)
+@Preview(name = "Tablet Team Content Fullscreen Preview", device = Devices.TABLET)
+fun TeamContentFullscreenPreview() {
     TemplatePreviewTheme {
         TeamContent(
             paddingValues = PaddingValues(0.dp),
             uiState = TeamUiState.Success(getPokemonListMock()),
-            fabContainerState = Fab,
-            onRetry = {},
-            onFabContainerStateChanged = {},
-            onSavePokemon = {}
-        )
-    }
-}
-
-@Composable
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Team Content Retry Preview", showBackground = true)
-fun TeamContentErrorPreview() {
-    TemplatePreviewTheme {
-        TeamContent(
-            paddingValues = PaddingValues(0.dp),
-            uiState = TeamUiState.Error,
-            fabContainerState = Fab,
+            fabContainerState = FabContainerState.Fullscreen,
             onRetry = {},
             onFabContainerStateChanged = {},
             onSavePokemon = {}

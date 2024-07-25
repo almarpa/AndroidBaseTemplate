@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import com.example.androidtemplateapp.common.utils.getDominantColorFromDrawable
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
+import com.example.androidtemplateapp.ui.common.utils.isTablet
 
 @Composable
 fun AnimatedFabContainer(
@@ -104,8 +106,8 @@ private fun Transition<FabContainerState>.getCornerRadius(): Dp {
 fun AddPokemonFullscreen(onCancel: () -> Unit, onSave: (Pokemon) -> Unit) {
     Column(
         modifier = Modifier
-            .padding(20.dp)
-            .fillMaxSize(),
+            .padding(horizontal = 10.dp, vertical = 30.dp)
+            .fillMaxSize()
     ) {
         CustomBackButton { onCancel() }
         PokemonForm { pokemon ->
@@ -142,7 +144,6 @@ fun PokemonForm(onSave: (Pokemon) -> Unit) {
                     validImageURL = true
                 }
             )
-            CustomSpacer(50)
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(.9f),
                 value = pokemonImageUrl,
@@ -208,7 +209,7 @@ fun PokemonImage(
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth(.9f)
+                    .fillMaxWidth(if (isTablet()) .3f else .9f)
                     .aspectRatio(1f),
                 model = pokemonImageURL,
                 contentDescription = "Member Image",
@@ -295,6 +296,13 @@ fun AddPokemonFloatingButtonPreview() {
     "Dark Fab Container Fullscreen",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(name = "Tablet Fab Container Fullscreen", device = Devices.TABLET, showBackground = true)
+@Preview(
+    "Dark Tablet Fab Container Fullscreen",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.TABLET
 )
 fun FabContainerFullscreenPreview() {
     TemplatePreviewTheme {
