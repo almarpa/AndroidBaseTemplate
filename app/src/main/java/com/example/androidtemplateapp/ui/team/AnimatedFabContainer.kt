@@ -106,7 +106,7 @@ private fun Transition<FabContainerState>.getCornerRadius(): Dp {
 fun AddPokemonFullscreen(onCancel: () -> Unit, onSave: (Pokemon) -> Unit) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 30.dp)
+            .padding(start = 10.dp, end = 10.dp, top = 40.dp)
             .fillMaxSize()
     ) {
         CustomBackButton { onCancel() }
@@ -123,53 +123,46 @@ fun PokemonForm(onSave: (Pokemon) -> Unit) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
     ) {
         var pokemonImageUrl: String by remember { mutableStateOf("") }
         var pokemonName: String by remember { mutableStateOf("") }
         var pokemonColor: Color by remember { mutableStateOf(Color.Transparent) }
         var validImageURL: Boolean by remember { mutableStateOf(false) }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            PokemonImage(
-                pokemonImageURL = pokemonImageUrl,
-                onError = {
-                    pokemonColor = Color.Transparent
-                    validImageURL = false
-                },
-                onSuccess = {
-                    pokemonColor = it
-                    validImageURL = true
-                }
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(.9f),
-                value = pokemonImageUrl,
-                onValueChange = { pokemonImageUrl = it },
-                placeholder = { Text(text = stringResource(R.string.add_photo)) },
-                label = { Text(text = stringResource(R.string.pokemon_photo)) },
-                maxLines = 3,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                isError = !validImageURL && pokemonImageUrl.isNotEmpty(),
-            )
-            CustomSpacer(height = 30)
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(.9f),
-                value = pokemonName,
-                onValueChange = { pokemonName = it },
-                placeholder = { Text(text = stringResource(R.string.insert_name)) },
-                label = { Text(text = stringResource(R.string.pokemon_name)) },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                maxLines = 1,
-            )
-        }
-
+        PokemonImage(
+            pokemonImageURL = pokemonImageUrl,
+            onError = {
+                pokemonColor = Color.Transparent
+                validImageURL = false
+            },
+            onSuccess = {
+                pokemonColor = it
+                validImageURL = true
+            }
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(.9f),
+            value = pokemonImageUrl,
+            onValueChange = { pokemonImageUrl = it },
+            placeholder = { Text(text = stringResource(R.string.add_photo)) },
+            label = { Text(text = stringResource(R.string.pokemon_photo)) },
+            maxLines = if (isTablet()) 1 else 3,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            isError = !validImageURL && pokemonImageUrl.isNotEmpty(),
+        )
+        CustomSpacer(height = 20)
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(.9f),
+            value = pokemonName,
+            onValueChange = { pokemonName = it },
+            placeholder = { Text(text = stringResource(R.string.insert_name)) },
+            label = { Text(text = stringResource(R.string.pokemon_name)) },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            maxLines = if (isTablet()) 1 else 2,
+        )
+        CustomSpacer(height = 50)
         Button(
-            modifier = Modifier
-                .fillMaxWidth(.6f)
-                .padding(bottom = 20.dp),
+            modifier = Modifier.fillMaxWidth(.6f),
             enabled = checkFields(pokemonName, pokemonImageUrl),
             onClick = {
                 onSave(
@@ -196,20 +189,21 @@ fun PokemonImage(
     onSuccess: (Color) -> Unit,
 ) {
     var cardDominantColor: Color by remember { mutableStateOf(Color.Transparent) }
-    Card(
-        modifier = Modifier
-            .wrapContentHeight()
-            .padding(20.dp),
-        shape = AbsoluteCutCornerShape(40.dp),
-        colors = CardDefaults.cardColors(containerColor = cardDominantColor)
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Card(
+            modifier = Modifier
+                .wrapContentHeight()
+                .padding(20.dp),
+            shape = AbsoluteCutCornerShape(40.dp),
+            colors = CardDefaults.cardColors(containerColor = cardDominantColor)
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth(if (isTablet()) .3f else .9f)
+                    .fillMaxWidth(if (isTablet()) .25f else 1f)
                     .aspectRatio(1f),
                 model = pokemonImageURL,
                 contentDescription = "Member Image",
@@ -248,7 +242,7 @@ fun CustomBackButton(onCancel: () -> Unit) {
 @Composable
 fun AddPokemonFab(onFabButtonPressed: () -> Unit) {
     Button(
-        modifier = Modifier.padding(end = 16.dp, bottom = 20.dp),
+        modifier = Modifier.padding(end = 20.dp, bottom = 20.dp),
         colors = ButtonDefaults.buttonColors(),
         onClick = { onFabButtonPressed() },
     ) {

@@ -86,13 +86,11 @@ private fun TeamContent(
     onSavePokemon: (Pokemon) -> Unit,
 ) {
     Column {
-        val initialPaddingValues by remember { mutableStateOf(paddingValues) }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(initialPaddingValues)
-                .padding(top = 50.dp)
+                .padding(paddingValues)
         ) {
             when (uiState) {
                 is TeamUiState.Loading -> {
