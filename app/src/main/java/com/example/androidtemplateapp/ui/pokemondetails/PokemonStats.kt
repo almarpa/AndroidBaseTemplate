@@ -30,8 +30,7 @@ import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 fun PokemonStats(pokemonDetails: PokemonDetails) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
+            .fillMaxWidth(),
     ) {
         pokemonDetails.stats.forEach { stat ->
             PokemonStat(stat = stat)
@@ -97,7 +96,7 @@ fun PokemonStatsPreview() {
         PokemonDetails(
             id = 1,
             order = 1,
-            name = "Bulbasour",
+            name = "Bulbasaur",
             baseExperience = 64,
             height = 24,
             weight = 12,

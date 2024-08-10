@@ -9,7 +9,7 @@ fun getPokemonMock() =
     Pokemon(
         id = 1,
         url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-        name = "Bulbasour",
+        name = "Bulbasaur",
         dominantColor = null,
         isTeamMember = false
     )
@@ -85,7 +85,7 @@ fun getPokemonDetailsMock() =
     PokemonDetails(
         id = 1,
         order = 1,
-        name = "Bulbasour",
+        name = "Bulbasaur",
         baseExperience = 64,
         height = 24,
         weight = 12,

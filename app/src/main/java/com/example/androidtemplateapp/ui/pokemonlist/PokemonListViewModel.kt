@@ -34,15 +34,12 @@ class PokemonListViewModel @Inject constructor(
 
     private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
     val uiState: StateFlow<SearchUiState> = _searchUiState
-
-    private var _visibleItems: Pair<Int, Int> = 0 to 0
-    val visibleItems: Pair<Int, Int> = _visibleItems
-
+    
     val pokemonList: Flow<PagingData<Pokemon>> =
         pokemonUseCase.getPokemons(pageSize = PAGE_SIZE).cachedIn(viewModelScope)
 
     fun onPokemonSearch(name: String) {
-        if (name.length > 2) {
+        if (name.length > 1) {
             _searchUiState.tryEmit(SearchUiState.Loading)
             viewModelScope.launch(Dispatchers.IO) {
                 pokemonUseCase.searchPokemonByName(name)
@@ -66,9 +63,5 @@ class PokemonListViewModel @Inject constructor(
 
     fun removeCurrentSearch() {
         _searchUiState.tryEmit(SearchUiState.Idle)
-    }
-
-    fun setCurrentScrollPosition(visibleItems: Pair<Int, Int>) {
-        _visibleItems = visibleItems
     }
 }
