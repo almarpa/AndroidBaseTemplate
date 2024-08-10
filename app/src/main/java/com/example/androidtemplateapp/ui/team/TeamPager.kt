@@ -9,7 +9,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.AbsoluteCutCornerShape
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -26,18 +24,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import java.net.URLDecoder
 import kotlin.math.absoluteValue
-import com.example.androidtemplateapp.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -46,6 +45,7 @@ fun TeamPager(pokemonList: List<Pokemon>) {
 
     CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
         HorizontalPager(
+            modifier = Modifier.fillMaxHeight(),
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 40.dp),
         ) { page ->
@@ -63,13 +63,14 @@ fun TeamPager(pokemonList: List<Pokemon>) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
+    val pageOffset =
+        ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
+
     Card(
         modifier = Modifier
-            .wrapContentHeight()
             .padding(20.dp)
+            .height(200.dp + 300.dp * (1 - pagerState.getOffsetFractionForPage(page).absoluteValue))
             .graphicsLayer {
-                val pageOffset =
-                    ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
                 alpha = lerp(
                     start = 0.5f,
                     stop = 1f,
@@ -83,14 +84,14 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MemberImage(pokemon)
-            MemberName(pokemon)
+            MemberImage(modifier = Modifier.weight(.6f), pokemon = pokemon)
+            MemberName(modifier = Modifier.weight(.2f), pokemon = pokemon)
         }
     }
 }
 
 @Composable
-fun MemberImage(pokemon: Pokemon) {
+fun MemberImage(pokemon: Pokemon, modifier: Modifier) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(URLDecoder.decode(pokemon.url, "UTF-8"))
@@ -99,32 +100,32 @@ fun MemberImage(pokemon: Pokemon) {
             .build(),
         contentDescription = "Member Image",
         contentScale = ContentScale.FillBounds,
-        modifier = Modifier
-            .clip(CircleShape)
-            .aspectRatio(1f)
-            .padding(8.dp)
+        modifier = modifier.aspectRatio(1f)
     )
 }
 
 @Composable
-fun MemberName(pokemon: Pokemon) {
-    Text(
-        modifier = Modifier
-            .padding(horizontal = 15.dp, vertical = 40.dp)
-            .fillMaxWidth(),
-        text = pokemon.name.uppercase(),
-        textAlign = TextAlign.Center,
-        color = Color.White,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold,
-        fontSize = 30.sp,
-    )
+fun MemberName(pokemon: Pokemon, modifier: Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Text(
+            modifier = Modifier.fillMaxSize().padding(16.dp),
+            textAlign = TextAlign.Center,
+            text = pokemon.name.uppercase(),
+            color = Color.White,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp,
+        )
+    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview("Team Pager", showBackground = true)
 @Preview("Dark Team Pager", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Tablet Dark Team Pager", device = Devices.TABLET)
 fun TeamPagerPreview() {
     TemplatePreviewTheme {
         TeamPager(pokemonList = getPokemonListMock())
