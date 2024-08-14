@@ -90,25 +90,57 @@ fun getPokemonDetailsMock() =
         height = 24,
         weight = 12,
         imageURL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-        stats = listOf(
-            Stat(
-                baseStat = 50, effort = 30, statX = StatX(StatNameEnum.ATTACK, "")
-            ),
-            Stat(
-                baseStat = 80, effort = 70, statX = StatX(StatNameEnum.DEFENSE, "")
-            ),
-            Stat(
-                baseStat = 70, effort = 10, statX = StatX(StatNameEnum.SPECIAL_ATTACK, "")
-            ),
-            Stat(
-                baseStat = 100, effort = 30, statX = StatX(StatNameEnum.SPECIAL_DEFENSE, "")
+        stats = getPokemonStatListMock(),
+        types = getPokemonTypeListMock(),
+        moves = getPokemonMoveListMock()
+    )
+
+fun getPokemonStatListMock() =
+    listOf(
+        Stat(
+            baseStat = 50, effort = 30, statX = StatX(StatNameEnum.ATTACK, "")
+        ),
+        Stat(
+            baseStat = 80, effort = 70, statX = StatX(StatNameEnum.DEFENSE, "")
+        ),
+        Stat(
+            baseStat = 70, effort = 10, statX = StatX(StatNameEnum.SPECIAL_ATTACK, "")
+        ),
+        Stat(
+            baseStat = 100, effort = 30, statX = StatX(StatNameEnum.SPECIAL_DEFENSE, "")
+        )
+    )
+
+fun getPokemonTypeListMock() =
+    listOf(
+        TypeX(
+            slot = 1, typeXX = TypeXX(PokemonTypeEnum.BUG, "")
+        ), TypeX(
+            slot = 2, typeXX = TypeXX(PokemonTypeEnum.POISON, "")
+        )
+    )
+
+fun getPokemonMoveListMock() =
+    listOf(
+        Move(
+            move = MoveX(
+                name = "Tackle 1", url = "https://pokeapi.co/api/v2/move/33/"
             )
         ),
-        types = listOf(
-            TypeX(
-                slot = 1, typeXX = TypeXX(PokemonTypeEnum.BUG, "")
-            ), TypeX(
-                slot = 2, typeXX = TypeXX(PokemonTypeEnum.POISON, "")
+        Move(
+            move = MoveX(
+                name = "Tackle 2 Tackle 2", url = "https://pokeapi.co/api/v2/move/33/"
+            )
+        ),
+        Move(
+            move = MoveX(
+                name = "Tackle 3 Tackle 3 Tackle 3", url = "https://pokeapi.co/api/v2/move/33/"
+            )
+        ),
+        Move(
+            move = MoveX(
+                name = "Tackle 4 Tackle 4 Tackle 4 Tackle 4",
+                url = "https://pokeapi.co/api/v2/move/33/"
             )
         )
     )

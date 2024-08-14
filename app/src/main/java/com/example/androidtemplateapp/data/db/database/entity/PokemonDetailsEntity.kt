@@ -27,7 +27,8 @@ data class PokemonDetailsEntity(
     var stats: List<Stat>,
     @ColumnInfo(name = "types")
     var types: List<TypeX>,
-
+    @ColumnInfo(name = "moves")
+    var moves: List<Move>,
     @Ignore
     var isDefault: Boolean,
     @Ignore
@@ -38,8 +39,6 @@ data class PokemonDetailsEntity(
     var sprites: Sprites,
     @Ignore
     var abilities: List<Ability>,
-    @Ignore
-    var moves: List<Move>,
     @Ignore
     var forms: List<Form>,
 ) {
@@ -53,6 +52,7 @@ data class PokemonDetailsEntity(
         imageURL: String,
         stats: List<Stat>,
         types: List<TypeX>,
+        moves: List<Move>,
     ) : this(
         id = id,
         name = name,
@@ -63,31 +63,31 @@ data class PokemonDetailsEntity(
         imageURL = imageURL,
         stats = stats,
         types = types,
+        moves = moves,
         isDefault = false,
         locationAreaEncounters = "",
         species = Species(),
         sprites = Sprites(),
         abilities = listOf(),
-        moves = listOf(),
         forms = listOf(),
     )
 
     fun asDomain(): PokemonDetails = PokemonDetails(
-        id,
-        name,
-        order,
-        baseExperience,
-        height,
-        weight,
-        imageURL,
-        stats,
-        types,
-        isDefault,
-        locationAreaEncounters,
-        species,
-        sprites,
-        abilities,
-        moves,
-        forms
+        id = id,
+        name = name,
+        order = order,
+        baseExperience = baseExperience,
+        height = height,
+        weight = weight,
+        imageURL = imageURL,
+        stats = stats,
+        types = types,
+        moves = moves,
+        isDefault = isDefault,
+        locationAreaEncounters = locationAreaEncounters,
+        species = species,
+        sprites = sprites,
+        abilities = abilities,
+        forms = forms
     )
 }

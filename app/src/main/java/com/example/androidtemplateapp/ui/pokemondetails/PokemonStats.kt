@@ -17,22 +17,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.androidtemplateapp.entity.PokemonDetails
 import com.example.androidtemplateapp.entity.Stat
 import com.example.androidtemplateapp.entity.StatX
-import com.example.androidtemplateapp.entity.TypeX
-import com.example.androidtemplateapp.entity.TypeXX
-import com.example.androidtemplateapp.entity.enums.PokemonTypeEnum
 import com.example.androidtemplateapp.entity.enums.StatNameEnum
+import com.example.androidtemplateapp.ui.common.mocks.getPokemonStatListMock
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 
 @Composable
-fun PokemonStats(pokemonDetails: PokemonDetails) {
+fun PokemonStats(stats: List<Stat>) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
     ) {
-        pokemonDetails.stats.forEach { stat ->
+        stats.forEach { stat ->
             PokemonStat(stat = stat)
             CustomSpacer(height = 4)
         }
@@ -92,44 +89,7 @@ fun PokemonStat(stat: Stat) {
 @Preview("Pokemon Stats", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun PokemonStatsPreview() {
-    PokemonStats(
-        PokemonDetails(
-            id = 1,
-            order = 1,
-            name = "Bulbasaur",
-            baseExperience = 64,
-            height = 24,
-            weight = 12,
-            imageURL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-            stats = listOf(
-                Stat(
-                    baseStat = 50,
-                    effort = 30,
-                    statX = StatX(StatNameEnum.ATTACK, "")
-                ),
-                Stat(
-                    baseStat = 80,
-                    effort = 70,
-                    statX = StatX(StatNameEnum.DEFENSE, "")
-                ),
-                Stat(
-                    baseStat = 80,
-                    effort = 70,
-                    statX = StatX(name = StatNameEnum.HP, url = "")
-                )
-            ),
-            types = listOf(
-                TypeX(
-                    slot = 1,
-                    typeXX = TypeXX(PokemonTypeEnum.BUG, "")
-                ),
-                TypeX(
-                    slot = 2,
-                    typeXX = TypeXX(PokemonTypeEnum.POISON, "")
-                )
-            )
-        )
-    )
+    PokemonStats(getPokemonStatListMock())
 }
 
 @Preview("Pokemon Stat")

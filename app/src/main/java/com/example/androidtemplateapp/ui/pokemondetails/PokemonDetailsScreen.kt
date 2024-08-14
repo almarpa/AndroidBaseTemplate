@@ -67,7 +67,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     BackHandler { onBackPressed() }
     Scaffold(
         topBar = { DefaultTopAppBar(title = R.string.empty_string) { onBackPressed() } },
-    ) { paddingValues ->
+    ) {
         PokemonDetailsContent(
             userAppTheme = userAppTheme,
             pokemon = pokemon,
@@ -153,7 +153,9 @@ fun AddMemberButton(
             },
         ) {
             Icon(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(4.dp),
                 imageVector = if (isTeamMember) Icons.Filled.PersonRemove else Icons.Outlined.PersonAdd,
                 contentDescription = "Add member icon",
                 tint = MaterialTheme.colorScheme.primary,
@@ -176,16 +178,17 @@ fun PokemonCard(
             .padding(
                 top = if (isTablet()) 230.dp else 20.dp,
             )
-            .verticalScroll(scrollState)
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
             PokemonName(pokemon)
             CustomSpacer(height = 16)
-            PokemonType(pokemonDetailsNotNull.types)
-            CustomSpacer(height = 8)
-            PokemonMeasures(pokemonDetailsNotNull.weight, pokemonDetailsNotNull.height)
-            CustomSpacer(height = 8)
-            PokemonStats(pokemonDetailsNotNull)
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
+                PokemonType(pokemonDetailsNotNull.types)
+                CustomSpacer(height = 8)
+                PokemonMeasures(pokemonDetailsNotNull.weight, pokemonDetailsNotNull.height)
+                CustomSpacer(height = 8)
+                PokemonTabRow(Modifier.height(300.dp), pokemonDetails)
+            }
         }
     }
 }
@@ -211,7 +214,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth(if (isTablet()) 0.3f else 0.75f)
+                .fillMaxWidth(if (isTablet()) 0.28f else 0.6f)
                 .aspectRatio(1f)
                 .pokemonSharedElement(
                     isLocalInspectionMode = LocalInspectionMode.current,

@@ -12,12 +12,12 @@ data class PokemonDetails(
     var imageURL: String,
     var stats: List<Stat>,
     var types: List<TypeX>,
+    var moves: List<Move>,
     var isDefault: Boolean,
     var locationAreaEncounters: String,
     var species: Species,
     var sprites: Sprites,
     var abilities: List<Ability>,
-    var moves: List<Move>,
     var forms: List<Form>,
 ) {
     constructor(
@@ -30,6 +30,7 @@ data class PokemonDetails(
         imageURL: String,
         stats: List<Stat>,
         types: List<TypeX>,
+        moves: List<Move>,
     ) : this(
         id = id,
         name = name,
@@ -40,12 +41,12 @@ data class PokemonDetails(
         imageURL = imageURL,
         stats = stats,
         types = types,
+        moves = moves,
         isDefault = false,
         locationAreaEncounters = "",
         species = Species(),
         sprites = Sprites(),
         abilities = listOf(),
-        moves = listOf(),
         forms = listOf(),
     )
 
@@ -60,12 +61,12 @@ data class PokemonDetails(
             imageURL,
             stats,
             types,
+            moves,
             isDefault,
             locationAreaEncounters,
             species,
             sprites,
             abilities,
-            moves,
             forms
         )
 }

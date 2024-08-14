@@ -30,4 +30,6 @@
     <string name="language_english">English</string>
     <string name="language_spanish">Spanish</string>
     <string name="language">Language</string>
+    <string name="stats">Stats</string>
+    <string name="moves">Moves</string>
 </resources>

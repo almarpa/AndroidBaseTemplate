@@ -41,7 +41,7 @@ import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
 import com.example.androidtemplateapp.ui.pokemonlist.search.PokemonSearchTopAppBar
 import kotlinx.coroutines.flow.flowOf
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
