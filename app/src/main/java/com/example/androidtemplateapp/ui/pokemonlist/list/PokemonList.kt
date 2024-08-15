@@ -36,7 +36,7 @@ fun SharedTransitionScope.PokemonList(
     onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
     val currentOrientation = LocalConfiguration.current.orientation
-    val columns = if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
+    val columns = if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
@@ -70,7 +70,8 @@ fun SharedTransitionScope.PokemonList(
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Pokemon List")
-@Preview("Pokemon List", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("Dark Pokemon List", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("Dark Pokemon List", uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun PokemonListPreview() {
     TemplatePreviewTheme {
         PokemonList(

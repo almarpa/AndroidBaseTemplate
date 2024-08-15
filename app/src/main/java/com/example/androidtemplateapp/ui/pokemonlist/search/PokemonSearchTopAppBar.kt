@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 fun SharedTransitionScope.PokemonSearchTopAppBar(
     animatedVisibilityScope: AnimatedVisibilityScope,
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
+    scrollBehaviour: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     uiState: SearchUiState,
     isSearchActive: Boolean = false,
     onSearchActiveChange: (Boolean) -> Unit = {},
@@ -52,7 +53,7 @@ fun SharedTransitionScope.PokemonSearchTopAppBar(
                 }
             },
             actions = { SearchIcon { onSearchActiveChange(true) } },
-            scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+            scrollBehavior = scrollBehaviour,
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 scrolledContainerColor = MaterialTheme.colorScheme.surface,
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -85,7 +86,7 @@ fun SearchIcon(onIconClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Preview("Inactive Search Top App Bar")
 @Preview("Inactive Dark Search Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -99,7 +100,7 @@ fun InactiveSearchTopAppBarPreview() {
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Preview("Active Search Top App Bar")
 @Preview("Active Dark Search Top App Bar", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable

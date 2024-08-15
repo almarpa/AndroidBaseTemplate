@@ -13,9 +13,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
@@ -41,7 +40,7 @@ import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
 import com.example.androidtemplateapp.ui.pokemonlist.search.PokemonSearchTopAppBar
 import kotlinx.coroutines.flow.flowOf
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SharedTransitionScope.PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -55,12 +54,15 @@ fun SharedTransitionScope.PokemonListScreen(
     onDismissSearch: () -> Unit,
 ) {
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
+    val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection),
         topBar = {
             PokemonSearchTopAppBar(
                 animatedVisibilityScope = animatedVisibilityScope,
                 drawerState = drawerState,
+                scrollBehaviour = scrollBehaviour,
                 uiState = searchUiState,
                 isSearchActive = isSearchActive,
                 onSearchActiveChange = { isActive -> isSearchActive = isActive },

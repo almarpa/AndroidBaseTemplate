@@ -15,7 +15,7 @@ import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.tabrow.SwipeableTabRow
 
 @Composable
-fun PokemonTabRow(modifier: Modifier, pokemonDetails: PokemonDetails) {
+fun PokemonTabRow(modifier: Modifier = Modifier, pokemonDetails: PokemonDetails) {
     val tabs =
         listOf(
             LocalContext.current.getString(R.string.stats),
@@ -45,6 +45,6 @@ fun PokemonTabRow(modifier: Modifier, pokemonDetails: PokemonDetails) {
 )
 fun PokemonTabRowPreview() {
     TemplatePreviewTheme {
-        PokemonTabRow(modifier = Modifier, pokemonDetails = getPokemonDetailsMock())
+        PokemonTabRow(pokemonDetails = getPokemonDetailsMock())
     }
 }

@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,11 +28,6 @@ import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.AnimatedTopAppBar
 
-sealed interface FabContainerState {
-    data object Fab : FabContainerState
-    data object Fullscreen : FabContainerState
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeamScreen(
@@ -43,11 +38,12 @@ fun TeamScreen(
     onRetry: () -> Unit,
     onSave: (pokemon: Pokemon) -> Unit,
 ) {
-    var fabContainerState by remember { mutableStateOf<FabContainerState>(FabContainerState.Fab) }
+
+    var isFabContainerFullScreen by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         topBar = {
             AnimatedTopAppBar(
-                isVisible = fabContainerState == FabContainerState.Fab,
+                isVisible = !isFabContainerFullScreen,
                 drawerState = drawerState,
                 title = R.string.team_title,
             )
@@ -56,18 +52,18 @@ fun TeamScreen(
             TeamContent(
                 paddingValues = paddingValues,
                 uiState = uiState,
-                fabContainerState = fabContainerState,
+                fabContainerState = isFabContainerFullScreen,
                 onRetry = { onRetry() },
-                onFabContainerStateChanged = { fabContainerState = it },
+                onFabContainerStateChanged = { isFabContainerFullScreen = it },
                 onSavePokemon = { pokemon ->
-                    fabContainerState = FabContainerState.Fab
+                    isFabContainerFullScreen = false
                     onSave(pokemon)
                 }
             )
         },
         bottomBar = {
             AnimatedBottomAppBar(
-                isVisible = fabContainerState == FabContainerState.Fab,
+                isVisible = !isFabContainerFullScreen,
                 drawerState = drawerState,
                 currentRoute = currentRoute,
                 navigationActions = navigationActions,
@@ -80,18 +76,17 @@ fun TeamScreen(
 private fun TeamContent(
     paddingValues: PaddingValues,
     uiState: TeamUiState,
-    fabContainerState: FabContainerState,
+    fabContainerState: Boolean,
     onRetry: () -> Unit,
-    onFabContainerStateChanged: (FabContainerState) -> Unit,
+    onFabContainerStateChanged: (Boolean) -> Unit,
     onSavePokemon: (Pokemon) -> Unit,
 ) {
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(paddingValues)
-        ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
             when (uiState) {
                 is TeamUiState.Loading -> {
                     FullScreenLoader()
@@ -110,8 +105,7 @@ private fun TeamContent(
             AnimatedFabContainer(
                 modifier = Modifier
                     .wrapContentSize()
-                    .align(Alignment.End)
-                    .padding(bottom = paddingValues.calculateBottomPadding()),
+                    .align(Alignment.End),
                 fabContainerState = fabContainerState,
                 onFabContainerStateChanged = { onFabContainerStateChanged(it) },
                 onSave = { onSavePokemon(it) }
@@ -123,6 +117,11 @@ private fun TeamContent(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview("Team Screen")
+@Preview(
+    "Team Screen Landscape",
+    showBackground = true,
+    device = "spec:width=400dp,height=900dp,dpi=420,orientation=landscape"
+)
 @Preview(name = "Tablet Team Screen", device = Devices.TABLET)
 fun TeamScreenPreview() {
     TemplatePreviewTheme {
@@ -146,7 +145,7 @@ fun TeamContentFullscreenPreview() {
         TeamContent(
             paddingValues = PaddingValues(0.dp),
             uiState = TeamUiState.Success(getPokemonListMock()),
-            fabContainerState = FabContainerState.Fullscreen,
+            fabContainerState = true,
             onRetry = {},
             onFabContainerStateChanged = {},
             onSavePokemon = {}

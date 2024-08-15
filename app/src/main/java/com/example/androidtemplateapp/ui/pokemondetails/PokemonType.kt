@@ -20,8 +20,9 @@ import com.example.androidtemplateapp.entity.enums.PokemonTypeEnum
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 
 @Composable
-fun PokemonType(types: List<TypeX>) {
+fun PokemonType(modifier: Modifier = Modifier, types: List<TypeX>) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (type in types) {
@@ -47,7 +48,7 @@ fun PokemonType(types: List<TypeX>) {
 @Preview("Pokemon Type")
 fun PokemonTypePreview() {
     PokemonType(
-        listOf(
+        types = listOf(
             TypeX(1, TypeXX(PokemonTypeEnum.ICE, "")),
             TypeX(2, TypeXX(PokemonTypeEnum.PSYCHIC, "")),
         )

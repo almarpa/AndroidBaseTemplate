@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,11 +22,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setScreenOrientation()
         setContent {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             val themeUserSetting by settingsViewModel.userTheme.collectAsStateWithLifecycle()
             val systemUiController = rememberSystemUiController()
-            
+
             systemUiController.setStatusBarColor(
                 color = Color.Transparent,
                 darkIcons = themeUserSetting == AppTheme.LIGHT
@@ -35,5 +37,9 @@ class MainActivity : AppCompatActivity() {
                 TemplateApp()
             }
         }
+    }
+
+    private fun setScreenOrientation() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 }

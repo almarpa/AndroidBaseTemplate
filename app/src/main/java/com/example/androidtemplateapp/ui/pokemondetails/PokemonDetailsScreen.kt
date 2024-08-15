@@ -2,11 +2,14 @@ package com.example.androidtemplateapp.ui.pokemondetails
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -16,14 +19,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.outlined.PersonAdd
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -87,34 +91,39 @@ private fun SharedTransitionScope.PokemonDetailsContent(
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
 ) {
+    val scrollState = rememberScrollState()
+    val topPaddingCard = 100
+
+    val animatedImageSize by animateDpAsState(
+        targetValue = if (scrollState.value > 60) (topPaddingCard / 4).dp else topPaddingCard.dp,
+        label = "animatedImageSize"
+    )
+
+    Log.i("DEBUG_END", "current: ${scrollState.value}, max: ${scrollState.maxValue}")
+
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .wrapContentHeight()
             .background(getBackgroundColor(userAppTheme, pokemon.dominantColor))
             .statusBarsPadding()
             .systemBarsPadding(),
     ) {
         PokemonCard(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = 150.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
-                .shadow(10.dp, RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.padding(top = topPaddingCard.dp),
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
+            scrollState = scrollState
         )
-        PokemonImageAnimation(animatedVisibilityScope, pokemon)
+        PokemonImageAnimation(
+            animatedVisibilityScope = animatedVisibilityScope,
+            pokemon = pokemon,
+            pokemonImageSize = animatedImageSize.times(2)
+        )
         AddMemberButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(
-                    top = 166.dp,
+                    top = topPaddingCard.dp - 16.dp,
                     start = 32.dp,
                 ),
             isMemberYet = pokemon.isTeamMember
@@ -136,15 +145,15 @@ fun AddMemberButton(
     isMemberYet: Boolean = false,
     onMemberClick: (Boolean) -> Unit = {},
 ) {
-    Box(modifier = modifier) {
-        var isTeamMember by remember { mutableStateOf(isMemberYet) }
+    Row(modifier = modifier) {
+        var isTeamMember by rememberSaveable { mutableStateOf(isMemberYet) }
         val memberIconScale by animateFloatAsState(
-            targetValue = if (isTeamMember) 1.2f else 1f,
+            targetValue = if (isTeamMember) 1.1f else 1f,
             label = "Member Button Scale"
         )
-        IconButton(
+        FloatingActionButton(
             modifier = Modifier
-                .size(if (isTablet()) 70.dp else 40.dp)
+                .size(if (isTablet()) 60.dp else 40.dp)
                 .aspectRatio(1f)
                 .scale(memberIconScale),
             onClick = {
@@ -169,25 +178,47 @@ fun PokemonCard(
     modifier: Modifier = Modifier,
     pokemon: Pokemon,
     pokemonDetails: PokemonDetails?,
+    scrollState: ScrollState,
 ) {
-    val scrollState = rememberScrollState()
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .wrapContentHeight()
+            .fillMaxWidth()
+            .fillMaxSize()
             .padding(
-                top = if (isTablet()) 230.dp else 20.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
             )
+            .shadow(10.dp, RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
-            PokemonName(pokemon)
-            CustomSpacer(height = 16)
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                PokemonType(pokemonDetailsNotNull.types)
-                CustomSpacer(height = 8)
-                PokemonMeasures(pokemonDetailsNotNull.weight, pokemonDetailsNotNull.height)
-                CustomSpacer(height = 8)
-                PokemonTabRow(Modifier.height(300.dp), pokemonDetails)
+            Column(
+                modifier = Modifier.verticalScroll(scrollState)
+            ) {
+                PokemonName(
+                    modifier = Modifier.padding(
+                        top = if (isTablet()) 160.dp else 120.dp,
+                    ),
+                    pokemon = pokemon
+                )
+                CustomSpacer(height = 16)
+                PokemonType(
+                    types = pokemonDetailsNotNull.types
+                )
+                PokemonMeasures(
+                    pokemonWeight = pokemonDetailsNotNull.weight,
+                    pokemonHeight = pokemonDetailsNotNull.height
+                )
+                PokemonTabRow(
+                    modifier = Modifier.heightIn(
+                        0.dp,
+                        300.dp
+                    ), // set max height due to nested scroll need to have a defined height
+                    pokemonDetails = pokemonDetails
+                )
             }
         }
     }
@@ -198,6 +229,7 @@ fun PokemonCard(
 fun SharedTransitionScope.PokemonImageAnimation(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
+    pokemonImageSize: Dp = 200.dp,
 ) {
     Box(
         modifier = Modifier
@@ -214,7 +246,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth(if (isTablet()) 0.28f else 0.6f)
+                .height(if (isTablet()) pokemonImageSize.plus(50.dp) else pokemonImageSize)
                 .aspectRatio(1f)
                 .pokemonSharedElement(
                     isLocalInspectionMode = LocalInspectionMode.current,
@@ -260,6 +292,7 @@ fun PokemonCardPreview() {
         PokemonCard(
             pokemonDetails = getPokemonDetailsMock(),
             pokemon = getPokemonMock(),
+            scrollState = rememberScrollState()
         )
     }
 }

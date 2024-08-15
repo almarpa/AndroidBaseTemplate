@@ -45,8 +45,8 @@ import com.example.androidtemplateapp.ui.common.utils.isTablet
 @Composable
 fun AnimatedFabContainer(
     modifier: Modifier = Modifier,
-    fabContainerState: FabContainerState,
-    onFabContainerStateChanged: (FabContainerState) -> Unit,
+    fabContainerState: Boolean,
+    onFabContainerStateChanged: (Boolean) -> Unit,
     onSave: (Pokemon) -> Unit,
 ) {
     with(updateTransition(targetState = fabContainerState, label = "fabContainerTransition")) {
@@ -66,37 +66,39 @@ fun AnimatedFabContainer(
                 )
             },
         ) { state ->
-            when (state) {
-                FabContainerState.Fab -> AddPokemonFab {
-                    onFabContainerStateChanged(FabContainerState.Fullscreen)
-                }
-
-                FabContainerState.Fullscreen -> AddPokemonFullscreen(
-                    onCancel = { onFabContainerStateChanged(FabContainerState.Fab) },
+            if (state) {
+                AddPokemonFullscreen(
+                    onCancel = { onFabContainerStateChanged(false) },
                     onSave = { pokemon -> onSave(pokemon) }
                 )
+            } else {
+                AddPokemonFab {
+                    onFabContainerStateChanged(true)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun Transition<FabContainerState>.getBackgroundColor(): Color {
+private fun Transition<Boolean>.getBackgroundColor(): Color {
     val backgroundColor by animateColor(label = "fabContainerColorAnim") { state ->
-        when (state) {
-            FabContainerState.Fab -> Color.Transparent
-            FabContainerState.Fullscreen -> MaterialTheme.colorScheme.surface
+        if (state) {
+            MaterialTheme.colorScheme.surface
+        } else {
+            Color.Transparent
         }
     }
     return backgroundColor
 }
 
 @Composable
-private fun Transition<FabContainerState>.getCornerRadius(): Dp {
+private fun Transition<Boolean>.getCornerRadius(): Dp {
     val cornerRadius by animateDp(label = "fabContainerDpAnim") { state ->
-        when (state) {
-            FabContainerState.Fab -> 22.dp
-            FabContainerState.Fullscreen -> 0.dp
+        if (state) {
+            0.dp
+        } else {
+            22.dp
         }
     }
     return cornerRadius
@@ -106,7 +108,7 @@ private fun Transition<FabContainerState>.getCornerRadius(): Dp {
 fun AddPokemonFullscreen(onCancel: () -> Unit, onSave: (Pokemon) -> Unit) {
     Column(
         modifier = Modifier
-            .padding(start = 10.dp, end = 10.dp, top = 40.dp)
+            .padding(10.dp)
             .fillMaxSize()
     ) {
         CustomBackButton { onCancel() }
@@ -257,7 +259,7 @@ fun AddPokemonFab(onFabButtonPressed: () -> Unit) {
                 tint = Color.White
             )
             Image(
-                modifier = Modifier.width(50.dp),
+                modifier = Modifier.width(40.dp),
                 painter = painterResource(id = R.drawable.pokeball),
                 contentDescription = "Splash",
             )
@@ -276,7 +278,7 @@ fun AddPokemonFab(onFabButtonPressed: () -> Unit) {
 fun AddPokemonFloatingButtonPreview() {
     TemplatePreviewTheme {
         AnimatedFabContainer(
-            fabContainerState = FabContainerState.Fab,
+            fabContainerState = false,
             onFabContainerStateChanged = {},
             onSave = {}
         )
@@ -301,7 +303,7 @@ fun AddPokemonFloatingButtonPreview() {
 fun FabContainerFullscreenPreview() {
     TemplatePreviewTheme {
         AnimatedFabContainer(
-            fabContainerState = FabContainerState.Fullscreen,
+            fabContainerState = true,
             onFabContainerStateChanged = {},
             onSave = {}
         )

@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
@@ -33,7 +34,7 @@ fun SwipeableTabRow(
     contentColor: Color,
     indicatorColor: Color,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.wrapContentSize()) {
 
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         val pagerState = rememberPagerState { tabs.size }

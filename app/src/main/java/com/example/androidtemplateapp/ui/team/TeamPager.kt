@@ -110,7 +110,9 @@ fun MemberName(pokemon: Pokemon, modifier: Modifier) {
         modifier = modifier.fillMaxSize()
     ) {
         Text(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             textAlign = TextAlign.Center,
             text = pokemon.name.uppercase(),
             color = Color.White,
@@ -124,6 +126,11 @@ fun MemberName(pokemon: Pokemon, modifier: Modifier) {
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview("Team Pager", showBackground = true)
+@Preview(
+    "Team Pager Landscape",
+    showBackground = true,
+    device = "spec:width=400dp,height=900dp,dpi=420,orientation=landscape"
+)
 @Preview("Dark Team Pager", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Tablet Dark Team Pager", device = Devices.TABLET)
 fun TeamPagerPreview() {

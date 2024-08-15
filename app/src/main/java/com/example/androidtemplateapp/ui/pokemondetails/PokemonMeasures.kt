@@ -24,6 +24,7 @@ import kotlin.math.round
 @Preview("Pokemon Measures", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun PokemonMeasures(
+    modifier: Modifier = Modifier,
     pokemonWeight: Int = 100,
     pokemonHeight: Int = 100,
 ) {
@@ -31,8 +32,9 @@ fun PokemonMeasures(
     val pokemonHeightInMeters = remember { round(pokemonHeight * 100f) / 1000f }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .wrapContentHeight()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

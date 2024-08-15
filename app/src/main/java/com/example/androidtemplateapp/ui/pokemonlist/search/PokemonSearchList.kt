@@ -34,7 +34,7 @@ fun SharedTransitionScope.PokemonSearchList(
     onPokemonItemClick: (Pokemon) -> Unit = { },
 ) {
     val currentOrientation = LocalConfiguration.current.orientation
-    val columns = if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
+    val columns = if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
