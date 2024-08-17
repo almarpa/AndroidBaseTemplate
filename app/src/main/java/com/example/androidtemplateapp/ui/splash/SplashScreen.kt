@@ -4,11 +4,9 @@ import android.content.res.Configuration
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,10 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.androidtemplateapp.R
+import com.example.androidtemplateapp.ui.common.utils.PokeballImage
 import com.example.androidtemplateapp.ui.theme.TemplateTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -59,11 +55,7 @@ fun SplashContent(rotationState: Animatable<Float, AnimationVector1D>) {
             .background(MaterialTheme.colorScheme.surface)
             .graphicsLayer(rotationZ = rotationState.value),
     ) {
-        Image(
-            modifier = Modifier.width(50.dp),
-            painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = "Splash",
-        )
+        PokeballImage()
     }
 }
 

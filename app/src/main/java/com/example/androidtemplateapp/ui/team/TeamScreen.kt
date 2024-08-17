@@ -1,7 +1,10 @@
 package com.example.androidtemplateapp.ui.team
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,8 +41,8 @@ fun TeamScreen(
     onRetry: () -> Unit,
     onSave: (pokemon: Pokemon) -> Unit,
 ) {
-
     var isFabContainerFullScreen by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             AnimatedTopAppBar(
@@ -52,9 +55,9 @@ fun TeamScreen(
             TeamContent(
                 paddingValues = paddingValues,
                 uiState = uiState,
-                fabContainerState = isFabContainerFullScreen,
+                isFabContainerFullscreen = isFabContainerFullScreen,
                 onRetry = { onRetry() },
-                onFabContainerStateChanged = { isFabContainerFullScreen = it },
+                onFabContainerFullscreenChanged = { isFabContainerFullScreen = it },
                 onSavePokemon = { pokemon ->
                     isFabContainerFullScreen = false
                     onSave(pokemon)
@@ -76,38 +79,42 @@ fun TeamScreen(
 private fun TeamContent(
     paddingValues: PaddingValues,
     uiState: TeamUiState,
-    fabContainerState: Boolean,
+    isFabContainerFullscreen: Boolean,
     onRetry: () -> Unit,
-    onFabContainerStateChanged: (Boolean) -> Unit,
+    onFabContainerFullscreenChanged: (Boolean) -> Unit,
     onSavePokemon: (Pokemon) -> Unit,
 ) {
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
+            .wrapContentSize()
+            .padding(
+                if (isFabContainerFullscreen) {
+                    PaddingValues(vertical = 30.dp, horizontal = 10.dp)
+                } else {
+                    paddingValues
+                }
+            )
     ) {
-        Box(modifier = Modifier.weight(1f)) {
-            when (uiState) {
-                is TeamUiState.Loading -> {
-                    FullScreenLoader()
-                }
+        when (uiState) {
+            is TeamUiState.Loading -> {
+                FullScreenLoader()
+            }
 
-                is TeamUiState.Error -> {
-                    GenericRetryView { onRetry() }
-                }
+            is TeamUiState.Error -> {
+                GenericRetryView { onRetry() }
+            }
 
-                is TeamUiState.Success -> {
-                    TeamPager(pokemonList = uiState.teamList)
-                }
+            is TeamUiState.Success -> {
+                TeamPager(pokemonList = uiState.teamList)
             }
         }
         if (uiState !is TeamUiState.Error) {
             AnimatedFabContainer(
                 modifier = Modifier
                     .wrapContentSize()
-                    .align(Alignment.End),
-                fabContainerState = fabContainerState,
-                onFabContainerStateChanged = { onFabContainerStateChanged(it) },
+                    .align(Alignment.BottomEnd),
+                fabContainerState = isFabContainerFullscreen,
+                onFabContainerStateChanged = { onFabContainerFullscreenChanged(it) },
                 onSave = { onSavePokemon(it) }
             )
         }
@@ -145,9 +152,9 @@ fun TeamContentFullscreenPreview() {
         TeamContent(
             paddingValues = PaddingValues(0.dp),
             uiState = TeamUiState.Success(getPokemonListMock()),
-            fabContainerState = true,
+            isFabContainerFullscreen = true,
             onRetry = {},
-            onFabContainerStateChanged = {},
+            onFabContainerFullscreenChanged = {},
             onSavePokemon = {}
         )
     }

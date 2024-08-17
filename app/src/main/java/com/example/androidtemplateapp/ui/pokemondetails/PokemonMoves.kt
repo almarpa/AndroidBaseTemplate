@@ -39,19 +39,21 @@ fun PokemonMoves(moves: List<Move>) {
 @Composable
 fun PokemonMove(move: Move) {
     Card(
-        modifier = Modifier.heightIn(min = 40.dp),
+        modifier = Modifier.height(60.dp),
         shape = CutCornerShape(16.dp)
     ) {
-        Box(modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             Text(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .wrapContentHeight()
+                    .padding(vertical = 12.dp, horizontal = 24.dp)
                     .align(Alignment.Center),
                 text = move.move.name.uppercase(),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleSmall,
-                maxLines = 2,
-                minLines = 2,
                 textAlign = TextAlign.Center,
             )
         }

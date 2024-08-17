@@ -69,7 +69,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
     Card(
         modifier = Modifier
             .padding(20.dp)
-            .height(200.dp + 300.dp * (1 - pagerState.getOffsetFractionForPage(page).absoluteValue))
+            .height(200.dp + 250.dp * (1 - pagerState.getOffsetFractionForPage(page).absoluteValue))
             .graphicsLayer {
                 alpha = lerp(
                     start = 0.5f,
@@ -107,12 +107,12 @@ fun MemberImage(pokemon: Pokemon, modifier: Modifier) {
 @Composable
 fun MemberName(pokemon: Pokemon, modifier: Modifier) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize().fillMaxWidth()
     ) {
         Text(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                .padding(bottom = 12.dp)
+                .align(Alignment.Center),
             textAlign = TextAlign.Center,
             text = pokemon.name.uppercase(),
             color = Color.White,

@@ -66,8 +66,7 @@ fun SwipeableTabRow(
                 }
             }
         }
-        CustomSpacer(16)
-
+        CustomSpacer(height = 16)
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -75,8 +74,7 @@ fun SwipeableTabRow(
         ) {
             contentScreens.getOrNull(selectedTabIndex)?.invoke()
         }
-
-        CustomSpacer(16)
+        CustomSpacer(height = 16)
     }
 }
 
