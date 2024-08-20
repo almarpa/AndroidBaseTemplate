@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.config.JvmTarget
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,73 +10,72 @@ plugins {
 }
 
 android {
-    namespace 'com.example.androidtemplateapp'
-    compileSdk 34
+    namespace = "com.example.androidtemplateapp"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.example.androidtemplateapp"
-        minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        applicationId = "com.example.androidtemplateapp"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+                argument("room.schemaLocation", "${projectDir}/schemas")
             }
         }
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility(JavaVersion.VERSION_17)
+        targetCompatibility(JavaVersion.VERSION_17)
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
-        freeCompilerArgs = ["-Xcontext-receivers"]
+        jvmTarget = JvmTarget.JVM_17.description
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-receivers")
     }
 
-    flavorDimensions "environment"
+    flavorDimensions.add("environment")
     productFlavors {
-        itg {
-            dimension "environment"
-            applicationIdSuffix ".itg"
-            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        create("itg") {
+            dimension = "environment"
+            applicationIdSuffix = ".itg"
+            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/\"")
         }
-
-        local {
-            dimension "environment"
-            applicationIdSuffix ".local"
-            buildConfigField "String", "BASE_URL", '"http://10.0.2.2/"'
+        create("local") {
+            dimension = "environment"
+            applicationIdSuffix = ".local"
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2/\"")
         }
-
-        pre {
-            dimension "environment"
-            applicationIdSuffix ".pre"
-            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        create("pre") {
+            dimension = "environment"
+            applicationIdSuffix = ".pre"
+            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/\"")
         }
-
-        pro {
-            dimension "environment"
-            buildConfigField "String", "BASE_URL", '"https://pokeapi.co/"'
+        create("pro") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/\"")
         }
     }
 
     buildFeatures {
-        compose true
+        compose = true
         buildConfig = true
     }
 
@@ -82,11 +83,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.11"
     }
 
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
+    packagingOptions.resources.excludes.add("META-INF/{AL2.0,LGPL2.1}")
 }
 
 dependencies {
@@ -130,8 +127,8 @@ dependencies {
     implementation(libs.coil.kt)
 
     // pagination
-    implementation libs.androidx.paging.runtime
-    implementation libs.androidx.paging.compose
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
     // unit test
     testImplementation(libs.junit)
@@ -141,9 +138,9 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
 
     // others
-    implementation libs.androidx.appcompat
-    implementation libs.androidx.activity.ktx
-    implementation libs.accompanist
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.accompanist)
     implementation(libs.converter.gson)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
