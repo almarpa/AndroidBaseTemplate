@@ -111,7 +111,7 @@ fun MemberName(pokemon: Pokemon, modifier: Modifier) {
     ) {
         Text(
             modifier = Modifier
-                .padding(bottom = 12.dp)
+                .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
                 .align(Alignment.Center),
             textAlign = TextAlign.Center,
             text = pokemon.name.uppercase(),

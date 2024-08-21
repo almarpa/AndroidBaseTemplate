@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp.ui.team
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,6 +43,10 @@ fun TeamScreen(
     onSave: (pokemon: Pokemon) -> Unit,
 ) {
     var isFabContainerFullScreen by rememberSaveable { mutableStateOf(false) }
+
+    if (isFabContainerFullScreen) {
+        BackHandler { isFabContainerFullScreen = false }
+    }
 
     Scaffold(
         topBar = {
@@ -87,13 +92,7 @@ private fun TeamContent(
     Box(
         modifier = Modifier
             .wrapContentSize()
-            .padding(
-                if (isFabContainerFullscreen) {
-                    PaddingValues(vertical = 30.dp, horizontal = 10.dp)
-                } else {
-                    paddingValues
-                }
-            )
+            .padding(if (!isFabContainerFullscreen) paddingValues else PaddingValues(0.dp))
     ) {
         when (uiState) {
             is TeamUiState.Loading -> {
@@ -146,7 +145,11 @@ fun TeamScreenPreview() {
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview("Team Content Fullscreen Preview", showBackground = true)
-@Preview(name = "Tablet Team Content Fullscreen Preview", device = Devices.TABLET)
+@Preview(
+    name = "Tablet Team Content Fullscreen Preview",
+    showBackground = true,
+    device = Devices.TABLET
+)
 fun TeamContentFullscreenPreview() {
     TemplatePreviewTheme {
         TeamContent(

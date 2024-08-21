@@ -19,14 +19,14 @@ fun getPokemonListMock() =
         Pokemon(
             id = 1,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-            name = "Pokemon 1",
+            name = "CHARMELEON 2",
             dominantColor = null,
             isTeamMember = false
         ),
         Pokemon(
             id = 2,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
-            name = "Pokemon 2",
+            name = "Pokemon 2 Pokemon 2",
             dominantColor = null,
             isTeamMember = false
         ),

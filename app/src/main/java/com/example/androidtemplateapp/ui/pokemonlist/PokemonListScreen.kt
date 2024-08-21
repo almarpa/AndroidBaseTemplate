@@ -1,6 +1,8 @@
 package com.example.androidtemplateapp.ui.pokemonlist
 
+import android.app.Activity
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -22,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
@@ -53,8 +56,11 @@ fun SharedTransitionScope.PokemonListScreen(
     onSearch: (text: String) -> Unit,
     onDismissSearch: () -> Unit,
 ) {
+    val activity = (LocalContext.current as? Activity)
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
+    BackHandler { activity?.finish() }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection),

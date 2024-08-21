@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.androidtemplateapp.common.utils.shimmerLoadingAnimation
 import com.example.androidtemplateapp.entity.Stat
 import com.example.androidtemplateapp.entity.StatX
 import com.example.androidtemplateapp.entity.enums.StatNameEnum
@@ -68,7 +69,7 @@ fun PokemonStat(stat: Stat) {
                 .fillMaxWidth()
                 .height(30.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.primaryContainer),
         ) {
             Row(
                 modifier = Modifier

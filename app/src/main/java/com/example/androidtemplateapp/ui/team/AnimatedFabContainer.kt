@@ -58,7 +58,7 @@ fun AnimatedFabContainer(
                 .drawBehind { drawRect(backgroundColor) },
             transitionSpec = {
                 fadeIn(
-                    animationSpec = tween(500, easing = EaseIn)
+                    animationSpec = tween(1000, easing = EaseIn)
                 ).togetherWith(
                     fadeOut(
                         animationSpec = tween(200, easing = EaseOut)
@@ -106,9 +106,13 @@ private fun Transition<Boolean>.getCornerRadius(): Dp {
 
 @Composable
 fun AddPokemonFullscreen(onCancel: () -> Unit, onSave: (Pokemon) -> Unit) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        CustomBackButton { onCancel() }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 32.dp, horizontal = 12.dp)
+    ) {
         PokemonForm { pokemon -> onSave(pokemon) }
+        CustomBackButton { onCancel() }
     }
 }
 
@@ -198,8 +202,8 @@ fun PokemonImageCard(
 
     Card(
         modifier = Modifier
-            .padding(horizontal = 20.dp),
-        shape = AbsoluteCutCornerShape(40.dp),
+            .padding(20.dp),
+        shape = AbsoluteCutCornerShape(32.dp),
         colors = CardDefaults.cardColors(containerColor = cardDominantColor)
     ) {
         SubcomposeAsyncImage(
@@ -234,7 +238,12 @@ fun checkFields(pokemonName: String, pokemonImageUrl: String?) =
 
 @Composable
 fun CustomBackButton(onCancel: () -> Unit) {
-    IconButton(onClick = { onCancel() }) {
+    IconButton(
+        modifier = Modifier
+            .height(32.dp)
+            .aspectRatio(1f),
+        onClick = { onCancel() }
+    ) {
         Icon(
             modifier = Modifier.fillMaxSize(),
             imageVector = Icons.AutoMirrored.Default.ArrowBack,
