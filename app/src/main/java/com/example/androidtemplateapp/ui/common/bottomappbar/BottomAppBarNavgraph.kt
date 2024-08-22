@@ -11,9 +11,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon.Companion.getPokemonFromJson
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
+import com.example.androidtemplateapp.ui.common.snackbar.SnackbarViewModel
 import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsScreen
 import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsViewModel
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListScreen
@@ -35,7 +37,6 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
         val pokemonListViewModel: PokemonListViewModel = hiltViewModel()
         val paginatedPokemonList = pokemonListViewModel.pokemonList.collectAsLazyPagingItems()
         val searchUiState: SearchUiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
-
         PokemonListScreen(
             animatedVisibilityScope = this,
             drawerState = drawerState,
@@ -75,22 +76,27 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
             val teamViewModel: TeamViewModel = hiltViewModel()
             val settingsViewModel: SettingsViewModel = hiltViewModel()
+            val snackbarViewModel: SnackbarViewModel = hiltViewModel()
 
             val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
             val userAppTheme by settingsViewModel.userTheme.collectAsStateWithLifecycle()
+            val messageIds by snackbarViewModel.messageIds.collectAsStateWithLifecycle()
 
             PokemonDetailsScreen(
                 animatedVisibilityScope = this,
                 pokemon = pokemon.getPokemonFromJson(),
                 pokemonDetails = pokemonDetails,
+                messageIds = messageIds,
                 userAppTheme = userAppTheme,
                 onAddTeamMember = { pokemonSelected, isAddedToTeam ->
                     teamViewModel.addPokemonToTeam(
                         pokemon = pokemonSelected,
                         isAdded = isAddedToTeam
                     )
+                    if (isAddedToTeam) snackbarViewModel.showUserMessage(R.string.pokemon_added_to_team)
                 },
                 onBackPressed = { navigationActions.navigateBack() },
+                onSnackBarDismissed = { snackbarViewModel.clearMessages() }
             )
         }
     }

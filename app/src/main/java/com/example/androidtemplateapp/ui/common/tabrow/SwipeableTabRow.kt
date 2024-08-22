@@ -39,10 +39,10 @@ fun SwipeableTabRow(
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         val pagerState = rememberPagerState { tabs.size }
 
-        LaunchedEffect(key1 = selectedTabIndex) {
+        LaunchedEffect(selectedTabIndex) {
             pagerState.animateScrollToPage(selectedTabIndex)
         }
-        LaunchedEffect(key1 = pagerState.currentPage) {
+        LaunchedEffect(pagerState.currentPage) {
             selectedTabIndex = pagerState.currentPage
         }
 

@@ -2,7 +2,6 @@ package com.example.androidtemplateapp.ui.pokemondetails
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -23,11 +22,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -36,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -52,6 +50,8 @@ import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
+import com.example.androidtemplateapp.ui.common.snackbar.CustomSnackBar
+import com.example.androidtemplateapp.ui.common.snackbar.showSnackbar
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidtemplateapp.ui.common.utils.isTablet
@@ -64,13 +64,20 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
     pokemonDetails: PokemonDetails?,
+    messageIds: List<Int>,
     userAppTheme: AppTheme,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
     onBackPressed: () -> Unit,
+    onSnackBarDismissed: () -> Unit = {},
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     BackHandler { onBackPressed() }
+
     Scaffold(
         topBar = { DefaultTopAppBar(title = R.string.empty_string) { onBackPressed() } },
+        snackbarHost = { CustomSnackBar(snackbarHostState = snackbarHostState) }
     ) {
         PokemonDetailsContent(
             userAppTheme = userAppTheme,
@@ -79,6 +86,14 @@ fun SharedTransitionScope.PokemonDetailsScreen(
             animatedVisibilityScope = animatedVisibilityScope,
             onAddTeamMember = onAddTeamMember
         )
+
+        if (messageIds.isNotEmpty()) {
+            coroutineScope.showSnackbar(
+                snackbarHostState = snackbarHostState,
+                message = stringResource(id = messageIds.first()),
+                onDismissed = { onSnackBarDismissed() }
+            )
+        }
     }
 }
 
@@ -94,12 +109,11 @@ private fun SharedTransitionScope.PokemonDetailsContent(
     val scrollState = rememberScrollState()
     val topPaddingCard = 100
 
+    // Minimize image when user scrolls and landscape is active
     val animatedImageSize by animateDpAsState(
         targetValue = if (scrollState.value > 60) (topPaddingCard / 4).dp else topPaddingCard.dp,
         label = "animatedImageSize"
     )
-
-    Log.i("DEBUG_END", "current: ${scrollState.value}, max: ${scrollState.maxValue}")
 
     Box(
         modifier = Modifier
@@ -128,10 +142,7 @@ private fun SharedTransitionScope.PokemonDetailsContent(
                 ),
             isMemberYet = pokemon.isTeamMember
         ) { isAdded ->
-            onAddTeamMember(
-                pokemon,
-                isAdded
-            )
+            onAddTeamMember(pokemon, isAdded)
         }
     }
 }
@@ -307,9 +318,10 @@ fun PokemonDetailsScreenPreview() {
             animatedVisibilityScope = it,
             pokemon = getPokemonMock(),
             pokemonDetails = getPokemonDetailsMock(),
+            messageIds = listOf(R.string.pokemon_added_to_team),
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
-            userAppTheme = AppTheme.DARK
+            userAppTheme = AppTheme.DARK,
         )
     }
 }
