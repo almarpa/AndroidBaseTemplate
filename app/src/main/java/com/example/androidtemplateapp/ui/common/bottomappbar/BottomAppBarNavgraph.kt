@@ -10,11 +10,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
-import com.example.androidtemplateapp.ui.common.snackbar.SnackbarViewModel
 import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsScreen
 import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsViewModel
 import com.example.androidtemplateapp.ui.pokemonlist.PokemonListScreen
@@ -66,28 +64,20 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
         val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
         val teamViewModel: TeamViewModel = hiltViewModel()
         val settingsViewModel: SettingsViewModel = hiltViewModel()
-        val snackbarViewModel: SnackbarViewModel = hiltViewModel()
 
         val pokemon = navBackStackEntry.toRoute<Pokemon>()
         val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
         val userAppTheme by settingsViewModel.userTheme.collectAsStateWithLifecycle()
-        val messageIds by snackbarViewModel.messageIds.collectAsStateWithLifecycle()
 
         PokemonDetailsScreen(
             animatedVisibilityScope = this,
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
-            messageIds = messageIds,
             userAppTheme = userAppTheme,
-            onAddTeamMember = { pokemonSelected, isAddedToTeam ->
-                teamViewModel.addPokemonToTeam(
-                    pokemon = pokemonSelected,
-                    isAdded = isAddedToTeam
-                )
-                if (isAddedToTeam) snackbarViewModel.showUserMessage(R.string.pokemon_added_to_team)
+            onAddTeamMember = { pokemon, isAdded ->
+                teamViewModel.addPokemonToTeam(pokemon, isAdded)
             },
             onBackPressed = { navigationActions.navigateBack() },
-            onSnackBarDismissed = { snackbarViewModel.clearMessages() }
         )
     }
 }

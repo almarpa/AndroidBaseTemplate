@@ -1,5 +1,6 @@
 package com.example.androidtemplateapp.ui.common.snackbar
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,7 +22,6 @@ fun CustomSnackBar(snackbarHostState: SnackbarHostState) {
     }
 }
 
-@Composable
 fun CoroutineScope.showSnackbar(
     snackbarHostState: SnackbarHostState,
     message: String = "SnackBar Preview",
@@ -53,6 +53,7 @@ fun CoroutineScope.showSnackbar(
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
 fun PreviewCustomSnackBar() {

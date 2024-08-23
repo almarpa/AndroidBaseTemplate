@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidtemplateapp.R
+import com.example.androidtemplateapp.common.utils.ObserveAsEvents
 import com.example.androidtemplateapp.common.utils.getBackgroundColorWithGradient
 import com.example.androidtemplateapp.common.utils.pokemonSharedElement
 import com.example.androidtemplateapp.entity.Pokemon
@@ -46,10 +46,13 @@ import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.snackbar.CustomSnackBar
+import com.example.androidtemplateapp.ui.common.snackbar.SnackbarController
+import com.example.androidtemplateapp.ui.common.snackbar.SnackbarEvent
 import com.example.androidtemplateapp.ui.common.snackbar.showSnackbar
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidtemplateapp.ui.common.utils.isTablet
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -59,14 +62,25 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
     pokemonDetails: PokemonDetails?,
-    messageIds: List<Int>,
     userAppTheme: AppTheme,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
     onBackPressed: () -> Unit,
-    onSnackBarDismissed: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val snackbarMessage = LocalContext.current.getString(R.string.pokemon_added_to_team)
+
+    ObserveAsEvents(
+        flow = SnackbarController.snackbarEvents,
+        key1 = snackbarHostState,
+    ) { snackbarEvent ->
+        coroutineScope.showSnackbar(
+            snackbarHostState = snackbarHostState,
+            message = snackbarEvent.message,
+            actionLabel = snackbarEvent.action?.name,
+            onActionPerformed = { snackbarEvent.action?.action?.invoke() },
+        )
+    }
 
     BackHandler { onBackPressed() }
 
@@ -79,15 +93,13 @@ fun SharedTransitionScope.PokemonDetailsScreen(
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
             animatedVisibilityScope = animatedVisibilityScope,
-            onAddTeamMember = onAddTeamMember
-        )
-
-        if (messageIds.isNotEmpty()) {
-            coroutineScope.showSnackbar(
-                snackbarHostState = snackbarHostState,
-                message = stringResource(id = messageIds.first()),
-                onDismissed = { onSnackBarDismissed() }
-            )
+        ) { pokemon, isAdded ->
+            onAddTeamMember(pokemon, isAdded)
+            coroutineScope.launch {
+                if (isAdded) {
+                    SnackbarController.sendSnackbarEvent(event = SnackbarEvent(snackbarMessage))
+                }
+            }
         }
     }
 }
@@ -299,7 +311,6 @@ fun PokemonDetailsScreenPreview() {
             animatedVisibilityScope = it,
             pokemon = getPokemonMock(),
             pokemonDetails = getPokemonDetailsMock(),
-            messageIds = listOf(R.string.pokemon_added_to_team),
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
             userAppTheme = AppTheme.DARK,

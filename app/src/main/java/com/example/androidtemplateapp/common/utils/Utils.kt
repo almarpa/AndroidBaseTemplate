@@ -6,11 +6,18 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.palette.graphics.Palette
 import com.example.androidtemplateapp.entity.enums.AppTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 fun getDominantColorFromDrawable(drawable: Drawable, onFinish: (Color) -> Unit) {
     (drawable as? BitmapDrawable)?.bitmap?.copy(Bitmap.Config.ARGB_8888, true)?.let { bitmap ->
@@ -24,6 +31,23 @@ fun getDominantColorFromDrawable(drawable: Drawable, onFinish: (Color) -> Unit) 
 
 fun setAppLanguage(locale: String) {
     AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locale))
+}
+
+@Composable
+fun <T> ObserveAsEvents(
+    flow: Flow<T>,
+    key1: Any? = null,
+    key2: Any? = null,
+    onEvent: (T) -> Unit,
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner.lifecycle, key1, key2, flow) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            withContext(Dispatchers.Main.immediate) {
+                flow.collect(onEvent)
+            }
+        }
+    }
 }
 
 @Composable
