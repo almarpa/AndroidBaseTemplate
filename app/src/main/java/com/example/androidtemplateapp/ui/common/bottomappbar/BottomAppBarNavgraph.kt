@@ -7,12 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.androidtemplateapp.R
-import com.example.androidtemplateapp.entity.Pokemon.Companion.getPokemonFromJson
+import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.snackbar.SnackbarViewModel
@@ -30,13 +29,14 @@ context(SharedTransitionScope)
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.bottomAppBarNavGraph(
     drawerState: DrawerState,
-    currentRoute: String,
+    currentRoute: Routes,
     navigationActions: NavigationActions,
 ) {
-    composable(Routes.PokemonList.route) {
+    composable<Routes.PokemonList> {
         val pokemonListViewModel: PokemonListViewModel = hiltViewModel()
         val paginatedPokemonList = pokemonListViewModel.pokemonList.collectAsLazyPagingItems()
         val searchUiState: SearchUiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
+
         PokemonListScreen(
             animatedVisibilityScope = this,
             drawerState = drawerState,
@@ -49,7 +49,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             onDismissSearch = { pokemonListViewModel.removeCurrentSearch() },
         )
     }
-    composable(Routes.Team.route) {
+    composable<Routes.Team> {
         val teamViewModel: TeamViewModel = hiltViewModel()
         val uiState: TeamUiState by teamViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,42 +62,32 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             onSave = { pokemon -> teamViewModel.createPokemonMemberAndReload(pokemon) }
         )
     }
-    composable(
-        route = Routes.PokemonDetail.route,
-        arguments = listOf(
-            navArgument("pokemon") {
-                type = NavType.StringType
-                nullable = false
+    composable<Pokemon> { navBackStackEntry ->
+        val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
+        val teamViewModel: TeamViewModel = hiltViewModel()
+        val settingsViewModel: SettingsViewModel = hiltViewModel()
+        val snackbarViewModel: SnackbarViewModel = hiltViewModel()
+
+        val pokemon = navBackStackEntry.toRoute<Pokemon>()
+        val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
+        val userAppTheme by settingsViewModel.userTheme.collectAsStateWithLifecycle()
+        val messageIds by snackbarViewModel.messageIds.collectAsStateWithLifecycle()
+
+        PokemonDetailsScreen(
+            animatedVisibilityScope = this,
+            pokemon = pokemon,
+            pokemonDetails = pokemonDetails,
+            messageIds = messageIds,
+            userAppTheme = userAppTheme,
+            onAddTeamMember = { pokemonSelected, isAddedToTeam ->
+                teamViewModel.addPokemonToTeam(
+                    pokemon = pokemonSelected,
+                    isAdded = isAddedToTeam
+                )
+                if (isAddedToTeam) snackbarViewModel.showUserMessage(R.string.pokemon_added_to_team)
             },
-        ),
-    ) { navBackStackEntry ->
-        // TODO: use typed safe navigation (PokemonNavType)
-        navBackStackEntry.arguments?.getString("pokemon")?.let { pokemon ->
-            val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
-            val teamViewModel: TeamViewModel = hiltViewModel()
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val snackbarViewModel: SnackbarViewModel = hiltViewModel()
-
-            val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
-            val userAppTheme by settingsViewModel.userTheme.collectAsStateWithLifecycle()
-            val messageIds by snackbarViewModel.messageIds.collectAsStateWithLifecycle()
-
-            PokemonDetailsScreen(
-                animatedVisibilityScope = this,
-                pokemon = pokemon.getPokemonFromJson(),
-                pokemonDetails = pokemonDetails,
-                messageIds = messageIds,
-                userAppTheme = userAppTheme,
-                onAddTeamMember = { pokemonSelected, isAddedToTeam ->
-                    teamViewModel.addPokemonToTeam(
-                        pokemon = pokemonSelected,
-                        isAdded = isAddedToTeam
-                    )
-                    if (isAddedToTeam) snackbarViewModel.showUserMessage(R.string.pokemon_added_to_team)
-                },
-                onBackPressed = { navigationActions.navigateBack() },
-                onSnackBarDismissed = { snackbarViewModel.clearMessages() }
-            )
-        }
+            onBackPressed = { navigationActions.navigateBack() },
+            onSnackBarDismissed = { snackbarViewModel.clearMessages() }
+        )
     }
 }

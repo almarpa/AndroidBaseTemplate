@@ -19,9 +19,9 @@ import com.example.androidtemplateapp.ui.splash.splashNavGraph
 fun TemplateNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Routes.Splash.route,
+    startDestination: Routes,
     drawerState: DrawerState,
-    currentRoute: String,
+    currentRoute: Routes,
     navigationActions: NavigationActions,
 ) {
     SharedTransitionLayout {

@@ -10,8 +10,6 @@ fun getPokemonMock() =
         id = 1,
         url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
         name = "Bulbasaur",
-        dominantColor = null,
-        isTeamMember = false
     )
 
 fun getPokemonListMock() =
@@ -20,64 +18,46 @@ fun getPokemonListMock() =
             id = 1,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
             name = "CHARMELEON",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 2,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
             name = "CHARMELEON CHARMELEON",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 3,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
             name = "Pokemon 3",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 4,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
             name = "Pokemon 4",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 5,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png",
             name = "Pokemon 5",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 6,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
             name = "Pokemon 6",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 7,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
             name = "Pokemon 4",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 8,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png",
             name = "Pokemon 5",
-            dominantColor = null,
-            isTeamMember = false
         ),
         Pokemon(
             id = 9,
             url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
             name = "Pokemon 6",
-            dominantColor = null,
-            isTeamMember = false
         )
     )
 

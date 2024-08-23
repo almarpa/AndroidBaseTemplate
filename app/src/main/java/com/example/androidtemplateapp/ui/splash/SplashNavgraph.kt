@@ -6,7 +6,7 @@ import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 
 fun NavGraphBuilder.splashNavGraph(navigationActions: NavigationActions) {
-    composable(Routes.Splash.route) {
+    composable<Routes.Splash> {
         SplashScreen { navigationActions.navigateToPokemonList() }
     }
 }

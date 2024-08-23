@@ -11,7 +11,7 @@ import com.example.androidtemplateapp.ui.settings.SettingsScreen
 import com.example.androidtemplateapp.ui.settings.SettingsViewModel
 
 fun NavGraphBuilder.drawerNavGraph(navigationActions: NavigationActions) {
-    composable(Routes.Settings.route) {
+    composable<Routes.Settings>() {
         val settingsViewModel: SettingsViewModel = hiltViewModel()
         val uiState by settingsViewModel.settingsUiState.collectAsStateWithLifecycle()
 

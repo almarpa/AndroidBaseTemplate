@@ -1,5 +1,7 @@
 package com.example.androidtemplateapp.data.db.ws.model.response
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.example.androidtemplateapp.entity.Pokemon
 import com.google.gson.annotations.SerializedName
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -15,9 +17,9 @@ class PokemonResponse(
             id = getPokemonID(),
             name = name,
             url = getPokemonImageURL(),
-            dominantColor = null,
+            createdAt = System.currentTimeMillis(),
+            dominantColor = Color.Transparent.toArgb(),
             isTeamMember = false,
-            createdAt = System.currentTimeMillis()
         )
     }
 

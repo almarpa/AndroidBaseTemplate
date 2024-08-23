@@ -1,5 +1,7 @@
 package com.example.androidtemplateapp.data.db.database.entity
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,19 +16,20 @@ data class PokemonEntity(
     var url: String,
     @ColumnInfo(name = "name")
     var name: String,
-    @ColumnInfo(name = "dominantColor")
-    var dominantColor: Int? = null,
-    @ColumnInfo(name = "isTeamMember")
-    var isTeamMember: Boolean = false,
     @ColumnInfo(name = "createdAt")
     var createdAt: Long = 0L,
+    @ColumnInfo(name = "dominantColor")
+    var dominantColor: Int = Color.Transparent.toArgb(),
+    @ColumnInfo(name = "isTeamMember")
+    var isTeamMember: Boolean = false,
 ) {
 
     fun asDomain(): Pokemon = Pokemon(
-        id,
-        url,
-        name,
-        dominantColor,
-        isTeamMember
+        id = id,
+        url = url,
+        name = name,
+        createdAt = createdAt,
+        dominantColor = dominantColor,
+        isTeamMember = isTeamMember,
     )
 }

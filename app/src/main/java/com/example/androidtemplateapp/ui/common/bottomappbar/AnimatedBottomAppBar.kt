@@ -8,12 +8,13 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
+import com.example.androidtemplateapp.ui.common.navigation.Routes
 
 @Composable
 fun AnimatedBottomAppBar(
     isVisible: Boolean,
     drawerState: DrawerState,
-    currentRoute: String,
+    currentRoute: Routes,
     navigationActions: NavigationActions,
 ) {
     AnimatedVisibility(

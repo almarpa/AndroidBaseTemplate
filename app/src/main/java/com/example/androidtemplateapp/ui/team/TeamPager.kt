@@ -69,7 +69,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
     Card(
         modifier = Modifier
             .padding(20.dp)
-            .height(200.dp + 250.dp * (1 - pagerState.getOffsetFractionForPage(page).absoluteValue))
+            .height(200.dp + 250.dp * (1 - pagerState.currentPageOffsetFraction.absoluteValue))
             .graphicsLayer {
                 alpha = lerp(
                     start = 0.5f,
@@ -78,7 +78,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
                 )
             },
         shape = AbsoluteCutCornerShape(40.dp),
-        colors = CardDefaults.cardColors(containerColor = pokemon.getDominantColorOrDefault())
+        colors = CardDefaults.cardColors(containerColor = pokemon.getDominantColor())
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -107,7 +107,9 @@ fun MemberImage(pokemon: Pokemon, modifier: Modifier) {
 @Composable
 fun MemberName(pokemon: Pokemon, modifier: Modifier) {
     Box(
-        modifier = modifier.fillMaxSize().fillMaxWidth()
+        modifier = modifier
+            .fillMaxSize()
+            .fillMaxWidth()
     ) {
         Text(
             modifier = Modifier

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomAppBar(
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
-    currentRoute: String,
+    currentRoute: Routes,
     navigationActions: NavigationActions,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -43,7 +43,7 @@ fun BottomAppBar(
                     color = MaterialTheme.colorScheme.primary,
                 )
             },
-            selected = currentRoute == Routes.PokemonList.route,
+            selected = currentRoute == Routes.PokemonList,
             onClick = {
                 navigationActions.navigateToPokemonList()
                 coroutineScope.launch { drawerState.close() }
@@ -52,7 +52,7 @@ fun BottomAppBar(
         NavigationBarItem(
             icon = {
                 Icon(
-                    if (currentRoute == Routes.Team.route) {
+                    if (currentRoute == Routes.Team) {
                         Icons.Outlined.PeopleOutline
                     } else {
                         Icons.Default.PeopleOutline
@@ -67,7 +67,7 @@ fun BottomAppBar(
                     color = MaterialTheme.colorScheme.primary,
                 )
             },
-            selected = currentRoute == Routes.Team.route,
+            selected = currentRoute == Routes.Team,
             onClick = {
                 navigationActions.navigateToTeamList()
                 coroutineScope.launch { drawerState.close() }
@@ -84,7 +84,7 @@ fun TemplateBottomAppBarPreview() {
     TemplateTheme {
         BottomAppBar(
             drawerState = DrawerState(DrawerValue.Closed),
-            currentRoute = Routes.PokemonList.route,
+            currentRoute = Routes.PokemonList,
             navigationActions = NavigationActions(rememberNavController())
         )
     }

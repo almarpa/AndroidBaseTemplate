@@ -1,26 +1,21 @@
 package com.example.androidtemplateapp.entity
 
 import android.os.Parcelable
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.example.androidtemplateapp.data.db.database.entity.PokemonEntity
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Parcelize
 @Serializable
 data class Pokemon(
-    var id: Int,
-    var url: String,
-    var name: String,
-    var dominantColor: Int? = null,
-    var isTeamMember: Boolean,
-    var createdAt: Long = System.currentTimeMillis(),
+    val id: Int,
+    val url: String,
+    val name: String,
+    val createdAt: Long = System.currentTimeMillis(),
+    var dominantColor: Int = Color.Transparent.toArgb(),
+    var isTeamMember: Boolean = false,
 ) : Parcelable {
 
     constructor(
@@ -31,9 +26,9 @@ data class Pokemon(
         id = 0,
         url = url,
         name = name,
+        createdAt = System.currentTimeMillis(),
         dominantColor = dominantColor,
         isTeamMember = true,
-        createdAt = System.currentTimeMillis()
     )
 
     fun asEntity(): PokemonEntity =
@@ -41,28 +36,10 @@ data class Pokemon(
             id = id,
             url = url,
             name = name,
+            createdAt = createdAt,
             dominantColor = dominantColor,
             isTeamMember = isTeamMember,
-            createdAt = createdAt
         )
 
-    @Composable
-    fun getDominantColorOrDefault() =
-        dominantColor?.let { Color(it) } ?: MaterialTheme.colorScheme.primary
-
-    companion object {
-        fun String.getPokemonFromJson(): Pokemon =
-            GsonBuilder().create().fromJson(this, Pokemon::class.java)
-    }
-
-    fun pokemonToJSONString(): String = Gson().toJson(apply { url = getEncodedUrl(url) })
-
-    private fun getEncodedUrl(url: String) =
-        if (urlIsEncodedYet(url)) {
-            url
-        } else {
-            URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
-        }
-
-    private fun urlIsEncodedYet(url: String) = url.contains("%2")
+    fun getDominantColor() = Color(dominantColor)
 }

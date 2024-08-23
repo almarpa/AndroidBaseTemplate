@@ -3,17 +3,24 @@ package com.example.androidtemplateapp.ui.common.navigation
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.androidtemplateapp.entity.Pokemon
+import kotlinx.serialization.Serializable
 
 
 /**
  * Destinations used throughout the app.
  */
-sealed class Routes(val route: String) {
-    data object Splash : Routes("/splash")
-    data object PokemonList : Routes("/pokemonList")
-    data object PokemonDetail : Routes("/pokemonDetail/{pokemon}")
-    data object Team : Routes("/team")
-    data object Settings : Routes("/settings")
+sealed class Routes {
+    @Serializable
+    data object Splash : Routes()
+
+    @Serializable
+    data object PokemonList : Routes()
+
+    @Serializable
+    data object Team : Routes()
+
+    @Serializable
+    data object Settings : Routes()
 }
 
 /**
@@ -21,7 +28,7 @@ sealed class Routes(val route: String) {
  */
 class NavigationActions(private val navController: NavHostController) {
     val navigateToPokemonList: () -> Unit = {
-        navController.navigate(Routes.PokemonList.route) {
+        navController.navigate(Routes.PokemonList) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
                 inclusive = true
@@ -31,7 +38,7 @@ class NavigationActions(private val navController: NavHostController) {
         }
     }
     val navigateToTeamList: () -> Unit = {
-        navController.navigate(Routes.Team.route) {
+        navController.navigate(Routes.Team) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
@@ -41,16 +48,14 @@ class NavigationActions(private val navController: NavHostController) {
     }
 
     val navigateToSettings: () -> Unit = {
-        navController.navigate(Routes.Settings.route) {
+        navController.navigate(Routes.Settings) {
             launchSingleTop = true
             restoreState = true
         }
     }
 
     val navigateToDetailNavGraph: (Pokemon) -> Unit = { pokemon ->
-        navController.navigate(
-            "/pokemonDetail/${pokemon.pokemonToJSONString()}"
-        )
+        navController.navigate(pokemon)
     }
 
     val navigateBack: () -> Unit = {

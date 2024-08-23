@@ -10,11 +10,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.outlined.PersonAdd
@@ -29,8 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -41,8 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidtemplateapp.R
-import com.example.androidtemplateapp.common.utils.getDarkGradientByColor
-import com.example.androidtemplateapp.common.utils.getLightGradientByColor
+import com.example.androidtemplateapp.common.utils.getBackgroundColorWithGradient
 import com.example.androidtemplateapp.common.utils.pokemonSharedElement
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
@@ -118,7 +113,7 @@ private fun SharedTransitionScope.PokemonDetailsContent(
     Box(
         modifier = Modifier
             .wrapContentHeight()
-            .background(getBackgroundColor(userAppTheme, pokemon.dominantColor))
+            .background(getBackgroundColorWithGradient(userAppTheme, pokemon.dominantColor))
             .statusBarsPadding()
             .systemBarsPadding(),
     ) {
@@ -207,7 +202,8 @@ fun PokemonCard(
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
             Column(
-                modifier = Modifier.verticalScroll(scrollState)
+                // TODO: FIX SCROLL STATE BUG
+                //modifier = Modifier.verticalScroll(scrollState)
             ) {
                 PokemonName(
                     modifier = Modifier.padding(
@@ -265,21 +261,6 @@ fun SharedTransitionScope.PokemonImageAnimation(
                     animatedVisibilityScope = animatedVisibilityScope
                 )
         )
-    }
-}
-
-@Composable
-fun getBackgroundColor(userAppTheme: AppTheme, dominantColor: Int?): Brush {
-    val color = dominantColor?.let { Color(it) } ?: Color.White
-    return when (userAppTheme) {
-        AppTheme.AUTO -> if (isSystemInDarkTheme()) {
-            getDarkGradientByColor(color)
-        } else {
-            getLightGradientByColor(color)
-        }
-
-        AppTheme.DARK -> getDarkGradientByColor(color)
-        AppTheme.LIGHT -> getLightGradientByColor(color)
     }
 }
 

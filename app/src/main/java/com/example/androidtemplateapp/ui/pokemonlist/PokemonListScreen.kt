@@ -48,7 +48,7 @@ import kotlinx.coroutines.flow.flowOf
 fun SharedTransitionScope.PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     drawerState: DrawerState,
-    currentRoute: String,
+    currentRoute: Routes,
     navigationActions: NavigationActions,
     searchUiState: SearchUiState,
     paginatedPokemonList: LazyPagingItems<Pokemon>,
@@ -155,7 +155,7 @@ fun PokemonListScreenPreview() {
         PokemonListScreen(
             animatedVisibilityScope = it,
             drawerState = DrawerState(DrawerValue.Closed),
-            currentRoute = Routes.PokemonList.route,
+            currentRoute = Routes.PokemonList,
             navigationActions = NavigationActions(rememberNavController()),
             searchUiState = SearchUiState.Success(getPokemonListMock()),
             paginatedPokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),
@@ -175,7 +175,7 @@ fun PokemonListScreenWithSearchActivePreview() {
         PokemonListScreen(
             animatedVisibilityScope = it,
             drawerState = DrawerState(DrawerValue.Closed),
-            currentRoute = Routes.PokemonList.route,
+            currentRoute = Routes.PokemonList,
             navigationActions = NavigationActions(rememberNavController()),
             searchUiState = SearchUiState.Success(getPokemonListMock()),
             paginatedPokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),

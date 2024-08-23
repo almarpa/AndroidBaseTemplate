@@ -36,7 +36,7 @@ import com.example.androidtemplateapp.ui.common.topappbar.AnimatedTopAppBar
 @Composable
 fun TeamScreen(
     drawerState: DrawerState,
-    currentRoute: String,
+    currentRoute: Routes,
     navigationActions: NavigationActions,
     uiState: TeamUiState,
     onRetry: () -> Unit,
@@ -133,7 +133,7 @@ fun TeamScreenPreview() {
     TemplatePreviewTheme {
         TeamScreen(
             drawerState = DrawerState(DrawerValue.Closed),
-            currentRoute = Routes.Team.route,
+            currentRoute = Routes.Team,
             navigationActions = NavigationActions(rememberNavController()),
             uiState = TeamUiState.Success(getPokemonListMock()),
             onRetry = {},
