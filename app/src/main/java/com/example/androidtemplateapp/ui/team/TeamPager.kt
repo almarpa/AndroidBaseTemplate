@@ -69,7 +69,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
     Card(
         modifier = Modifier
             .padding(20.dp)
-            .height(200.dp + 250.dp * (1 - pagerState.currentPageOffsetFraction.absoluteValue))
+            .height(200.dp + 200.dp * (1 - pageOffset))
             .graphicsLayer {
                 alpha = lerp(
                     start = 0.5f,
