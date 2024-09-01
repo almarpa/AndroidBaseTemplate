@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,6 +33,8 @@ import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.topappbar.AnimatedTopAppBar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,6 +98,7 @@ private fun TeamContent(
             .wrapContentSize()
             .padding(if (!isFabContainerFullscreen) paddingValues else PaddingValues(0.dp))
     ) {
+
         when (uiState) {
             is TeamUiState.Loading -> {
                 FullScreenLoader()
@@ -104,18 +109,25 @@ private fun TeamContent(
             }
 
             is TeamUiState.Success -> {
-                TeamPager(pokemonList = uiState.teamList)
+                val pagerState = rememberPagerState(pageCount = { uiState.teamList.size })
+                val coroutineScope = rememberCoroutineScope()
+
+                TeamPager(pagerState = pagerState, pokemonList = uiState.teamList)
+                AnimatedFabContainer(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.BottomEnd),
+                    fabContainerState = isFabContainerFullscreen,
+                    onFabContainerStateChanged = { onFabContainerFullscreenChanged(it) },
+                    onSave = {
+                        onSavePokemon(it)
+                        coroutineScope.launch {
+                            delay(1600)
+                            pagerState.animateScrollToPage(uiState.teamList.size)
+                        }
+                    }
+                )
             }
-        }
-        if (uiState !is TeamUiState.Error) {
-            AnimatedFabContainer(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.BottomEnd),
-                fabContainerState = isFabContainerFullscreen,
-                onFabContainerStateChanged = { onFabContainerFullscreenChanged(it) },
-                onSave = { onSavePokemon(it) }
-            )
         }
     }
 }

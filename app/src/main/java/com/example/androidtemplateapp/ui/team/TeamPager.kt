@@ -40,9 +40,7 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TeamPager(pokemonList: List<Pokemon>) {
-    val pagerState = rememberPagerState(pageCount = { pokemonList.size })
-
+fun TeamPager(pagerState: PagerState, pokemonList: List<Pokemon>) {
     CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
         HorizontalPager(
             modifier = Modifier.fillMaxHeight(),
@@ -60,7 +58,6 @@ fun TeamPager(pokemonList: List<Pokemon>) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
     val pageOffset =
@@ -78,7 +75,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
                 )
             },
         shape = AbsoluteCutCornerShape(40.dp),
-        colors = CardDefaults.cardColors(containerColor = pokemon.getDominantColor())
+        colors = CardDefaults.cardColors(containerColor = pokemon.getDominantColor() ?: MaterialTheme.colorScheme.secondary)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -137,6 +134,6 @@ fun MemberName(pokemon: Pokemon, modifier: Modifier) {
 @Preview(name = "Tablet Dark Team Pager", device = Devices.TABLET)
 fun TeamPagerPreview() {
     TemplatePreviewTheme {
-        TeamPager(pokemonList = getPokemonListMock())
+        TeamPager(pagerState = rememberPagerState { getPokemonListMock().size }, pokemonList = getPokemonListMock())
     }
 }

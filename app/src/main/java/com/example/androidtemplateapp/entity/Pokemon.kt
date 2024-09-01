@@ -41,5 +41,10 @@ data class Pokemon(
             isTeamMember = isTeamMember,
         )
 
-    fun getDominantColor() = Color(dominantColor)
+    fun getDominantColor() =
+        if (dominantColor == Color.Transparent.toArgb()) {
+            null
+        } else {
+            Color(dominantColor)
+        }
 }
