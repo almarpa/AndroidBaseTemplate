@@ -8,7 +8,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -53,7 +52,6 @@ import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
 import com.example.androidtemplateapp.ui.common.utils.isTablet
 import kotlinx.coroutines.launch
-import java.net.URLDecoder
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -133,7 +131,6 @@ private fun SharedTransitionScope.PokemonDetailsContent(
             modifier = Modifier.padding(top = topPaddingCard.dp),
             pokemon = pokemon,
             pokemonDetails = pokemonDetails,
-            scrollState = scrollState
         )
         PokemonImageAnimation(
             animatedVisibilityScope = animatedVisibilityScope,
@@ -196,7 +193,6 @@ fun PokemonCard(
     modifier: Modifier = Modifier,
     pokemon: Pokemon,
     pokemonDetails: PokemonDetails?,
-    scrollState: ScrollState,
 ) {
     Column(
         modifier = modifier
@@ -213,10 +209,7 @@ fun PokemonCard(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         pokemonDetails?.let { pokemonDetailsNotNull ->
-            Column(
-                // TODO: FIX SCROLL STATE BUG
-                //modifier = Modifier.verticalScroll(scrollState)
-            ) {
+            Column {
                 PokemonName(
                     modifier = Modifier.padding(
                         top = if (isTablet()) 160.dp else 120.dp,
@@ -259,7 +252,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(URLDecoder.decode(pokemon.url, "UTF-8"))
+                .data(pokemon.url)
                 .crossfade(true)
                 .apply { if (LocalInspectionMode.current) placeholder(R.drawable.pokeball) }
                 .build(),
@@ -296,7 +289,6 @@ fun PokemonCardPreview() {
         PokemonCard(
             pokemonDetails = getPokemonDetailsMock(),
             pokemon = getPokemonMock(),
-            scrollState = rememberScrollState()
         )
     }
 }

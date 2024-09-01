@@ -40,7 +40,6 @@ import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 import com.example.androidtemplateapp.ui.common.utils.PokeballImage
 import com.example.androidtemplateapp.ui.common.utils.isTablet
 import kotlinx.coroutines.delay
-import java.net.URLDecoder
 
 @Composable
 fun AnimatedFabContainer(
@@ -211,7 +210,7 @@ fun PokemonImageCard(
                 .fillMaxWidth(if (isTablet()) .25f else .8f)
                 .aspectRatio(1f),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(URLDecoder.decode(pokemonImageURL, "UTF-8"))
+                .data(pokemonImageURL)
                 .placeholder(R.drawable.pokeball)
                 .crossfade(true)
                 .build(),

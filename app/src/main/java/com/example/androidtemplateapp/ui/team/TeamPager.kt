@@ -35,7 +35,6 @@ import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
-import java.net.URLDecoder
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -91,7 +90,7 @@ fun MemberItem(pokemon: Pokemon, pagerState: PagerState, page: Int) {
 fun MemberImage(pokemon: Pokemon, modifier: Modifier) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(URLDecoder.decode(pokemon.url, "UTF-8"))
+            .data(pokemon.url)
             .crossfade(true)
             .apply { if (LocalInspectionMode.current) placeholder(R.drawable.pokeball) }
             .build(),
