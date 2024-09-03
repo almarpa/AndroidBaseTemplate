@@ -3,11 +3,10 @@ package com.example.androidtemplateapp.ui.settings
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +27,7 @@ import com.example.androidtemplateapp.ui.common.topappbar.DefaultTopAppBar
 
 @Composable
 fun SettingsScreen(
-    uiState: SettingsUiState,
+    userData: UserData?,
     locales: Map<String, Int>,
     onLanguageChange: (String) -> Unit,
     onThemeChange: (Boolean) -> Unit,
@@ -39,54 +38,62 @@ fun SettingsScreen(
             DefaultTopAppBar(title = R.string.settings_title) { onBackPressed() }
         }
     ) { paddingValues ->
-        when (uiState) {
-            is SettingsUiState.Success -> {
-                val currentLanguage =
-                    locales.getOrDefault(uiState.userData.locale, R.string.language_english)
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .padding(top = 16.dp)
-                        .wrapContentSize()
-                        .fillMaxWidth(),
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.primary)
-                            .height(1.dp)
-                    )
-                    LanguagesSection(
-                        languages = locales,
-                        currentLanguage = currentLanguage,
-                        onLanguageChange = {
-                            onLanguageChange(it)
-                            setAppLanguage(it)
-                        }
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.primary)
-                            .height(1.dp)
-                    )
-                    DarkModeSection(
-                        themeState = uiState.userData.theme,
-                        onChange = { isChecked -> onThemeChange(isChecked) },
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.primary)
-                            .height(1.dp)
-                    )
-                }
-            }
-
-            else -> {
-                // Do nothing
-            }
+        userData?.let { userDataNotNull ->
+            SettingsContent(
+                modifier = Modifier.padding(paddingValues),
+                userData = userDataNotNull,
+                locales = locales,
+                onLanguageChange = { onLanguageChange(it) },
+                onThemeChange = { onThemeChange(it) },
+            )
         }
+    }
+}
+
+@Composable
+fun SettingsContent(
+    modifier: Modifier,
+    userData: UserData,
+    locales: Map<String, Int>,
+    onLanguageChange: (String) -> Unit,
+    onThemeChange: (Boolean) -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .padding(top = 16.dp)
+            .wrapContentSize()
+            .fillMaxWidth(),
+    ) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .height(1.dp)
+        )
+        LanguagesSection(
+            languages = locales,
+            currentLanguage = locales.getOrDefault(userData.locale, R.string.language_english),
+            onLanguageChange = {
+                onLanguageChange(it)
+                setAppLanguage(it)
+            }
+        )
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .height(1.dp)
+        )
+        DarkModeSection(
+            themeState = userData.theme,
+            onChange = { isChecked -> onThemeChange(isChecked) },
+        )
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .height(1.dp)
+        )
     }
 }
 
@@ -128,19 +135,43 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            modifier = Modifier.padding(vertical = 16.dp),
-            text = stringResource(R.string.dark_mode),
-            style = MaterialTheme.typography.titleMedium,
-            fontSize = 18.sp
-        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Text(
+                text = stringResource(R.string.dark_mode),
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                fontSize = 18.sp
+            )
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                text = stringResource(R.string.dark_mode_description),
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 3
+            )
+        }
+
         Switch(
             checked = themeState == AppTheme.DARK,
             onCheckedChange = { onChange(it) },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = MaterialTheme.colorScheme.primary
-            )
+            ),
+            thumbContent = {
+                Icon(
+                    imageVector = if (themeState == AppTheme.DARK) {
+                        Icons.Filled.DarkMode
+                    } else {
+                        Icons.Filled.LightMode
+                    },
+                    tint = MaterialTheme.colorScheme.primaryContainer,
+                    contentDescription = null,
+                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                )
+            }
         )
     }
 }
@@ -152,11 +183,9 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
 fun SettingsScreenPreview() {
     TemplatePreviewTheme {
         SettingsScreen(
-            uiState = SettingsUiState.Success(
-                userData = UserData(
-                    locale = LocaleEnum.EN.name,
-                    theme = AppTheme.DARK
-                )
+            userData = UserData(
+                locale = LocaleEnum.EN.name,
+                theme = AppTheme.DARK
             ),
             onThemeChange = {},
             onBackPressed = {},

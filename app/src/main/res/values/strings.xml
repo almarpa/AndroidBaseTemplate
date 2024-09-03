@@ -18,6 +18,7 @@
     <string name="stat_special_defense">S. Def</string>
     <string name="empty_string">""</string>
     <string name="dark_mode">Dark mode</string>
+    <string name="dark_mode_description">Elige entre el modo oscuro o claro para adaptar la apariencia de la aplicación a tus preferencias.</string>
     <string name="common_accept">Accept</string>
     <string name="common_cancel">Cancel</string>
     <string name="about">About</string>

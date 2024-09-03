@@ -1,12 +1,8 @@
 package com.example.androidtemplateapp.ui.common.dropdown
 
 import android.content.res.Configuration
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.*
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +36,7 @@ fun CustomDropdown(
             readOnly = true,
             value = stringResource(id = selected),
             onValueChange = { },
-            trailingIcon = { TrailingIcon(expanded = expanded) }
+            trailingIcon = { TrailingIcon(expanded = expanded) },
         )
         ExposedDropdownMenu(
             expanded = expanded,

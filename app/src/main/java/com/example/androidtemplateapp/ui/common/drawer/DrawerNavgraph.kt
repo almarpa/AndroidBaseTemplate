@@ -11,12 +11,12 @@ import com.example.androidtemplateapp.ui.settings.SettingsScreen
 import com.example.androidtemplateapp.ui.settings.SettingsViewModel
 
 fun NavGraphBuilder.drawerNavGraph(navigationActions: NavigationActions) {
-    composable<Routes.Settings>() {
+    composable<Routes.Settings> {
         val settingsViewModel: SettingsViewModel = hiltViewModel()
-        val uiState by settingsViewModel.settingsUiState.collectAsStateWithLifecycle()
+        val userDataState by settingsViewModel.userData.collectAsStateWithLifecycle()
 
         SettingsScreen(
-            uiState = uiState,
+            userData = userDataState,
             locales = settingsViewModel.locales,
             onLanguageChange = { settingsViewModel.setUserAppLocale(it) },
             onThemeChange = { isChecked -> settingsViewModel.setUserAppTheme(isChecked) },

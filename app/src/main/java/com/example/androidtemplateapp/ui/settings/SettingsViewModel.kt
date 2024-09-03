@@ -27,17 +27,20 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     private val _userTheme = MutableStateFlow(AppTheme.AUTO)
     val userTheme: StateFlow<AppTheme> = _userTheme
 
-    val settingsUiState = combine(
+    val userData = combine(
         _userLocale,
         _userTheme,
     ) { locale: String?, theme: AppTheme ->
         locale?.let {
-            SettingsUiState.Success(UserData(it, theme))
-        } ?: SettingsUiState.Loading
+            UserData(
+                locale = locale,
+                theme = theme
+            )
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = SettingsUiState.Loading
+        initialValue = null
     )
 
     private val _locales: Map<String, Int> = getAppLocales()
