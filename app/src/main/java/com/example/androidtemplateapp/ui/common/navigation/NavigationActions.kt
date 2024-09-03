@@ -9,18 +9,18 @@ import kotlinx.serialization.Serializable
 /**
  * Destinations used throughout the app.
  */
-sealed class Routes {
+sealed interface Routes {
     @Serializable
-    data object Splash : Routes()
+    data object Splash : Routes
 
     @Serializable
-    data object PokemonList : Routes()
+    data object PokemonList : Routes
 
     @Serializable
-    data object Team : Routes()
+    data object Team : Routes
 
     @Serializable
-    data object Settings : Routes()
+    data object Settings : Routes
 }
 
 /**
