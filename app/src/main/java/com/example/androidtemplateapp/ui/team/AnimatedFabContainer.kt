@@ -207,7 +207,7 @@ fun PokemonImageCard(
     ) {
         SubcomposeAsyncImage(
             modifier = Modifier
-                .fillMaxWidth(if (isTablet()) .25f else .8f)
+                .fillMaxWidth(if (isTablet()) .3f else .8f)
                 .aspectRatio(1f),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(pokemonImageURL)

@@ -19,11 +19,12 @@ import com.example.androidtemplateapp.R
 @Preview("Error Retry View", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun GenericRetryView(
+    modifier: Modifier = Modifier,
     errorDescription: Int = R.string.error_getting_pokemon_list,
     action: () -> Unit = {},
 ) {
     Column(
-        modifier = Modifier.padding(50.dp),
+        modifier = modifier.padding(50.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
