@@ -88,6 +88,7 @@ fun SharedTransitionScope.PokemonListScreen(
         },
         bottomBar = {
             AnimatedBottomAppBar(
+                modifier = Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f),
                 isVisible = !isSearchActive,
                 drawerState = drawerState,
                 currentRoute = currentRoute,
@@ -177,7 +178,7 @@ fun PokemonListScreenWithSearchActivePreview() {
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.PokemonList,
             navigationActions = NavigationActions(rememberNavController()),
-            searchUiState = SearchUiState.Success(getPokemonListMock()),
+            searchUiState = SearchUiState.Error,
             paginatedPokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),
             onReload = {},
             onDismissSearch = {},
