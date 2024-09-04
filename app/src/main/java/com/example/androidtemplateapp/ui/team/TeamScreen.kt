@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -95,7 +96,7 @@ private fun TeamContent(
 ) {
     Box(
         modifier = Modifier
-            .wrapContentSize()
+            .fillMaxSize()
             .padding(if (!isFabContainerFullscreen) paddingValues else PaddingValues(0.dp))
     ) {
 
@@ -122,7 +123,7 @@ private fun TeamContent(
                     onSave = {
                         onSavePokemon(it)
                         coroutineScope.launch {
-                            delay(1600)
+                            delay(1500)
                             pagerState.animateScrollToPage(uiState.teamList.size)
                         }
                     }
@@ -136,12 +137,12 @@ private fun TeamContent(
 @Composable
 @Preview("Team Screen")
 @Preview(
-    "Team Screen Landscape",
+    "Team Screen Fab Landscape",
     showBackground = true,
     device = "spec:width=400dp,height=900dp,dpi=420,orientation=landscape"
 )
-@Preview(name = "Tablet Team Screen", device = Devices.TABLET)
-fun TeamScreenPreview() {
+@Preview(name = "Team Fab Preview Tablet", device = Devices.TABLET)
+fun TeamScreenFabPreview() {
     TemplatePreviewTheme {
         TeamScreen(
             drawerState = DrawerState(DrawerValue.Closed),
@@ -156,11 +157,37 @@ fun TeamScreenPreview() {
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-@Preview("Team Content Fullscreen Preview", showBackground = true)
+@Preview("Team Empty Content Fab", showBackground = true)
 @Preview(
-    name = "Tablet Team Content Fullscreen Preview",
+    name = "Team Empty Content Fab",
     showBackground = true,
     device = Devices.TABLET
+)
+fun TeamEmptyContentFabPreview() {
+    TemplatePreviewTheme {
+        TeamScreen(
+            drawerState = DrawerState(DrawerValue.Closed),
+            currentRoute = Routes.Team,
+            navigationActions = NavigationActions(rememberNavController()),
+            uiState = TeamUiState.Success(listOf()),
+            onRetry = {},
+            onSave = {}
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview("Team Content Fullscreen", showBackground = true)
+@Preview(
+    name = "Tablet Team Content Fullscreen",
+    showBackground = true,
+    device = Devices.TABLET
+)
+@Preview(
+    name = "Tablet Portrait Team Content Fullscreen",
+    showBackground = true,
+    device = "spec:width=1280dp,height=900dp,dpi=420,orientation=portrait"
 )
 fun TeamContentFullscreenPreview() {
     TemplatePreviewTheme {
