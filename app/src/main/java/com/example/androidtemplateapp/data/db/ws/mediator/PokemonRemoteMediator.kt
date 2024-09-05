@@ -21,6 +21,8 @@ class PokemonRemoteMediator(
     companion object {
         private const val POKEMON_RESULTS_LIMIT = 1302
         private const val POKEMON_RESULTS_OFFSET = 0
+
+        // TODO:  Wait one week to refresh items from remote
         private const val REFRESHING_TIME_FROM_REMOTE = 168L
     }
 

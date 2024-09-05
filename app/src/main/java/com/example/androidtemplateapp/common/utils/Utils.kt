@@ -19,20 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-fun getDominantColorFromDrawable(drawable: Drawable, onFinish: (Color) -> Unit) {
-    (drawable as? BitmapDrawable)?.bitmap?.copy(Bitmap.Config.ARGB_8888, true)?.let { bitmap ->
-        Palette.from(bitmap).generate { palette ->
-            palette?.dominantSwatch?.rgb?.let { colorValue ->
-                onFinish(Color(colorValue))
-            }
-        }
-    }
-}
-
-fun setAppLanguage(locale: String) {
-    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locale))
-}
-
 @Composable
 fun <T> ObserveAsEvents(
     flow: Flow<T>,
@@ -48,6 +34,20 @@ fun <T> ObserveAsEvents(
             }
         }
     }
+}
+
+fun getDominantColorFromDrawable(drawable: Drawable, onFinish: (Color) -> Unit) {
+    (drawable as? BitmapDrawable)?.bitmap?.copy(Bitmap.Config.ARGB_8888, true)?.let { bitmap ->
+        Palette.from(bitmap).generate { palette ->
+            palette?.dominantSwatch?.rgb?.let { colorValue ->
+                onFinish(Color(colorValue))
+            }
+        }
+    }
+}
+
+fun setAppLanguage(locale: String) {
+    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locale))
 }
 
 @Composable

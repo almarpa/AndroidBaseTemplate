@@ -23,12 +23,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun BottomAppBar(
+    modifier: Modifier = Modifier,
     drawerState: DrawerState = DrawerState(DrawerValue.Closed),
     currentRoute: Routes,
     navigationActions: NavigationActions,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    NavigationBar(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
+    NavigationBar(modifier = modifier.clip(RoundedCornerShape(20.dp))) {
         NavigationBarItem(
             icon = {
                 Icon(

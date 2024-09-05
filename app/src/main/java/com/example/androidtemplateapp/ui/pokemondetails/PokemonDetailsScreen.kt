@@ -41,6 +41,8 @@ import com.example.androidtemplateapp.common.utils.pokemonSharedElement
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
 import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.ui.common.error.GenericRetryView
+import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
@@ -59,8 +61,9 @@ import kotlinx.coroutines.launch
 fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
-    pokemonDetails: PokemonDetails?,
+    pokemonDetailsUiState: PokemonDetailsUiState,
     userAppTheme: AppTheme,
+    onRetry: () -> Unit,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
     onBackPressed: () -> Unit,
 ) {
@@ -89,8 +92,9 @@ fun SharedTransitionScope.PokemonDetailsScreen(
         PokemonDetailsContent(
             userAppTheme = userAppTheme,
             pokemon = pokemon,
-            pokemonDetails = pokemonDetails,
+            pokemonDetailsUiState = pokemonDetailsUiState,
             animatedVisibilityScope = animatedVisibilityScope,
+            onRetry = { onRetry() },
         ) { pokemon, isAdded ->
             onAddTeamMember(pokemon, isAdded)
             coroutineScope.launch {
@@ -107,8 +111,9 @@ fun SharedTransitionScope.PokemonDetailsScreen(
 private fun SharedTransitionScope.PokemonDetailsContent(
     userAppTheme: AppTheme,
     pokemon: Pokemon,
-    pokemonDetails: PokemonDetails?,
+    pokemonDetailsUiState: PokemonDetailsUiState,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    onRetry: () -> Unit,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -130,7 +135,8 @@ private fun SharedTransitionScope.PokemonDetailsContent(
         PokemonCard(
             modifier = Modifier.padding(top = topPaddingCard.dp),
             pokemon = pokemon,
-            pokemonDetails = pokemonDetails,
+            pokemonDetailsUiState = pokemonDetailsUiState,
+            onRetry = { onRetry() }
         )
         PokemonImageAnimation(
             animatedVisibilityScope = animatedVisibilityScope,
@@ -192,7 +198,8 @@ fun AddMemberButton(
 fun PokemonCard(
     modifier: Modifier = Modifier,
     pokemon: Pokemon,
-    pokemonDetails: PokemonDetails?,
+    pokemonDetailsUiState: PokemonDetailsUiState,
+    onRetry: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -208,31 +215,46 @@ fun PokemonCard(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        pokemonDetails?.let { pokemonDetailsNotNull ->
-            Column {
-                PokemonName(
-                    modifier = Modifier.padding(
-                        top = if (isTablet()) 160.dp else 120.dp,
-                    ),
-                    pokemon = pokemon
-                )
-                CustomSpacer(height = 16)
-                PokemonType(
-                    types = pokemonDetailsNotNull.types
-                )
-                PokemonMeasures(
-                    pokemonWeight = pokemonDetailsNotNull.weight,
-                    pokemonHeight = pokemonDetailsNotNull.height
-                )
-                PokemonTabRow(
-                    modifier = Modifier.heightIn(
-                        0.dp,
-                        300.dp
-                    ), // set max height due to nested scroll need to have a defined height
-                    pokemonDetails = pokemonDetails
-                )
+        when (pokemonDetailsUiState) {
+            is PokemonDetailsUiState.Loading -> {
+                FullScreenLoader()
+            }
+
+            is PokemonDetailsUiState.Error -> {
+                GenericRetryView(modifier = Modifier.padding(top = if (isTablet()) 160.dp else 120.dp)) {
+                    onRetry()
+                }
+            }
+
+            is PokemonDetailsUiState.Success -> {
+                PokemonInfo(pokemon = pokemon, details = pokemonDetailsUiState.details)
             }
         }
+    }
+}
+
+@Composable
+fun PokemonInfo(pokemon: Pokemon, details: PokemonDetails) {
+    Column {
+        PokemonName(
+            modifier = Modifier.padding(
+                top = if (isTablet()) 160.dp else 120.dp,
+            ),
+            pokemon = pokemon
+        )
+        CustomSpacer(height = 16)
+        PokemonType(types = details.types)
+        PokemonMeasures(
+            pokemonWeight = details.weight,
+            pokemonHeight = details.height
+        )
+        PokemonTabRow(
+            modifier = Modifier.heightIn(
+                0.dp,
+                300.dp
+            ), // set max height due to nested scroll need to have a defined height
+            pokemonDetails = details
+        )
     }
 }
 
@@ -287,7 +309,7 @@ fun PokemonImageAnimationPreview() {
 fun PokemonCardPreview() {
     TemplatePreviewTheme {
         PokemonCard(
-            pokemonDetails = getPokemonDetailsMock(),
+            pokemonDetailsUiState = PokemonDetailsUiState.Success(getPokemonDetailsMock()),
             pokemon = getPokemonMock(),
         )
     }
@@ -302,7 +324,26 @@ fun PokemonDetailsScreenPreview() {
         PokemonDetailsScreen(
             animatedVisibilityScope = it,
             pokemon = getPokemonMock(),
-            pokemonDetails = getPokemonDetailsMock(),
+            pokemonDetailsUiState = PokemonDetailsUiState.Success(getPokemonDetailsMock()),
+            onRetry = {},
+            onAddTeamMember = { _, _ -> },
+            onBackPressed = {},
+            userAppTheme = AppTheme.DARK,
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview(name = "Phone Error Pokemon Details Screen", device = Devices.PHONE)
+@Preview(name = "Tablet Error Pokemon Details Screen", device = Devices.TABLET)
+fun PokemonDetailsErrorScreenPreview() {
+    TemplatePreviewTheme {
+        PokemonDetailsScreen(
+            animatedVisibilityScope = it,
+            pokemon = getPokemonMock(),
+            pokemonDetailsUiState = PokemonDetailsUiState.Error,
+            onRetry = {},
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
             userAppTheme = AppTheme.DARK,

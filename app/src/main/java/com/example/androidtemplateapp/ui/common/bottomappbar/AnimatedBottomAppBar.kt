@@ -7,11 +7,13 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 
 @Composable
 fun AnimatedBottomAppBar(
+    modifier: Modifier = Modifier,
     isVisible: Boolean,
     drawerState: DrawerState,
     currentRoute: Routes,
@@ -35,6 +37,7 @@ fun AnimatedBottomAppBar(
         )
     ) {
         BottomAppBar(
+            modifier = modifier,
             drawerState = drawerState,
             currentRoute = currentRoute,
             navigationActions = navigationActions
