@@ -4,7 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.example.androidtemplateapp.common.utils.Resource
+import com.example.androidtemplateapp.common.errorhandler.entity.AppError
+import com.example.androidtemplateapp.common.utils.Result
 import com.example.androidtemplateapp.domain.PokemonDetailsUseCase
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
@@ -17,7 +18,7 @@ import javax.inject.Inject
 sealed interface PokemonDetailsUiState {
     data object Loading : PokemonDetailsUiState
     data class Success(val details: PokemonDetails) : PokemonDetailsUiState
-    data object Error : PokemonDetailsUiState
+    data class Error(val error: AppError) : PokemonDetailsUiState
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,11 +38,10 @@ class PokemonDetailsViewModel @Inject constructor(
     val pokemonDetails: StateFlow<PokemonDetailsUiState> =
         _getDetailsTrigger.filterNotNull().flatMapLatest { _ ->
             pokemonDetailsUseCase.getPokemonDetails(_pokemon.id)
-                .map { pokemonDetails ->
-                    when (pokemonDetails) {
-                        is Resource.Loading -> PokemonDetailsUiState.Loading
-                        is Resource.Error -> PokemonDetailsUiState.Error
-                        is Resource.Success -> PokemonDetailsUiState.Success(pokemonDetails.data)
+                .map { resource ->
+                    when (resource) {
+                        is Result.Error -> PokemonDetailsUiState.Error(resource.error)
+                        is Result.Success -> PokemonDetailsUiState.Success(resource.data)
                     }
                 }
         }.stateIn(

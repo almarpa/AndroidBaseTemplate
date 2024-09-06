@@ -1,7 +1,9 @@
 package com.example.androidtemplateapp.data.repository.impl
 
+import com.example.androidtemplateapp.common.errorhandler.ErrorHandler
+import com.example.androidtemplateapp.common.errorhandler.entity.AppError
 import com.example.androidtemplateapp.common.errorhandler.entity.AppErrorType
-import com.example.androidtemplateapp.common.utils.Resource
+import com.example.androidtemplateapp.common.utils.Result
 import com.example.androidtemplateapp.data.db.database.dao.PokemonDetailsDao
 import com.example.androidtemplateapp.data.db.ws.api.PokemonApi
 import com.example.androidtemplateapp.data.repository.PokemonDetailsRepository
@@ -18,24 +20,23 @@ class PokemonDetailsRepositoryImpl(
     private val pokemonDetailsDao: PokemonDetailsDao,
 ) : PokemonDetailsRepository {
 
-    override suspend fun getPokemonDetails(pokemonID: Int): Flow<Resource<PokemonDetails>> = flow {
-        emit(Resource.Loading())
+    override suspend fun getPokemonDetails(pokemonID: Int): Flow<Result<PokemonDetails>> = flow {
         emit(getLocalPokemonDetails(pokemonID)?.let { localDetails ->
-            Resource.Success(localDetails)
+            Result.Success(localDetails)
         } ?: run {
             with(pokemonApi.getPokemon(pokemonID).execute()) {
                 return@with body()?.map()?.let { remoteDetails ->
                     savePokemonDetails(remoteDetails)
-                    Resource.Success(data = remoteDetails)
+                    Result.Success(data = remoteDetails)
                 } ?: run {
-                    Resource.Error(AppErrorType.MalformedResponse)
+                    Result.Error(ErrorHandler.processError(this))
                 }
             }
         })
     }
         .flowOn(Dispatchers.IO)
         .catch { error ->
-            emit(Resource.Error(AppErrorType.Api.Server))
+            emit(Result.Error(AppError(type = AppErrorType.Unknown, cause = error)))
         }
 
     private suspend fun getLocalPokemonDetails(pokemonID: Int): PokemonDetails? {

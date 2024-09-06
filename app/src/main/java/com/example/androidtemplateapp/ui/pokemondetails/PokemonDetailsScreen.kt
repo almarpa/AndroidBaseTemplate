@@ -45,6 +45,7 @@ import com.example.androidtemplateapp.ui.common.error.GenericRetryView
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
+import com.example.androidtemplateapp.ui.common.mocks.mockNotFoundAppError
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.snackbar.CustomSnackBar
 import com.example.androidtemplateapp.ui.common.snackbar.SnackbarController
@@ -221,7 +222,10 @@ fun PokemonCard(
             }
 
             is PokemonDetailsUiState.Error -> {
-                GenericRetryView(modifier = Modifier.padding(top = if (isTablet()) 160.dp else 120.dp)) {
+                GenericRetryView(
+                    modifier = Modifier.padding(top = if (isTablet()) 160.dp else 120.dp),
+                    errorDescription = pokemonDetailsUiState.error.data?.getFormatted() ?: ""
+                ) {
                     onRetry()
                 }
             }
@@ -342,7 +346,7 @@ fun PokemonDetailsErrorScreenPreview() {
         PokemonDetailsScreen(
             animatedVisibilityScope = it,
             pokemon = getPokemonMock(),
-            pokemonDetailsUiState = PokemonDetailsUiState.Error,
+            pokemonDetailsUiState = PokemonDetailsUiState.Error(mockNotFoundAppError()),
             onRetry = {},
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
