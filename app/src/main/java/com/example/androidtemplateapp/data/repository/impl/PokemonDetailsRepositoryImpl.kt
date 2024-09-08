@@ -1,8 +1,6 @@
 package com.example.androidtemplateapp.data.repository.impl
 
 import com.example.androidtemplateapp.common.errorhandler.ErrorHandler
-import com.example.androidtemplateapp.common.errorhandler.entity.AppError
-import com.example.androidtemplateapp.common.errorhandler.entity.AppErrorType
 import com.example.androidtemplateapp.common.utils.Result
 import com.example.androidtemplateapp.data.db.database.dao.PokemonDetailsDao
 import com.example.androidtemplateapp.data.db.ws.api.PokemonApi
@@ -29,14 +27,14 @@ class PokemonDetailsRepositoryImpl(
                     savePokemonDetails(remoteDetails)
                     Result.Success(data = remoteDetails)
                 } ?: run {
-                    Result.Error(ErrorHandler.processError(this))
+                    Result.Error(ErrorHandler.processApiException(this))
                 }
             }
         })
     }
         .flowOn(Dispatchers.IO)
         .catch { error ->
-            emit(Result.Error(AppError(type = AppErrorType.Unknown, cause = error)))
+            emit(Result.Error(ErrorHandler.processException(error)))
         }
 
     private suspend fun getLocalPokemonDetails(pokemonID: Int): PokemonDetails? {

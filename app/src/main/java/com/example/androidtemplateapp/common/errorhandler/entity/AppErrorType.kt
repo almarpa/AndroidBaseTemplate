@@ -13,7 +13,7 @@ sealed class AppErrorType {
         data object NotFound : Api()
 
         data object Timeout : Api()
-        
+
         data object InterruptedIO : Api()
 
         data object Forbidden : Api()
@@ -38,18 +38,3 @@ sealed class AppErrorType {
     data object MalformedResponse : AppErrorType()
     data object Unknown : AppErrorType()
 }
-
-//val operationError = OperationError
-//    .Builder(OperationErrorType.CONNECTION_ERROR)
-//    .errorId(1)
-//    .messageTitle("Connection Error")
-//    .message("Device is not connected to the internet. Please check your mobile internet connection.")
-//    .build()
-//
-//val timeoutError = OperationError
-//    .Builder(OperationErrorType.TIMEOUT_ERROR)
-//    .errorId(2)
-//    .messageTitle("Connection Error")
-//    .message("Failed to connect to the server please try again later.")
-//    .build()
-
