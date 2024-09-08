@@ -3,12 +3,12 @@ agp = "8.2.2"
 kotlin = "1.9.23"
 ksp = "1.9.23-1.0.20"
 
-androidxLifecycle = "2.8.4"
-androidxComposeNavigation = "2.8.0-rc01"
+androidxLifecycle = "2.8.5"
+androidxComposeNavigation = "2.8.0"
 androidxRoom = "2.6.1"
-androidxCompose = "1.6.8"
-androidxComposeSnapshot = "1.7.0-rc01"
-androidxComposeMaterial3 = "1.2.1"
+androidxCompose = "1.7.0"
+androidxComposeSnapshot = "1.7.0"
+androidxComposeMaterial3 = "1.3.0"
 androidxHiltNavigationCompose = "1.2.0"
 hilt = "2.51.1"
 kotlinxSerializationJson = "1.6.3"
@@ -24,7 +24,7 @@ mockito = "5.11.0"
 mockito-kotlin = "5.2.1"
 androidxComposeConstraintLayout = "1.0.1"
 appcompat = "1.7.0"
-activity = "1.9.1"
+activity = "1.9.2"
 androidxPaging = "3.3.2"
 accompanist = "0.27.0"
 
@@ -42,7 +42,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
 
-androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation", version.ref = "androidxHiltNavigationCompose" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 
 androidx-room-common = { module = "androidx.room:room-common", version.ref = "androidxRoom" }
