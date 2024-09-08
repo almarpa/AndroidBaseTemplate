@@ -34,4 +34,5 @@
     <string name="stats">Stats</string>
     <string name="moves">Moves</string>
     <string name="pokemon_added_to_team">¡Pokemon añadido al equipo!</string>
+    <string name="app_error_title">Error</string>
 </resources>
