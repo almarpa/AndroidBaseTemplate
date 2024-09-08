@@ -27,7 +27,7 @@ class PokemonDetailsRepositoryImpl(
                     savePokemonDetails(remoteDetails)
                     Result.Success(data = remoteDetails)
                 } ?: run {
-                    Result.Error(ErrorHandler.processApiException(this))
+                    Result.Error(ErrorHandler.processResponseError(this))
                 }
             }
         })

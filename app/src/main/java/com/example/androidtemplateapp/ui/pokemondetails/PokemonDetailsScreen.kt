@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -35,12 +36,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidtemplateapp.R
+import com.example.androidtemplateapp.common.errorhandler.entity.AppError
 import com.example.androidtemplateapp.common.utils.ObserveAsEvents
 import com.example.androidtemplateapp.common.utils.getBackgroundColorWithGradient
 import com.example.androidtemplateapp.common.utils.pokemonSharedElement
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
 import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.ui.common.dialog.SimpleActionAlertDialog
 import com.example.androidtemplateapp.ui.common.error.GenericRetryView
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
@@ -222,9 +225,10 @@ fun PokemonCard(
             }
 
             is PokemonDetailsUiState.Error -> {
+                AppErrorDialog(appError = pokemonDetailsUiState.error)
                 GenericRetryView(
                     modifier = Modifier.padding(top = if (isTablet()) 160.dp else 120.dp),
-                    errorDescription = pokemonDetailsUiState.error.data?.getFormatted() ?: ""
+                    errorDescription = stringResource(R.string.error_getting_pokemon_list)
                 ) {
                     onRetry()
                 }
@@ -293,6 +297,15 @@ fun SharedTransitionScope.PokemonImageAnimation(
                 )
         )
     }
+}
+
+@Composable
+fun AppErrorDialog(appError: AppError) {
+    LocalContext.current.SimpleActionAlertDialog(
+        show = true,
+        title = appError.data?.code ?: "",
+        description = appError.data?.detail ?: "",
+    )
 }
 
 @Composable

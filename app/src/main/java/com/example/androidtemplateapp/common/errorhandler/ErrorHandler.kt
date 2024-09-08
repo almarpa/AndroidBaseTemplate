@@ -18,35 +18,9 @@ import javax.net.ssl.SSLException
 @Singleton
 object ErrorHandler {
 
-    fun processApiException(response: Response<out Any>): AppError {
-        return getAppError(response)
-    }
-
-    fun processException(
-        exception: Throwable,
-        defaultErrorType: AppErrorType? = null,
-    ): AppError =
-        when (exception) {
-            is AppError -> exception
-            is Exception -> getAppError(exception, defaultErrorType)
-            else -> AppError(
-                type = AppErrorType.Unknown,
-                cause = exception
-            )
-        }
-
-    private fun getAppError(response: Response<out Any>): AppError {
-        val errorType = when (response.code()) {
-            in 200..299 -> AppErrorType.MalformedResponse
-            in 401..403 -> AppErrorType.Api.Forbidden
-            404 -> AppErrorType.Api.NotFound
-            in 400..499 -> AppErrorType.Api.MalformedRequest
-            in 500..599 -> AppErrorType.Api.InternalServerError
-            else -> AppErrorType.Unknown
-        }
-
+    fun processResponseError(response: Response<out Any>): AppError {
         return AppError(
-            type = errorType,
+            type = getAppErrorType(response.code()),
             data = response.errorBody()?.let { body ->
                 AppErrorData(
                     code = response.code().toString(),
@@ -56,84 +30,110 @@ object ErrorHandler {
         )
     }
 
-    private fun getAppError(
-        exception: Throwable,
-        defaultErrorCode: AppErrorType? = null,
-    ): AppError =
+    fun processException(exception: Throwable): AppError =
+        when (exception) {
+            is Exception -> getAppError(exception)
+            else -> getDefaultAppError(exception)
+        }
+
+    private fun getAppErrorType(httpErrorCode: Int): AppErrorType =
+        when (httpErrorCode) {
+            in 200..299 -> AppErrorType.MalformedResponse
+            in 401..403 -> AppErrorType.Api.Forbidden
+            404 -> AppErrorType.Api.NotFound
+            in 400..499 -> AppErrorType.Api.MalformedRequest
+            in 500..599 -> AppErrorType.Api.InternalServerError
+            else -> AppErrorType.Unknown
+        }
+
+    private fun getAppError(exception: Throwable): AppError =
         when (exception) {
             is TimeoutException -> {
                 AppError(
                     type = AppErrorType.Api.Timeout,
+                    data = AppErrorData(detail = "Timeout exception"),
                     cause = exception
                 )
             }
 
             is IOException -> {
-                processIOException(exception, defaultErrorCode)
+                processIOException(exception)
             }
 
             else -> {
                 AppError(
-                    type = defaultErrorCode ?: AppErrorType.MalformedResponse,
+                    type = AppErrorType.MalformedResponse,
+                    data = AppErrorData(detail = "Malformed response"),
                     cause = exception
                 )
             }
         }
-    
-    private fun processIOException(
-        ioe: IOException,
-        defaultErrorCode: AppErrorType? = null,
-    ): AppError =
-        when (ioe) {
+
+    private fun processIOException(ioException: IOException): AppError =
+        when (ioException) {
             is UnknownHostException -> {
                 AppError(
                     type = AppErrorType.Api.Offline,
-                    cause = ioe
+                    data = AppErrorData(detail = "No Internet connection"),
+                    cause = ioException
                 )
             }
 
             is UnknownServiceException -> {
                 AppError(
                     type = AppErrorType.Api.UnknownService,
-                    cause = ioe
+                    data = AppErrorData(detail = "Unknown service exception"),
+                    cause = ioException
                 )
             }
 
             is SocketException -> {
                 AppError(
                     type = AppErrorType.Api.SocketError,
-                    cause = ioe
+                    data = AppErrorData(detail = "Socket exception"),
+                    cause = ioException
                 )
             }
 
             is SSLException -> {
                 AppError(
                     type = AppErrorType.Api.SSLError,
-                    cause = ioe
+                    data = AppErrorData(detail = "SSL exception"),
+                    cause = ioException
                 )
             }
 
             is InterruptedIOException -> {
                 AppError(
-                    type = if (ioe is SocketTimeoutException) {
+                    type = if (ioException is SocketTimeoutException) {
                         AppErrorType.Api.Timeout
                     } else {
                         AppErrorType.Api.InterruptedIO
                     },
-                    cause = ioe
+                    data = AppErrorData(detail = "Interrupted IO exception"),
+                    cause = ioException
                 )
             }
 
             is MalformedURLException -> {
                 AppError(
                     type = AppErrorType.Api.MalformedUrl,
-                    cause = ioe
+                    data = AppErrorData(detail = "Malformed URL exception"),
+                    cause = ioException
                 )
             }
 
             else -> AppError(
-                type = defaultErrorCode ?: AppErrorType.MalformedResponse,
-                cause = ioe
+                type = AppErrorType.MalformedResponse,
+                data = AppErrorData(detail = "Malformed response"),
+                cause = ioException
             )
         }
+
+    private fun getDefaultAppError(exception: Throwable) =
+        AppError(
+            type = AppErrorType.Unknown,
+            data = AppErrorData(detail = "Unknown error"),
+            cause = exception
+        )
 }

@@ -24,7 +24,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.androidtemplateapp.R
 
 @Composable
-fun Context.SimpleAlertDialog(
+fun Context.SimpleActionAlertDialog(
     show: Boolean = true,
     title: String = stringResource(R.string.app_error_title),
     description: String = stringResource(R.string.empty_string),
@@ -33,7 +33,6 @@ fun Context.SimpleAlertDialog(
     onDismissRequest: () -> Unit = {},
 ) {
     var isActive by rememberSaveable { mutableStateOf(show) }
-
     if (isActive) {
         AlertDialog(
             onDismissRequest = { onDismissRequest() },
@@ -119,7 +118,7 @@ fun Context.CustomDialog(
 @Preview
 @Composable
 fun SimpleAlertDialogPreview() {
-    LocalContext.current.SimpleAlertDialog(
+    LocalContext.current.SimpleActionAlertDialog(
         title = stringResource(R.string.search_title),
         description = stringResource(R.string.error_getting_pokemon_list),
     )

@@ -88,7 +88,7 @@ fun SharedTransitionScope.PokemonListScreen(
         },
         bottomBar = {
             AnimatedBottomAppBar(
-                modifier = Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f),
+                modifier = Modifier, // TODO: fix with .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
                 isVisible = !isSearchActive,
                 drawerState = drawerState,
                 currentRoute = currentRoute,
