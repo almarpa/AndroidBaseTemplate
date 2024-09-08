@@ -25,9 +25,9 @@ import com.example.androidtemplateapp.R
 
 @Composable
 fun Context.SimpleActionAlertDialog(
-    show: Boolean = true,
-    title: String = stringResource(R.string.app_error_title),
-    description: String = stringResource(R.string.empty_string),
+    show: Boolean,
+    title: String?,
+    description: String?,
     onConfirm: () -> Unit = {},
     confirmText: Int = R.string.common_accept,
     onDismissRequest: () -> Unit = {},
@@ -36,8 +36,8 @@ fun Context.SimpleActionAlertDialog(
     if (isActive) {
         AlertDialog(
             onDismissRequest = { onDismissRequest() },
-            title = { Text(text = title) },
-            text = { Text(text = description) },
+            title = { Text(text = title ?: stringResource(R.string.app_error_title)) },
+            text = { Text(text = description ?: stringResource(R.string.empty_string)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -119,6 +119,7 @@ fun Context.CustomDialog(
 @Composable
 fun SimpleAlertDialogPreview() {
     LocalContext.current.SimpleActionAlertDialog(
+        show = true,
         title = stringResource(R.string.search_title),
         description = stringResource(R.string.error_getting_pokemon_list),
     )

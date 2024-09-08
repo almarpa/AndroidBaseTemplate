@@ -303,8 +303,8 @@ fun SharedTransitionScope.PokemonImageAnimation(
 fun AppErrorDialog(appError: AppError) {
     LocalContext.current.SimpleActionAlertDialog(
         show = true,
-        title = appError.data?.code ?: "",
-        description = appError.data?.detail ?: "",
+        title = appError.data?.code,
+        description = appError.data?.detail,
     )
 }
 
