@@ -17,6 +17,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,9 +59,11 @@ fun SharedTransitionScope.PokemonListScreen(
 ) {
     val activity = (LocalContext.current as? Activity)
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
+    var isBottomAppBarVisible by rememberSaveable { mutableStateOf(true) }
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     BackHandler { activity?.finish() }
+    LaunchedEffect(Unit) { isBottomAppBarVisible = true }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection),
@@ -71,7 +74,10 @@ fun SharedTransitionScope.PokemonListScreen(
                 scrollBehaviour = scrollBehaviour,
                 uiState = searchUiState,
                 isSearchActive = isSearchActive,
-                onSearchActiveChange = { isActive -> isSearchActive = isActive },
+                onSearchActiveChange = { isActive ->
+                    isSearchActive = isActive
+                    isBottomAppBarVisible = !isActive
+                },
                 onDismissSearch = { onDismissSearch() },
                 onSearch = { onSearch(it) },
                 onSelected = { navigationActions.navigateToDetailNavGraph(it) }
@@ -83,13 +89,16 @@ fun SharedTransitionScope.PokemonListScreen(
                 animatedVisibilityScope = animatedVisibilityScope,
                 paginatedPokemonList = paginatedPokemonList,
                 onReload = { onReload() },
-                onNavigateToPokemonDetail = { navigationActions.navigateToDetailNavGraph(it) }
+                onNavigateToPokemonDetail = {
+                    isBottomAppBarVisible = false
+                    navigationActions.navigateToDetailNavGraph(it)
+                }
             )
         },
         bottomBar = {
             AnimatedBottomAppBar(
-                modifier = Modifier, // TODO: fix with .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
-                isVisible = !isSearchActive,
+                modifier = Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f),
+                isVisible = isBottomAppBarVisible,
                 drawerState = drawerState,
                 currentRoute = currentRoute,
                 navigationActions = navigationActions

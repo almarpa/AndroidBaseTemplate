@@ -22,7 +22,7 @@ sealed interface SettingsUiState {
 class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDataUseCase) :
     ViewModel() {
 
-    private val _userLocale: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val _userLocale = MutableStateFlow(LocaleEnum.EN.value)
 
     private val _userTheme = MutableStateFlow(AppTheme.AUTO)
     val userTheme: StateFlow<AppTheme> = _userTheme
@@ -30,13 +30,11 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     val userData = combine(
         _userLocale,
         _userTheme,
-    ) { locale: String?, theme: AppTheme ->
-        locale?.let {
-            UserData(
-                locale = locale,
-                theme = theme
-            )
-        }
+    ) { locale: String, theme: AppTheme ->
+        UserData(
+            locale = locale,
+            theme = theme
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
@@ -57,13 +55,9 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
 
     private fun getUserAppLocale() {
         viewModelScope.launch(Dispatchers.IO) {
-            userDataUseCase.getAppLocale()
-                .catch {
-                    _userLocale.tryEmit(null)
-                }
-                .collect { appLocale ->
-                    _userLocale.tryEmit(appLocale)
-                }
+            userDataUseCase.getAppLocale().collect { appLocale ->
+                _userLocale.tryEmit(appLocale)
+            }
         }
     }
 
