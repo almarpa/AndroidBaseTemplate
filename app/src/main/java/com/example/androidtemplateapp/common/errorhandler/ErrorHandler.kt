@@ -32,6 +32,7 @@ object ErrorHandler {
 
     fun processException(exception: Throwable): AppError =
         when (exception) {
+            is AppError -> exception
             is Exception -> getAppError(exception)
             else -> getDefaultAppError(exception)
         }
@@ -49,11 +50,7 @@ object ErrorHandler {
     private fun getAppError(exception: Throwable): AppError =
         when (exception) {
             is TimeoutException -> {
-                AppError(
-                    type = AppErrorType.Api.Timeout,
-                    data = AppErrorData(detail = "Timeout exception"),
-                    cause = exception
-                )
+                getTimeoutException(exception)
             }
 
             is IOException -> {
@@ -61,11 +58,7 @@ object ErrorHandler {
             }
 
             else -> {
-                AppError(
-                    type = AppErrorType.MalformedResponse,
-                    data = AppErrorData(detail = "Malformed response"),
-                    cause = exception
-                )
+                getDefaultAppError(exception)
             }
         }
 
@@ -123,17 +116,19 @@ object ErrorHandler {
                 )
             }
 
-            else -> AppError(
-                type = AppErrorType.MalformedResponse,
-                data = AppErrorData(detail = "Malformed response"),
-                cause = ioException
-            )
+            else -> getDefaultAppError(ioException)
         }
 
+    private fun getTimeoutException(exception: Throwable) = AppError(
+        type = AppErrorType.Api.Timeout,
+        data = AppErrorData(detail = "Timeout exception"),
+        cause = exception
+    )
+    
     private fun getDefaultAppError(exception: Throwable) =
         AppError(
-            type = AppErrorType.Unknown,
-            data = AppErrorData(detail = "Unknown error"),
+            type = AppErrorType.MalformedResponse,
+            data = AppErrorData(detail = "Malformed response"),
             cause = exception
         )
 }

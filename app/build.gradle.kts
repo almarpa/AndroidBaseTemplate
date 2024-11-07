@@ -145,4 +145,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.okhttp.interceptor)
+    implementation(libs.arrow.core)
 }

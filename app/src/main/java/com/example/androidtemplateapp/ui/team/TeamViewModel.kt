@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidtemplateapp.domain.PokemonUseCase
 import com.example.androidtemplateapp.entity.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -32,7 +31,7 @@ class TeamViewModel @Inject constructor(
 
     fun getTeamList() {
         _uiState.tryEmit(TeamUiState.Loading)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             pokemonUseCase.getTeamMembers()
                 .catch {
                     _uiState.tryEmit(TeamUiState.Error)
@@ -44,13 +43,13 @@ class TeamViewModel @Inject constructor(
     }
 
     fun addPokemonToTeam(pokemon: Pokemon, isAdded: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             pokemonUseCase.addPokemonToTeam(pokemon.apply { isTeamMember = isAdded })
         }
     }
 
     fun createPokemonMemberAndReload(pokemon: Pokemon) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             pokemonUseCase.createPokemonMember(pokemon)
             getTeamList()
         }

@@ -1,16 +1,13 @@
 package com.example.androidtemplateapp.data.repository.impl
 
+import arrow.core.Either
 import com.example.androidtemplateapp.common.errorhandler.ErrorHandler
-import com.example.androidtemplateapp.common.utils.Result
+import com.example.androidtemplateapp.common.errorhandler.entity.AppError
 import com.example.androidtemplateapp.data.db.database.dao.PokemonDetailsDao
 import com.example.androidtemplateapp.data.db.ws.api.PokemonApi
 import com.example.androidtemplateapp.data.repository.PokemonDetailsRepository
 import com.example.androidtemplateapp.entity.PokemonDetails
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class PokemonDetailsRepositoryImpl(
@@ -18,23 +15,20 @@ class PokemonDetailsRepositoryImpl(
     private val pokemonDetailsDao: PokemonDetailsDao,
 ) : PokemonDetailsRepository {
 
-    override suspend fun getPokemonDetails(pokemonID: Int): Flow<Result<PokemonDetails>> = flow {
-        emit(getLocalPokemonDetails(pokemonID)?.let { localDetails ->
-            Result.Success(localDetails)
-        } ?: run {
-            with(pokemonApi.getPokemon(pokemonID).execute()) {
-                return@with body()?.map()?.let { remoteDetails ->
-                    savePokemonDetails(remoteDetails)
-                    Result.Success(data = remoteDetails)
-                } ?: run {
-                    Result.Error(ErrorHandler.processResponseError(this))
+    override suspend fun getPokemonDetails(pokemonID: Int): Either<AppError, PokemonDetails> =
+        Either.catchOrThrow<Throwable, PokemonDetails> {
+            getLocalPokemonDetails(pokemonID) ?: run {
+                with(pokemonApi.getPokemon(pokemonID).execute()) {
+                    return@with body()?.map()?.let { remoteDetails ->
+                        savePokemonDetails(remoteDetails)
+                        remoteDetails
+                    } ?: run {
+                        throw ErrorHandler.processResponseError(this)
+                    }
                 }
             }
-        })
-    }
-        .flowOn(Dispatchers.IO)
-        .catch { error ->
-            emit(Result.Error(ErrorHandler.processException(error)))
+        }.mapLeft { throwable ->
+            ErrorHandler.processException(throwable)
         }
 
     private suspend fun getLocalPokemonDetails(pokemonID: Int): PokemonDetails? {

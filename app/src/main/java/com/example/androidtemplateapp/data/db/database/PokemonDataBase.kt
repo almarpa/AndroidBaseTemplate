@@ -11,7 +11,7 @@ import com.example.androidtemplateapp.data.db.database.entity.PokemonEntity
 
 @Database(
     entities = [PokemonEntity::class, PokemonDetailsEntity::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

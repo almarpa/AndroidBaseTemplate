@@ -8,13 +8,11 @@ import com.example.androidtemplateapp.entity.UserData
 import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.entity.enums.LocaleEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface SettingsUiState {
-    data object Loading : SettingsUiState
     data class Success(val userData: UserData) : SettingsUiState
 }
 
@@ -54,7 +52,7 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     }
 
     private fun getUserAppLocale() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userDataUseCase.getAppLocale().collect { appLocale ->
                 _userLocale.tryEmit(appLocale)
             }
@@ -62,13 +60,13 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     }
 
     fun setUserAppLocale(newLocale: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userDataUseCase.setAppLocale(newLocale)
         }
     }
 
     private fun getUserAppTheme() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userDataUseCase.getAppTheme()
                 .catch {
                     _userTheme.tryEmit(AppTheme.AUTO)
@@ -80,7 +78,7 @@ class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDat
     }
 
     fun setUserAppTheme(isChecked: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userDataUseCase.setAppTheme(
                 if (isChecked) {
                     AppTheme.DARK

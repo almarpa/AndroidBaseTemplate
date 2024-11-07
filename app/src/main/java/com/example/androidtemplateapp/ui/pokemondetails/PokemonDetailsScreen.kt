@@ -15,11 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.outlined.PersonAdd
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -33,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.androidtemplateapp.R
@@ -44,7 +41,6 @@ import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
 import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.ui.common.dialog.SimpleActionAlertDialog
-import com.example.androidtemplateapp.ui.common.error.GenericRetryView
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonMock
@@ -67,13 +63,20 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     pokemon: Pokemon,
     pokemonDetailsUiState: PokemonDetailsUiState,
     userAppTheme: AppTheme,
-    onRetry: () -> Unit,
+    onFetchDetails: () -> Unit,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
     onBackPressed: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val snackbarMessage = LocalContext.current.getString(R.string.pokemon_added_to_team)
+
+    LifecycleResumeEffect(Unit) {
+        onFetchDetails()
+        onPauseOrDispose {
+            // Do nothing
+        }
+    }
 
     ObserveAsEvents(
         flow = SnackbarController.snackbarEvents,
@@ -98,7 +101,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
             pokemon = pokemon,
             pokemonDetailsUiState = pokemonDetailsUiState,
             animatedVisibilityScope = animatedVisibilityScope,
-            onRetry = { onRetry() },
+            onFetchDetails = { onFetchDetails() },
         ) { pokemon, isAdded ->
             onAddTeamMember(pokemon, isAdded)
             coroutineScope.launch {
@@ -117,7 +120,7 @@ private fun SharedTransitionScope.PokemonDetailsContent(
     pokemon: Pokemon,
     pokemonDetailsUiState: PokemonDetailsUiState,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    onRetry: () -> Unit,
+    onFetchDetails: () -> Unit,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -140,7 +143,7 @@ private fun SharedTransitionScope.PokemonDetailsContent(
             modifier = Modifier.padding(top = topPaddingCard.dp),
             pokemon = pokemon,
             pokemonDetailsUiState = pokemonDetailsUiState,
-            onRetry = { onRetry() }
+            onRetry = { onFetchDetails() }
         )
         PokemonImageAnimation(
             animatedVisibilityScope = animatedVisibilityScope,
@@ -218,6 +221,7 @@ fun PokemonCard(
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         when (pokemonDetailsUiState) {
             is PokemonDetailsUiState.Loading -> {
@@ -226,11 +230,11 @@ fun PokemonCard(
 
             is PokemonDetailsUiState.Error -> {
                 AppErrorDialog(appError = pokemonDetailsUiState.error)
-                GenericRetryView(
-                    modifier = Modifier.padding(top = if (isTablet()) 160.dp else 120.dp),
-                    errorDescription = stringResource(R.string.error_getting_pokemon_list)
+                Button(
+                    contentPadding = PaddingValues(16.dp),
+                    onClick = { onRetry() }
                 ) {
-                    onRetry()
+                    Text(text = stringResource(id = R.string.retry_btn))
                 }
             }
 
@@ -342,7 +346,7 @@ fun PokemonDetailsScreenPreview() {
             animatedVisibilityScope = it,
             pokemon = getPokemonMock(),
             pokemonDetailsUiState = PokemonDetailsUiState.Success(getPokemonDetailsMock()),
-            onRetry = {},
+            onFetchDetails = {},
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
             userAppTheme = AppTheme.DARK,
@@ -360,7 +364,7 @@ fun PokemonDetailsErrorScreenPreview() {
             animatedVisibilityScope = it,
             pokemon = getPokemonMock(),
             pokemonDetailsUiState = PokemonDetailsUiState.Error(mockNotFoundAppError()),
-            onRetry = {},
+            onFetchDetails = {},
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
             userAppTheme = AppTheme.DARK,

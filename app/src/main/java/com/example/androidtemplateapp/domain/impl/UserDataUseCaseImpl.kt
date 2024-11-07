@@ -10,16 +10,16 @@ import kotlinx.coroutines.flow.map
 
 class UserDataUseCaseImpl(private val userDataRepository: UserDataRepository) : UserDataUseCase {
 
-    override suspend fun getAppLocale(): Flow<String> =
+    override fun getAppLocale(): Flow<String> =
         userDataRepository.getAppLocale().map { currentAppLocale ->
             currentAppLocale ?: LocaleEnum.EN.value
         }
-    
+
     override suspend fun setAppLocale(locale: String) {
         userDataRepository.setAppLocale(locale)
     }
 
-    override suspend fun getAppTheme(): Flow<AppTheme> =
+    override fun getAppTheme(): Flow<AppTheme> =
         userDataRepository.getAppTheme().map { currentAppTheme ->
             currentAppTheme?.let {
                 AppTheme.valueOf(currentAppTheme)

@@ -7,7 +7,6 @@ import androidx.paging.cachedIn
 import com.example.androidtemplateapp.domain.PokemonUseCase
 import com.example.androidtemplateapp.entity.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,14 +33,14 @@ class PokemonListViewModel @Inject constructor(
 
     private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
     val uiState: StateFlow<SearchUiState> = _searchUiState
-    
+
     val pokemonList: Flow<PagingData<Pokemon>> =
         pokemonUseCase.getPokemons(pageSize = PAGE_SIZE).cachedIn(viewModelScope)
 
     fun onPokemonSearch(name: String) {
         if (name.length > 1) {
             _searchUiState.tryEmit(SearchUiState.Loading)
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 pokemonUseCase.searchPokemonByName(name)
                     .catch {
                         _searchUiState.tryEmit(SearchUiState.Error)

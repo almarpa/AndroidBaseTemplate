@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDataUseCase {
 
     suspend fun setAppLocale(locale: String)
-    suspend fun getAppLocale(): Flow<String>
-    suspend fun getAppTheme(): Flow<AppTheme>
+    fun getAppLocale(): Flow<String>
+    fun getAppTheme(): Flow<AppTheme>
     suspend fun setAppTheme(appTheme: AppTheme)
 }
