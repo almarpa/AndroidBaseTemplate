@@ -67,13 +67,13 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
 
         val pokemonID = navBackStackEntry.toRoute<Pokemon>().id
         val pokemonDetailsUiState by pokemonDetailsViewModel.detailsUiState.collectAsStateWithLifecycle()
-        val userAppTheme by settingsViewModel.userTheme.collectAsStateWithLifecycle()
+        val userAppTheme by settingsViewModel.userData.collectAsStateWithLifecycle()
 
         PokemonDetailsScreen(
             animatedVisibilityScope = this,
             pokemon = navBackStackEntry.toRoute<Pokemon>(),
             pokemonDetailsUiState = pokemonDetailsUiState,
-            userAppTheme = userAppTheme,
+            userAppTheme = userAppTheme.theme,
             onFetchDetails = { pokemonDetailsViewModel.getPokemonDetails(pokemonID) },
             onAddTeamMember = { pokemon, added -> teamViewModel.addPokemonToTeam(pokemon, added) },
             onBackPressed = { navigationActions.navigateBack() },

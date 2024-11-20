@@ -13,6 +13,7 @@ class UrlInterceptor : Interceptor {
 
     companion object {
         private const val LOCAL_SERVER_PORT = 3000
+        private const val DEV_ENV = "dev"
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -22,7 +23,7 @@ class UrlInterceptor : Interceptor {
         BuildConfig.BASE_URL.toHttpUrlOrNull()?.let { httpUrl ->
             try {
                 newUrl = request.url.newBuilder().apply {
-                    if (BuildConfig.FLAVOR == "dev") {
+                    if (BuildConfig.FLAVOR == DEV_ENV) {
                         scheme("http")
                         host(httpUrl.toUrl().toURI().host)
                         port(LOCAL_SERVER_PORT)

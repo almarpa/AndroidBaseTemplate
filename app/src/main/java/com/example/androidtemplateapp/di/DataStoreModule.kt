@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.di.module
+package com.example.androidtemplateapp.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

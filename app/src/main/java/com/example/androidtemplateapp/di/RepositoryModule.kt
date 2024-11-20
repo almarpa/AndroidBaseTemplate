@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.di.module
+package com.example.androidtemplateapp.di
 
 import com.example.androidtemplateapp.data.db.database.PokemonDataBase
 import com.example.androidtemplateapp.data.db.database.dao.PokemonDao

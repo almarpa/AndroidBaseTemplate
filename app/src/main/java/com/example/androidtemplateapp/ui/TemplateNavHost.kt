@@ -31,8 +31,8 @@ fun TemplateNavHost(
             modifier = modifier,
         ) {
             splashNavGraph(navigationActions)
-            drawerNavGraph(navigationActions)
             bottomAppBarNavGraph(drawerState, currentRoute, navigationActions)
+            drawerNavGraph(navigationActions)
         }
     }
 }

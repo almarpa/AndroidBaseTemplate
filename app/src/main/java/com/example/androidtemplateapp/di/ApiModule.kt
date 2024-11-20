@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.di.module
+package com.example.androidtemplateapp.di
 
 import com.example.androidtemplateapp.BuildConfig
 import com.example.androidtemplateapp.data.db.ws.api.PokemonApi

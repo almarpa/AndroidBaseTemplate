@@ -13,6 +13,7 @@ import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.ui.TemplateApp
 import com.example.androidtemplateapp.ui.settings.SettingsViewModel
 import com.example.androidtemplateapp.ui.theme.TemplateTheme
+import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,21 +26,25 @@ class MainActivity : AppCompatActivity() {
         setScreenOrientation()
         setContent {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val themeUserSetting by settingsViewModel.userTheme.collectAsStateWithLifecycle()
+            val userData by settingsViewModel.userData.collectAsStateWithLifecycle()
             val systemUiController = rememberSystemUiController()
 
-            systemUiController.setStatusBarColor(
-                color = Color.Transparent,
-                darkIcons = themeUserSetting == AppTheme.LIGHT
-            )
-
-            TemplateTheme(themeUserSetting) {
+            TemplateTheme(userData.theme) {
                 TemplateApp()
             }
+
+            setStatusBarColorsByTheme(systemUiController, userData.theme)
         }
     }
 
     private fun setScreenOrientation() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+    }
+
+    private fun setStatusBarColorsByTheme(systemUiController: SystemUiController, theme: AppTheme) {
+        systemUiController.setStatusBarColor(
+            color = Color.Transparent,
+            darkIcons = theme == AppTheme.LIGHT
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.example.androidtemplateapp.di.module
+package com.example.androidtemplateapp.di
 
 import android.util.Log
 import com.example.androidtemplateapp.data.db.ws.interceptor.UrlInterceptor

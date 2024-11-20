@@ -8,7 +8,8 @@ import com.example.androidtemplateapp.entity.UserData
 import com.example.androidtemplateapp.entity.enums.AppTheme
 import com.example.androidtemplateapp.entity.enums.LocaleEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,60 +21,18 @@ sealed interface SettingsUiState {
 class SettingsViewModel @Inject constructor(private val userDataUseCase: UserDataUseCase) :
     ViewModel() {
 
-    private val _userLocale = MutableStateFlow(LocaleEnum.EN.value)
-
-    private val _userTheme = MutableStateFlow(AppTheme.AUTO)
-    val userTheme: StateFlow<AppTheme> = _userTheme
-
-    val userData = combine(
-        _userLocale,
-        _userTheme,
-    ) { locale: String, theme: AppTheme ->
-        UserData(
-            locale = locale,
-            theme = theme
-        )
-    }.stateIn(
+    val userData = userDataUseCase.getUserData().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = null
+        initialValue = UserData(locale = LocaleEnum.EN.value, theme = AppTheme.AUTO)
     )
 
     private val _locales: Map<String, Int> = getAppLocales()
     val locales: Map<String, Int> = _locales
 
-    init {
-        getUserAppData()
-    }
-
-    private fun getUserAppData() {
-        getUserAppLocale()
-        getUserAppTheme()
-    }
-
-    private fun getUserAppLocale() {
-        viewModelScope.launch {
-            userDataUseCase.getAppLocale().collect { appLocale ->
-                _userLocale.tryEmit(appLocale)
-            }
-        }
-    }
-
     fun setUserAppLocale(newLocale: String) {
         viewModelScope.launch {
             userDataUseCase.setAppLocale(newLocale)
-        }
-    }
-
-    private fun getUserAppTheme() {
-        viewModelScope.launch {
-            userDataUseCase.getAppTheme()
-                .catch {
-                    _userTheme.tryEmit(AppTheme.AUTO)
-                }
-                .collect { appTheme ->
-                    _userTheme.tryEmit(appTheme)
-                }
         }
     }
 
