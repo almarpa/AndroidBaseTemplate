@@ -15,25 +15,27 @@ class PokemonDetailsRepositoryImpl(
     private val pokemonDetailsDao: PokemonDetailsDao,
 ) : PokemonDetailsRepository {
 
-    override suspend fun getPokemonDetails(pokemonID: Int): Either<AppError, PokemonDetails> =
-        Either.catchOrThrow<Throwable, PokemonDetails> {
-            getLocalPokemonDetails(pokemonID) ?: run {
-                with(pokemonApi.getPokemon(pokemonID).execute()) {
-                    return@with body()?.map()?.let { remoteDetails ->
-                        savePokemonDetails(remoteDetails)
-                        remoteDetails
-                    } ?: run {
-                        throw ErrorHandler.processResponseError(this)
-                    }
-                }
-            }
+    override suspend fun getPokemonDetails(pokemonID: Int): Either<AppError, PokemonDetails> {
+        return Either.catchOrThrow<Throwable, PokemonDetails> {
+            getLocalPokemonDetails(pokemonID) ?: fetchAndSavePokemonDetails(pokemonID)
         }.mapLeft { throwable ->
             ErrorHandler.processException(throwable)
         }
+    }
 
     private suspend fun getLocalPokemonDetails(pokemonID: Int): PokemonDetails? {
         return withContext(Dispatchers.IO) {
             pokemonDetailsDao.get(pokemonID.toString())?.asDomain()
+        }
+    }
+
+    private suspend fun fetchAndSavePokemonDetails(pokemonID: Int): PokemonDetails {
+        val response = pokemonApi.getPokemon(pokemonID).execute()
+        if (response.isSuccessful) {
+            return response.body()?.map()?.also { savePokemonDetails(it) }
+                ?: throw ErrorHandler.processResponseError(response)
+        } else {
+            throw ErrorHandler.processResponseError(response)
         }
     }
 

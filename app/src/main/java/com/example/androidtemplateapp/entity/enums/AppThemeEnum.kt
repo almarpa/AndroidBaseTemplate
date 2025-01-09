@@ -1,5 +1,5 @@
 package com.example.androidtemplateapp.entity.enums
 
-enum class AppTheme {
+enum class AppThemeEnum {
     AUTO, LIGHT, DARK
 }

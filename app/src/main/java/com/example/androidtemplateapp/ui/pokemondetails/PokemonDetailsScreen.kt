@@ -39,7 +39,7 @@ import com.example.androidtemplateapp.common.utils.getBackgroundColorWithGradien
 import com.example.androidtemplateapp.common.utils.pokemonSharedElement
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.entity.PokemonDetails
-import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.entity.enums.AppThemeEnum
 import com.example.androidtemplateapp.ui.common.dialog.SimpleActionAlertDialog
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonDetailsMock
@@ -62,7 +62,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
     pokemonDetailsUiState: PokemonDetailsUiState,
-    userAppTheme: AppTheme,
+    userAppTheme: AppThemeEnum,
     onFetchDetails: () -> Unit,
     onAddTeamMember: (Pokemon, Boolean) -> Unit,
     onBackPressed: () -> Unit,
@@ -116,7 +116,7 @@ fun SharedTransitionScope.PokemonDetailsScreen(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SharedTransitionScope.PokemonDetailsContent(
-    userAppTheme: AppTheme,
+    userAppTheme: AppThemeEnum,
     pokemon: Pokemon,
     pokemonDetailsUiState: PokemonDetailsUiState,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -349,7 +349,7 @@ fun PokemonDetailsScreenPreview() {
             onFetchDetails = {},
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
-            userAppTheme = AppTheme.DARK,
+            userAppTheme = AppThemeEnum.DARK,
         )
     }
 }
@@ -367,7 +367,7 @@ fun PokemonDetailsErrorScreenPreview() {
             onFetchDetails = {},
             onAddTeamMember = { _, _ -> },
             onBackPressed = {},
-            userAppTheme = AppTheme.DARK,
+            userAppTheme = AppThemeEnum.DARK,
         )
     }
 }

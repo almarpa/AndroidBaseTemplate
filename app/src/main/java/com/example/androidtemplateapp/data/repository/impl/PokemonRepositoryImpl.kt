@@ -13,7 +13,7 @@ import com.example.androidtemplateapp.data.repository.PokemonRepository
 import com.example.androidtemplateapp.entity.Pokemon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -39,9 +39,15 @@ class PokemonRepositoryImpl(
         ).flow.map { pagingData -> pagingData.map { it.asDomain() } }
     }
 
-    override suspend fun getTeamMembers() = flow {
-        emit(getLocalTeamMembers())
-    }
+    override fun getTeamMembers(): Flow<List<Pokemon>> =
+        pokemonDao.getAllTeamMembers().map { pokemonList ->
+            pokemonList.map { it.asDomain() }
+        }.flowOn(Dispatchers.IO)
+
+    override fun searchPokemonByName(name: String): Flow<List<Pokemon>> =
+        pokemonDao.searchPokemonByName(name.lowercase()).map { pokemonList ->
+            pokemonList.map { it.asDomain() }
+        }.flowOn(Dispatchers.IO)
 
     override suspend fun addPokemonToTeam(pokemon: Pokemon) {
         withContext(Dispatchers.IO) {
@@ -49,25 +55,9 @@ class PokemonRepositoryImpl(
         }
     }
 
-    override suspend fun searchPokemonByName(name: String) = flow {
-        emit(searchLocalPokemonByName(name))
-    }
-
     override suspend fun createPokemonMember(pokemon: Pokemon) {
         withContext(Dispatchers.IO) {
             pokemonDao.insert(pokemon.asEntity())
-        }
-    }
-
-    private suspend fun getLocalTeamMembers(): List<Pokemon> {
-        return withContext(Dispatchers.IO) {
-            pokemonDao.getAllTeamMembers().map { it.asDomain() }
-        }
-    }
-
-    private suspend fun searchLocalPokemonByName(name: String): List<Pokemon> {
-        return withContext(Dispatchers.IO) {
-            pokemonDao.searchPokemonByName(name.lowercase()).map { it.asDomain() }
         }
     }
 }

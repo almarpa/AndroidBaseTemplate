@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.common.utils.setAppLanguage
 import com.example.androidtemplateapp.entity.UserData
-import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.entity.enums.AppThemeEnum
 import com.example.androidtemplateapp.entity.enums.LocaleEnum
 import com.example.androidtemplateapp.ui.common.dropdown.CustomDropdown
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
@@ -127,7 +127,7 @@ fun LanguagesSection(
 }
 
 @Composable
-fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
+fun DarkModeSection(themeState: AppThemeEnum, onChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -154,7 +154,7 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
         }
 
         Switch(
-            checked = themeState == AppTheme.DARK,
+            checked = themeState == AppThemeEnum.DARK,
             onCheckedChange = { onChange(it) },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
@@ -162,7 +162,7 @@ fun DarkModeSection(themeState: AppTheme, onChange: (Boolean) -> Unit) {
             ),
             thumbContent = {
                 Icon(
-                    imageVector = if (themeState == AppTheme.DARK) {
+                    imageVector = if (themeState == AppThemeEnum.DARK) {
                         Icons.Filled.DarkMode
                     } else {
                         Icons.Filled.LightMode
@@ -185,7 +185,7 @@ fun SettingsScreenPreview() {
         SettingsScreen(
             userData = UserData(
                 locale = LocaleEnum.EN.name,
-                theme = AppTheme.DARK
+                theme = AppThemeEnum.DARK
             ),
             onThemeChange = {},
             onBackPressed = {},

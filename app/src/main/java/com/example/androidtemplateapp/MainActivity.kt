@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.entity.enums.AppThemeEnum
 import com.example.androidtemplateapp.ui.TemplateApp
 import com.example.androidtemplateapp.ui.settings.SettingsViewModel
 import com.example.androidtemplateapp.ui.theme.TemplateTheme
@@ -41,10 +41,13 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 
-    private fun setStatusBarColorsByTheme(systemUiController: SystemUiController, theme: AppTheme) {
+    private fun setStatusBarColorsByTheme(
+        systemUiController: SystemUiController,
+        theme: AppThemeEnum,
+    ) {
         systemUiController.setStatusBarColor(
             color = Color.Transparent,
-            darkIcons = theme == AppTheme.LIGHT
+            darkIcons = theme == AppThemeEnum.LIGHT
         )
     }
 }

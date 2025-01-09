@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.palette.graphics.Palette
-import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.entity.enums.AppThemeEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -51,17 +51,17 @@ fun setAppLanguage(locale: String) {
 }
 
 @Composable
-fun getBackgroundColorWithGradient(userAppTheme: AppTheme, dominantColor: Int): Brush {
+fun getBackgroundColorWithGradient(userAppTheme: AppThemeEnum, dominantColor: Int): Brush {
     val color = Color(dominantColor)
     return when (userAppTheme) {
-        AppTheme.AUTO -> if (isSystemInDarkTheme()) {
+        AppThemeEnum.AUTO -> if (isSystemInDarkTheme()) {
             getDarkGradientByColor(color)
         } else {
             getLightGradientByColor(color)
         }
 
-        AppTheme.DARK -> getDarkGradientByColor(color)
-        AppTheme.LIGHT -> getLightGradientByColor(color)
+        AppThemeEnum.DARK -> getDarkGradientByColor(color)
+        AppThemeEnum.LIGHT -> getLightGradientByColor(color)
     }
 }
 

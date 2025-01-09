@@ -9,7 +9,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.entity.enums.AppThemeEnum
 
 val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -73,28 +73,28 @@ val DarkColors = darkColorScheme(
 
 @Composable
 fun TemplateTheme(
-    currentTheme: AppTheme = AppTheme.AUTO,
+    currentTheme: AppThemeEnum = AppThemeEnum.AUTO,
     content: @Composable () -> Unit,
 ) {
     val colorScheme =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             with(LocalContext.current) {
                 when (currentTheme) {
-                    AppTheme.AUTO -> if (isSystemInDarkTheme()) {
+                    AppThemeEnum.AUTO -> if (isSystemInDarkTheme()) {
                         dynamicDarkColorScheme(this)
                     } else {
                         dynamicLightColorScheme(this)
                     }
 
-                    AppTheme.DARK -> dynamicDarkColorScheme(this)
-                    AppTheme.LIGHT -> dynamicLightColorScheme(this)
+                    AppThemeEnum.DARK -> dynamicDarkColorScheme(this)
+                    AppThemeEnum.LIGHT -> dynamicLightColorScheme(this)
                 }
             }
         } else {
             when (currentTheme) {
-                AppTheme.AUTO -> if (isSystemInDarkTheme()) DarkColors else LightColors
-                AppTheme.DARK -> DarkColors
-                AppTheme.LIGHT -> LightColors
+                AppThemeEnum.AUTO -> if (isSystemInDarkTheme()) DarkColors else LightColors
+                AppThemeEnum.DARK -> DarkColors
+                AppThemeEnum.LIGHT -> LightColors
             }
         }
 

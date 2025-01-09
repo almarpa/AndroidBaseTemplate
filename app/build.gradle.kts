@@ -110,11 +110,8 @@ dependencies {
 
     // di
     implementation(libs.hilt.android)
-    ksp(libs.dagger.compiler)
     ksp(libs.hilt.android.compiler)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.testing)
-
+    
     // database
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)

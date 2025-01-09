@@ -3,7 +3,7 @@ package com.example.androidtemplateapp.domain.impl
 import com.example.androidtemplateapp.data.repository.UserDataRepository
 import com.example.androidtemplateapp.domain.UserDataUseCase
 import com.example.androidtemplateapp.entity.UserData
-import com.example.androidtemplateapp.entity.enums.AppTheme
+import com.example.androidtemplateapp.entity.enums.AppThemeEnum
 import com.example.androidtemplateapp.entity.enums.LocaleEnum
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -15,14 +15,14 @@ class UserDataUseCaseImpl(private val userDataRepository: UserDataRepository) : 
     override fun getUserData(): Flow<UserData> = combine(
         getAppLocale(),
         getAppTheme(),
-    ) { locale: String, theme: AppTheme ->
+    ) { locale: String, theme: AppThemeEnum ->
         UserData(
             locale = locale,
             theme = theme
         )
     }
-    
-    override suspend fun setAppTheme(appTheme: AppTheme) {
+
+    override suspend fun setAppTheme(appTheme: AppThemeEnum) {
         userDataRepository.setAppTheme(appTheme.name)
     }
 
@@ -30,12 +30,12 @@ class UserDataUseCaseImpl(private val userDataRepository: UserDataRepository) : 
         userDataRepository.setAppLocale(locale)
     }
 
-    private fun getAppTheme(): Flow<AppTheme> =
+    private fun getAppTheme(): Flow<AppThemeEnum> =
         userDataRepository.getAppTheme().map { currentAppTheme ->
             currentAppTheme?.let {
-                AppTheme.valueOf(currentAppTheme)
+                AppThemeEnum.valueOf(currentAppTheme)
             } ?: run {
-                AppTheme.AUTO
+                AppThemeEnum.AUTO
             }
         }
 
