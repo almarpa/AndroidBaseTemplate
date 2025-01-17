@@ -32,7 +32,7 @@ class PokemonListViewModel @Inject constructor(
     }
 
     private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
-    val uiState: StateFlow<SearchUiState> = _searchUiState
+    val searchUiState: StateFlow<SearchUiState> = _searchUiState
 
     val pokemonList: Flow<PagingData<Pokemon>> =
         pokemonUseCase.getPokemons(pageSize = PAGE_SIZE).cachedIn(viewModelScope)

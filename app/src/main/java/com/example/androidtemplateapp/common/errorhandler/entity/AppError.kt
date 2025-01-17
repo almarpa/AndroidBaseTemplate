@@ -5,7 +5,7 @@ import java.io.Serializable
 /**
  * It represents an Exception in the App
  * @property type The exception type
- * @property description the exception description
+ * @property data the exception data
  * @param cause the cause of the error
  */
 class AppError(

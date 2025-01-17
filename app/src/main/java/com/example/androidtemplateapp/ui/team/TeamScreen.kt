@@ -48,6 +48,7 @@ fun TeamScreen(
     onSave: (pokemon: Pokemon) -> Unit,
 ) {
     var isFabContainerFullScreen by rememberSaveable { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     if (isFabContainerFullScreen) {
         BackHandler { isFabContainerFullScreen = false }
@@ -77,10 +78,15 @@ fun TeamScreen(
         bottomBar = {
             AnimatedBottomAppBar(
                 isVisible = !isFabContainerFullScreen,
-                drawerState = drawerState,
                 currentRoute = currentRoute,
-                navigationActions = navigationActions,
-            )
+            ) { onRouteSelected ->
+                coroutineScope.launch { drawerState.close() }
+                if (onRouteSelected == Routes.PokemonList) {
+                    navigationActions.navigateToPokemonList()
+                } else {
+                    navigationActions.navigateToTeamList()
+                }
+            }
         }
     )
 }

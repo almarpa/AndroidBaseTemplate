@@ -11,18 +11,16 @@ class PokemonUseCaseImpl(private val pokemonRepository: PokemonRepository) : Pok
     override fun getPokemons(pageSize: Int): Flow<PagingData<Pokemon>> =
         pokemonRepository.getPokemons(pageSize)
 
-    override suspend fun getTeamMembers(): Flow<List<Pokemon>> =
+    override fun getTeamMembers(): Flow<List<Pokemon>> =
         pokemonRepository.getTeamMembers()
 
+    override fun searchPokemonByName(name: String): Flow<List<Pokemon>> =
+        pokemonRepository.searchPokemonByName(name)
 
     override suspend fun addPokemonToTeam(pokemon: Pokemon) {
         pokemonRepository.addPokemonToTeam(pokemon)
     }
 
-    override suspend fun searchPokemonByName(name: String): Flow<List<Pokemon>> =
-        pokemonRepository.searchPokemonByName(name)
-
     override suspend fun createPokemonMember(pokemon: Pokemon) =
         pokemonRepository.createPokemonMember(pokemon)
-
 }

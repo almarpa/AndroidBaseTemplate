@@ -32,7 +32,7 @@ fun CustomDropdown(
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
-            modifier = Modifier.menuAnchor(),
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true),
             readOnly = true,
             value = stringResource(id = selected),
             onValueChange = { },

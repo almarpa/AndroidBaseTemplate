@@ -33,7 +33,7 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
     composable<Routes.PokemonList> {
         val pokemonListViewModel: PokemonListViewModel = hiltViewModel()
         val paginatedPokemonList = pokemonListViewModel.pokemonList.collectAsLazyPagingItems()
-        val searchUiState: SearchUiState by pokemonListViewModel.uiState.collectAsStateWithLifecycle()
+        val searchUiState: SearchUiState by pokemonListViewModel.searchUiState.collectAsStateWithLifecycle()
 
         PokemonListScreen(
             animatedVisibilityScope = this,

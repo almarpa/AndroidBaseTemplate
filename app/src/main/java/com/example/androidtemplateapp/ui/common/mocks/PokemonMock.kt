@@ -1,8 +1,17 @@
 package com.example.androidtemplateapp.ui.common.mocks
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ManageSearch
+import androidx.compose.material.icons.outlined.PeopleOutline
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.*
 import com.example.androidtemplateapp.entity.enums.PokemonTypeEnum
 import com.example.androidtemplateapp.entity.enums.StatNameEnum
+import com.example.androidtemplateapp.ui.common.bottomappbar.BottomAppBarItem
+import com.example.androidtemplateapp.ui.common.navigation.Routes
 
 // region POKEMON_DATA_MOCKS
 fun getPokemonMock() =
@@ -122,6 +131,35 @@ fun getPokemonMoveListMock() =
                 name = "Tackle 4 Tackle 4 Tackle 4 Tackle 4",
                 url = "https://pokeapi.co/api/v2/move/33/"
             )
+        )
+    )
+
+@Composable
+fun getBottomAppBarItemsMock(): List<BottomAppBarItem> =
+    listOf(
+        BottomAppBarItem(
+            icon = {
+                Icon(
+                    Icons.AutoMirrored.Outlined.ManageSearch,
+                    contentDescription = "Pokedex",
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            },
+            label = R.string.pokedex_title,
+            color = MaterialTheme.colorScheme.primary,
+            route = Routes.PokemonList,
+        ),
+        BottomAppBarItem(
+            icon = {
+                Icon(
+                    Icons.Outlined.PeopleOutline,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = "Team",
+                )
+            },
+            label = R.string.team_title,
+            color = MaterialTheme.colorScheme.primary,
+            route = Routes.Team,
         )
     )
 // endregion

@@ -16,12 +16,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -43,6 +39,7 @@ import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
 import com.example.androidtemplateapp.ui.pokemonlist.search.PokemonSearchTopAppBar
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +58,7 @@ fun SharedTransitionScope.PokemonListScreen(
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
     var isBottomAppBarVisible by rememberSaveable { mutableStateOf(true) }
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val coroutineScope = rememberCoroutineScope()
 
     BackHandler { activity?.finish() }
     LaunchedEffect(Unit) { isBottomAppBarVisible = true }
@@ -99,10 +97,15 @@ fun SharedTransitionScope.PokemonListScreen(
             AnimatedBottomAppBar(
                 modifier = Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f),
                 isVisible = isBottomAppBarVisible,
-                drawerState = drawerState,
                 currentRoute = currentRoute,
-                navigationActions = navigationActions
-            )
+            ) { onRouteSelected ->
+                coroutineScope.launch { drawerState.close() }
+                if (onRouteSelected == Routes.PokemonList) {
+                    navigationActions.navigateToPokemonList()
+                } else {
+                    navigationActions.navigateToTeamList()
+                }
+            }
         },
     )
 }

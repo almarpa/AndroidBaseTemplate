@@ -50,18 +50,21 @@ fun SharedTransitionScope.PokemonList(
         items(
             count = pokemonList.itemCount,
         ) { index ->
-            with(getLazyGridAnimation(index, columns)) {
-                pokemonList[index]?.let { pokemon ->
-                    PokemonItem(
-                        modifier = Modifier.applyIfCurrentLocalInspectionMode {
-                            graphicsLayer(alpha = first, scaleX = second, scaleY = second)
-                        },
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        pokemon = pokemon,
-                        onPokemonItemClick = { onPokemonItemClick(it) },
-                    )
-                    CustomSpacer(height = 16, width = 16)
-                }
+            val gridAnim = getLazyGridAnimation(index, columns)
+            pokemonList[index]?.let { pokemon ->
+                PokemonItem(
+                    modifier = Modifier.applyIfCurrentLocalInspectionMode {
+                        graphicsLayer(
+                            alpha = gridAnim.first,
+                            scaleX = gridAnim.second,
+                            scaleY = gridAnim.second
+                        )
+                    },
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    pokemon = pokemon,
+                    onPokemonItemClick = { onPokemonItemClick(it) },
+                )
+                CustomSpacer(height = 16, width = 16)
             }
         }
     }

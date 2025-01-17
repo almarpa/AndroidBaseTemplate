@@ -2,7 +2,6 @@ package com.example.androidtemplateapp.ui.common.tabrow
 
 import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +23,6 @@ import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.common.spacer.CustomSpacer
 import com.example.androidtemplateapp.ui.pokemondetails.PokemonStats
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SwipeableTabRow(
     modifier: Modifier,

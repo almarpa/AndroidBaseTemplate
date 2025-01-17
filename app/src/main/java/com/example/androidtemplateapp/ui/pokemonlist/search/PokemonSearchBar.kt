@@ -50,25 +50,34 @@ fun SharedTransitionScope.PokemonSearchBar(
                     isSearchInputLoaded = true
                 }
             },
-        query = searchText,
-        onQueryChange = {
-            searchText = it
-            onSearch(searchText)
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = searchText,
+                onQueryChange = {
+                    searchText = it
+                    onSearch(searchText)
+                },
+                onSearch = { onSearch(searchText) },
+                enabled = true,
+                expanded = true,
+                onExpandedChange = { },
+                placeholder = { Text(text = stringResource(id = R.string.search_title)) },
+                leadingIcon = null,
+                trailingIcon = {
+                    IconButton(onClick = { onCancel() }) {
+                        Icon(
+                            imageVector = Icons.Default.Cancel,
+                            tint = MaterialTheme.colorScheme.primary,
+                            contentDescription = null
+                        )
+                    }
+                },
+                interactionSource = null,
+            )
         },
-        onSearch = { onSearch(searchText) },
-        active = true,
-        onActiveChange = {},
-        placeholder = { Text(text = stringResource(id = R.string.search_title)) },
+        expanded = true,
+        onExpandedChange = { },
         shadowElevation = 12.dp,
-        trailingIcon = {
-            IconButton(onClick = { onCancel() }) {
-                Icon(
-                    imageVector = Icons.Default.Cancel,
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = null
-                )
-            }
-        }
     ) {
         if (uiState !is SearchUiState.Idle) {
             PokemonSearchBarContent(
