@@ -30,12 +30,14 @@ class PokemonDetailsRepositoryImpl(
     }
 
     private suspend fun fetchAndSavePokemonDetails(pokemonID: Int): PokemonDetails {
-        val response = pokemonApi.getPokemon(pokemonID).execute()
-        if (response.isSuccessful) {
-            return response.body()?.map()?.also { savePokemonDetails(it) }
-                ?: throw ErrorHandler.processResponseError(response)
-        } else {
-            throw ErrorHandler.processResponseError(response)
+        return withContext(Dispatchers.IO) {
+            val response = pokemonApi.getPokemon(pokemonID).execute()
+            if (response.isSuccessful) {
+                response.body()?.map()?.also { savePokemonDetails(it) }
+                    ?: throw ErrorHandler.processResponseError(response)
+            } else {
+                throw ErrorHandler.processResponseError(response)
+            }
         }
     }
 
