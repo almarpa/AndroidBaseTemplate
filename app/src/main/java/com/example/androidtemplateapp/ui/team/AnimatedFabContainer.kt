@@ -310,7 +310,6 @@ fun AddPokemonFloatingButtonPreview() {
     "Dark Tablet Fab Container Fullscreen",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.TABLET
 )
 fun FabContainerFullscreenPreview() {
     TemplatePreviewTheme {

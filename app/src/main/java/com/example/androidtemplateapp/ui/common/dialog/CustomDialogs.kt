@@ -1,6 +1,5 @@
 package com.example.androidtemplateapp.ui.common.dialog
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -13,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +22,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.androidtemplateapp.R
 
 @Composable
-fun Context.SimpleActionAlertDialog(
+fun SimpleActionAlertDialog(
     show: Boolean,
     title: String?,
     description: String?,
@@ -45,7 +43,7 @@ fun Context.SimpleActionAlertDialog(
                         onConfirm()
                     }
                 ) {
-                    Text(text = getString(confirmText))
+                    Text(text = stringResource(confirmText))
                 }
             },
             properties = DialogProperties(
@@ -59,7 +57,7 @@ fun Context.SimpleActionAlertDialog(
 
 
 @Composable
-fun Context.CustomDialog(
+fun CustomDialog(
     show: Boolean = true,
     title: Int = R.string.empty_string,
     description: Int = R.string.empty_string,
@@ -88,14 +86,14 @@ fun Context.CustomDialog(
                             .fillMaxWidth(),
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
-                        text = getString(title)
+                        text = stringResource(title)
                     )
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 30.dp),
                         fontSize = 16.sp,
-                        text = getString(description)
+                        text = stringResource(description)
                     )
                     Row(
                         modifier = Modifier
@@ -103,10 +101,10 @@ fun Context.CustomDialog(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TextButton(onClick = { onCancel() }) {
-                            Text(text = getString(cancelText))
+                            Text(text = stringResource(cancelText))
                         }
                         Button(onClick = { onConfirm() }) {
-                            Text(text = getString(confirmText))
+                            Text(text = stringResource(confirmText))
                         }
                     }
                 }
@@ -118,7 +116,7 @@ fun Context.CustomDialog(
 @Preview
 @Composable
 fun SimpleAlertDialogPreview() {
-    LocalContext.current.SimpleActionAlertDialog(
+    SimpleActionAlertDialog(
         show = true,
         title = stringResource(R.string.search_title),
         description = stringResource(R.string.error_getting_pokemon_list),
@@ -129,7 +127,7 @@ fun SimpleAlertDialogPreview() {
 @Preview
 @Composable
 fun CustomDialogPreview() {
-    LocalContext.current.CustomDialog(
+    CustomDialog(
         title = R.string.search_title,
         description = R.string.error_getting_pokemon_list
     )
