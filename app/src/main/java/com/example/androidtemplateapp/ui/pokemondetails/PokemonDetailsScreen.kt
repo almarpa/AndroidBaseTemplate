@@ -305,7 +305,7 @@ fun SharedTransitionScope.PokemonImageAnimation(
 
 @Composable
 fun AppErrorDialog(appError: AppError) {
-    LocalContext.current.SimpleActionAlertDialog(
+    SimpleActionAlertDialog(
         show = true,
         title = appError.data?.code,
         description = appError.data?.detail,
