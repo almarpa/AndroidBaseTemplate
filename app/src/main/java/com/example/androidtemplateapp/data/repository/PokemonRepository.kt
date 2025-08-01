@@ -11,4 +11,5 @@ interface PokemonRepository {
     fun searchPokemonByName(name: String): Flow<List<Pokemon>>
     suspend fun addPokemonToTeam(pokemon: Pokemon)
     suspend fun createPokemonMember(pokemon: Pokemon)
+    suspend fun addPokemonDominantColor(pokemonId: Int, color: Int)
 }

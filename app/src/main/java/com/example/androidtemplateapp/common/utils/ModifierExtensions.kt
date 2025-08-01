@@ -3,6 +3,7 @@ package com.example.androidtemplateapp.common.utils
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.SharedTransitionScope.SharedContentState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
@@ -26,14 +27,14 @@ context(SharedTransitionScope)
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun Modifier.pokemonSharedElement(
     isLocalInspectionMode: Boolean,
-    state: SharedTransitionScope.SharedContentState,
+    state: SharedContentState,
     animatedVisibilityScope: AnimatedVisibilityScope,
 ): Modifier {
     return if (isLocalInspectionMode) {
         this
     } else {
         this.sharedElement(
-            state = state,
+            sharedContentState = state,
             animatedVisibilityScope = animatedVisibilityScope,
         )
     }

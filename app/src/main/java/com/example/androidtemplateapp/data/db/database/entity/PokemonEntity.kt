@@ -11,17 +11,17 @@ import com.example.androidtemplateapp.entity.Pokemon
 data class PokemonEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int,
+    val id: Int,
     @ColumnInfo(name = "url")
-    var url: String,
+    val url: String,
     @ColumnInfo(name = "name")
-    var name: String,
+    val name: String,
     @ColumnInfo(name = "createdAt")
-    var createdAt: Long = 0L,
+    val createdAt: Long = 0L,
     @ColumnInfo(name = "dominantColor")
-    var dominantColor: Int = Color.Transparent.toArgb(),
+    val dominantColor: Int = Color.Transparent.toArgb(),
     @ColumnInfo(name = "isTeamMember")
-    var isTeamMember: Boolean = false,
+    val isTeamMember: Boolean = false,
 ) {
 
     fun asDomain(): Pokemon = Pokemon(

@@ -44,7 +44,7 @@ class TeamViewModel @Inject constructor(
 
     fun addPokemonToTeam(pokemon: Pokemon, isAdded: Boolean) {
         viewModelScope.launch {
-            pokemonUseCase.addPokemonToTeam(pokemon.apply { isTeamMember = isAdded })
+            pokemonUseCase.addPokemonToTeam(pokemon.copy(isTeamMember = isAdded))
         }
     }
 

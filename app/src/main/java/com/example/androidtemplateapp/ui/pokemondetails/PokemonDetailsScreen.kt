@@ -2,7 +2,6 @@ package com.example.androidtemplateapp.ui.pokemondetails
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -89,8 +88,6 @@ fun SharedTransitionScope.PokemonDetailsScreen(
             onActionPerformed = { snackbarEvent.action?.action?.invoke() },
         )
     }
-
-    BackHandler { onBackPressed() }
 
     Scaffold(
         topBar = { DefaultTopAppBar(title = R.string.empty_string) { onBackPressed() } },

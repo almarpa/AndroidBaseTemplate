@@ -1,8 +1,8 @@
 package com.example.androidtemplateapp.ui.pokemonlist
 
-import android.app.Activity
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -21,9 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -33,7 +31,6 @@ import com.example.androidtemplateapp.ui.common.bottomappbar.AnimatedBottomAppBa
 import com.example.androidtemplateapp.ui.common.error.GenericRetryView
 import com.example.androidtemplateapp.ui.common.loader.FullScreenLoader
 import com.example.androidtemplateapp.ui.common.mocks.getPokemonListMock
-import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.common.preview.TemplatePreviewTheme
 import com.example.androidtemplateapp.ui.pokemonlist.list.PokemonList
@@ -47,14 +44,16 @@ fun SharedTransitionScope.PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     drawerState: DrawerState,
     currentRoute: Routes,
-    navigationActions: NavigationActions,
     searchUiState: SearchUiState,
     paginatedPokemonList: LazyPagingItems<Pokemon>,
+    onPokemonImageLoaded: (Int, Int) -> Unit,
+    onItemSelected: (Pokemon) -> Unit,
+    onRouteSelected: (Routes) -> Unit,
     onReload: () -> Unit,
     onSearch: (text: String) -> Unit,
     onDismissSearch: () -> Unit,
 ) {
-    val activity = (LocalContext.current as? Activity)
+    val activity = (LocalActivity.current)
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
     var isBottomAppBarVisible by rememberSaveable { mutableStateOf(true) }
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -78,7 +77,7 @@ fun SharedTransitionScope.PokemonListScreen(
                 },
                 onDismissSearch = { onDismissSearch() },
                 onSearch = { onSearch(it) },
-                onSelected = { navigationActions.navigateToDetailNavGraph(it) }
+                onSelected = { onItemSelected(it) }
             )
         },
         content = { paddingValues ->
@@ -87,10 +86,11 @@ fun SharedTransitionScope.PokemonListScreen(
                 animatedVisibilityScope = animatedVisibilityScope,
                 paginatedPokemonList = paginatedPokemonList,
                 onReload = { onReload() },
-                onNavigateToPokemonDetail = {
+                onNavigateToPokemonDetail = { pokemon ->
                     isBottomAppBarVisible = false
-                    navigationActions.navigateToDetailNavGraph(it)
-                }
+                    onItemSelected(pokemon)
+                },
+                onPokemonImageLoaded = { id, color -> onPokemonImageLoaded(id, color) }
             )
         },
         bottomBar = {
@@ -98,13 +98,9 @@ fun SharedTransitionScope.PokemonListScreen(
                 modifier = Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f),
                 isVisible = isBottomAppBarVisible,
                 currentRoute = currentRoute,
-            ) { onRouteSelected ->
+            ) { routeSelected ->
                 coroutineScope.launch { drawerState.close() }
-                if (onRouteSelected == Routes.PokemonList) {
-                    navigationActions.navigateToPokemonList()
-                } else {
-                    navigationActions.navigateToTeamList()
-                }
+                onRouteSelected(routeSelected)
             }
         },
     )
@@ -118,6 +114,7 @@ fun SharedTransitionScope.PokemonListContent(
     paginatedPokemonList: LazyPagingItems<Pokemon>,
     onReload: () -> Unit,
     onNavigateToPokemonDetail: (Pokemon) -> Unit,
+    onPokemonImageLoaded: (Int, Int) -> Unit,
 ) {
     Box {
         val pullRefreshState = rememberPullRefreshState(
@@ -145,7 +142,8 @@ fun SharedTransitionScope.PokemonListContent(
                     PokemonList(
                         animatedVisibilityScope = animatedVisibilityScope,
                         pokemonList = paginatedPokemonList,
-                        onPokemonItemClick = { onNavigateToPokemonDetail(it) }
+                        onPokemonItemClick = { onNavigateToPokemonDetail(it) },
+                        onPokemonImageLoaded = { id, color -> onPokemonImageLoaded(id, color) },
                     )
                 }
             }
@@ -169,12 +167,14 @@ fun PokemonListScreenPreview() {
             animatedVisibilityScope = it,
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.PokemonList,
-            navigationActions = NavigationActions(rememberNavController()),
             searchUiState = SearchUiState.Success(getPokemonListMock()),
             paginatedPokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),
             onReload = {},
             onDismissSearch = {},
             onSearch = {},
+            onItemSelected = {},
+            onRouteSelected = {},
+            onPokemonImageLoaded = { _, _ -> }
         )
     }
 }
@@ -189,12 +189,14 @@ fun PokemonListScreenWithSearchActivePreview() {
             animatedVisibilityScope = it,
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.PokemonList,
-            navigationActions = NavigationActions(rememberNavController()),
             searchUiState = SearchUiState.Error,
             paginatedPokemonList = flowOf(PagingData.from(getPokemonListMock())).collectAsLazyPagingItems(),
             onReload = {},
             onDismissSearch = {},
             onSearch = {},
+            onItemSelected = {},
+            onRouteSelected = {},
+            onPokemonImageLoaded = { _, _ -> }
         )
     }
 }

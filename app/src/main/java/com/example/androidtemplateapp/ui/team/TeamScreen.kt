@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.example.androidtemplateapp.R
 import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.bottomappbar.AnimatedBottomAppBar
@@ -49,10 +49,8 @@ fun TeamScreen(
 ) {
     var isFabContainerFullScreen by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
-    if (isFabContainerFullScreen) {
-        BackHandler { isFabContainerFullScreen = false }
-    }
+    
+    BackHandler { isFabContainerFullScreen = false }
 
     Scaffold(
         topBar = {
@@ -153,7 +151,7 @@ fun TeamScreenFabPreview() {
         TeamScreen(
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.Team,
-            navigationActions = NavigationActions(rememberNavController()),
+            navigationActions = NavigationActions(rememberNavBackStack(Routes.Team)),
             uiState = TeamUiState.Success(getPokemonListMock()),
             onRetry = {},
             onSave = {}
@@ -174,7 +172,7 @@ fun TeamEmptyContentFabPreview() {
         TeamScreen(
             drawerState = DrawerState(DrawerValue.Closed),
             currentRoute = Routes.Team,
-            navigationActions = NavigationActions(rememberNavController()),
+            navigationActions = NavigationActions(rememberNavBackStack(Routes.Team)),
             uiState = TeamUiState.Success(listOf()),
             onRetry = {},
             onSave = {}

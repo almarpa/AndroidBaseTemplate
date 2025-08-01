@@ -63,4 +63,10 @@ class PokemonListViewModel @Inject constructor(
     fun removeCurrentSearch() {
         _searchUiState.tryEmit(SearchUiState.Idle)
     }
+
+    fun addPokemonDominantColor(pokemonId: Int, color: Int) {
+        viewModelScope.launch {
+            pokemonUseCase.addPokemonDominantColor(pokemonId, color)
+        }
+    }
 }

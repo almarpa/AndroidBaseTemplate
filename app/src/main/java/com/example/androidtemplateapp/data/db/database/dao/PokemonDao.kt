@@ -20,6 +20,9 @@ interface PokemonDao {
     @Query("SELECT * from pokemon WHERE name LIKE '%' || :name || '%'")
     fun searchPokemonByName(name: String): Flow<List<PokemonEntity>>
 
+    @Query("UPDATE pokemon SET dominantColor = :color WHERE id = :id")
+    suspend fun updatePokemonDominantColor(id: Int, color: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(pokemon: PokemonEntity)
 

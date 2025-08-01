@@ -1,16 +1,15 @@
 package com.example.androidtemplateapp.ui.common.bottomappbar
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
+import androidx.navigation3.runtime.EntryProviderBuilder
+import androidx.navigation3.runtime.entry
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.androidtemplateapp.entity.Pokemon
 import com.example.androidtemplateapp.ui.common.navigation.NavigationActions
 import com.example.androidtemplateapp.ui.common.navigation.Routes
 import com.example.androidtemplateapp.ui.pokemondetails.PokemonDetailsScreen
@@ -23,31 +22,38 @@ import com.example.androidtemplateapp.ui.team.TeamScreen
 import com.example.androidtemplateapp.ui.team.TeamUiState
 import com.example.androidtemplateapp.ui.team.TeamViewModel
 
-context(SharedTransitionScope)
 @OptIn(ExperimentalSharedTransitionApi::class)
-fun NavGraphBuilder.bottomAppBarNavGraph(
+fun <T : Any> EntryProviderBuilder<T>.bottomAppBarNavGraph(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     drawerState: DrawerState,
     currentRoute: Routes,
     navigationActions: NavigationActions,
 ) {
-    composable<Routes.PokemonList> {
+    entry<Routes.PokemonList> {
         val pokemonListViewModel: PokemonListViewModel = hiltViewModel()
         val paginatedPokemonList = pokemonListViewModel.pokemonList.collectAsLazyPagingItems()
         val searchUiState: SearchUiState by pokemonListViewModel.searchUiState.collectAsStateWithLifecycle()
 
-        PokemonListScreen(
-            animatedVisibilityScope = this,
+        sharedTransitionScope.PokemonListScreen(
+            animatedVisibilityScope = animatedVisibilityScope,
             drawerState = drawerState,
             currentRoute = currentRoute,
-            navigationActions = navigationActions,
             searchUiState = searchUiState,
             paginatedPokemonList = paginatedPokemonList,
+            onItemSelected = { item -> navigationActions.navigateToDetail(item) },
+            onRouteSelected = { route ->
+                if (route == Routes.Team) navigationActions.navigateToTeamList() else Unit
+            },
             onReload = { paginatedPokemonList.refresh() },
             onSearch = { text -> pokemonListViewModel.onPokemonSearch(text) },
             onDismissSearch = { pokemonListViewModel.removeCurrentSearch() },
+            onPokemonImageLoaded = { pokemonId, color ->
+                pokemonListViewModel.addPokemonDominantColor(pokemonId, color)
+            },
         )
     }
-    composable<Routes.Team> {
+    entry<Routes.Team> {
         val teamViewModel: TeamViewModel = hiltViewModel()
         val uiState: TeamUiState by teamViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -60,21 +66,20 @@ fun NavGraphBuilder.bottomAppBarNavGraph(
             onSave = { pokemon -> teamViewModel.createPokemonMemberAndReload(pokemon) }
         )
     }
-    composable<Pokemon> { navBackStackEntry ->
+    entry<Routes.Detail> { route ->
         val pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel()
         val teamViewModel: TeamViewModel = hiltViewModel()
         val settingsViewModel: SettingsViewModel = hiltViewModel()
 
-        val pokemonID = navBackStackEntry.toRoute<Pokemon>().id
         val pokemonDetailsUiState by pokemonDetailsViewModel.detailsUiState.collectAsStateWithLifecycle()
         val userAppTheme by settingsViewModel.userData.collectAsStateWithLifecycle()
 
-        PokemonDetailsScreen(
-            animatedVisibilityScope = this,
-            pokemon = navBackStackEntry.toRoute<Pokemon>(),
+        sharedTransitionScope.PokemonDetailsScreen(
+            animatedVisibilityScope = animatedVisibilityScope,
+            pokemon = route.pokemon,
             pokemonDetailsUiState = pokemonDetailsUiState,
             userAppTheme = userAppTheme.theme,
-            onFetchDetails = { pokemonDetailsViewModel.getPokemonDetails(pokemonID) },
+            onFetchDetails = { pokemonDetailsViewModel.getPokemonDetails(route.pokemon.id) },
             onAddTeamMember = { pokemon, added -> teamViewModel.addPokemonToTeam(pokemon, added) },
             onBackPressed = { navigationActions.navigateBack() },
         )

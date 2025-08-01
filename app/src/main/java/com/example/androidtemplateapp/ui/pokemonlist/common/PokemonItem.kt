@@ -48,8 +48,9 @@ fun SharedTransitionScope.PokemonItem(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemon: Pokemon,
     onPokemonItemClick: (Pokemon) -> Unit = { },
+    onPokemonImageLoaded: (Int, Int) -> Unit = { _, _ -> },
 ) {
-    var dominantColor: Color? by remember { mutableStateOf(null) }
+    var dominantColor: Color? by remember { mutableStateOf(pokemon.getDominantColor()) }
 
     Card(
         modifier = modifier
@@ -76,10 +77,10 @@ fun SharedTransitionScope.PokemonItem(
                     .build(),
                 contentDescription = "Pokemon Image",
                 contentScale = ContentScale.FillBounds,
-                onSuccess = { success ->
-                    getDominantColorFromDrawable(success.result.drawable) {
+                onSuccess = {
+                    getDominantColorFromDrawable(it.result.drawable) {
                         dominantColor = it
-                        pokemon.dominantColor = it.toArgb()
+                        onPokemonImageLoaded(pokemon.id, it.toArgb())
                     }
                 },
                 modifier = Modifier

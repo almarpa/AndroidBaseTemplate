@@ -7,16 +7,17 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.plugin.compose") version ("2.0.0")
 }
 
 android {
     namespace = "com.example.androidtemplateapp"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.androidtemplateapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -79,10 +80,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
-
     packagingOptions.resources.excludes.add("META-INF/{AL2.0,LGPL2.1}")
 }
 
@@ -108,10 +105,14 @@ dependencies {
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.material3.navigation3)
+
     // di
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    
+
     // database
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
@@ -137,9 +138,9 @@ dependencies {
     // others
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.accompanist)
     implementation(libs.converter.gson)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.okhttp.interceptor)
     implementation(libs.arrow.core)

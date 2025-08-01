@@ -1,7 +1,7 @@
 package com.example.androidtemplateapp.ui.common.navigation
 
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.example.androidtemplateapp.entity.Pokemon
 import kotlinx.serialization.Serializable
 
@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 /**
  * Destinations used throughout the app.
  */
-sealed interface Routes {
+sealed interface Routes : NavKey {
     @Serializable
     data object Splash : Routes
 
@@ -21,44 +21,18 @@ sealed interface Routes {
 
     @Serializable
     data object Settings : Routes
+
+    @Serializable
+    data class Detail(val pokemon: Pokemon) : Routes
 }
 
 /**
  * Models the navigation actions in the app.
  */
-class NavigationActions(private val navController: NavHostController) {
-    val navigateToPokemonList: () -> Unit = {
-        navController.navigate(Routes.PokemonList) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-                inclusive = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-    val navigateToTeamList: () -> Unit = {
-        navController.navigate(Routes.Team) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-
-    val navigateToSettings: () -> Unit = {
-        navController.navigate(Routes.Settings) {
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-
-    val navigateToDetailNavGraph: (Pokemon) -> Unit = { pokemon ->
-        navController.navigate(pokemon)
-    }
-
-    val navigateBack: () -> Unit = {
-        navController.navigateUp()
-    }
+class NavigationActions(private val backStack: NavBackStack) {
+    val navigateToPokemonList: () -> Unit = { backStack.add(Routes.PokemonList) }
+    val navigateToTeamList: () -> Unit = { backStack.add(Routes.Team) }
+    val navigateToSettings: () -> Unit = { backStack.add(Routes.Settings) }
+    val navigateToDetail: (Pokemon) -> Unit = { pokemon -> backStack.add(Routes.Detail(pokemon)) }
+    val navigateBack: () -> Unit = { backStack.removeLastOrNull() }
 }

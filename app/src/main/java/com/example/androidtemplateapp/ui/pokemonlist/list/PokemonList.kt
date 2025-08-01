@@ -34,6 +34,7 @@ fun SharedTransitionScope.PokemonList(
     animatedVisibilityScope: AnimatedVisibilityScope,
     pokemonList: LazyPagingItems<Pokemon>,
     onPokemonItemClick: (Pokemon) -> Unit = { },
+    onPokemonImageLoaded: (Int, Int) -> Unit = { _, _ -> },
 ) {
     val currentOrientation = LocalConfiguration.current.orientation
     val columns = if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
@@ -63,6 +64,7 @@ fun SharedTransitionScope.PokemonList(
                     animatedVisibilityScope = animatedVisibilityScope,
                     pokemon = pokemon,
                     onPokemonItemClick = { onPokemonItemClick(it) },
+                    onPokemonImageLoaded = { id, drawable -> onPokemonImageLoaded(id, drawable) }
                 )
                 CustomSpacer(height = 16, width = 16)
             }

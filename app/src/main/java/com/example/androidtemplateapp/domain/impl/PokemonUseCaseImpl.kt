@@ -23,4 +23,7 @@ class PokemonUseCaseImpl(private val pokemonRepository: PokemonRepository) : Pok
 
     override suspend fun createPokemonMember(pokemon: Pokemon) =
         pokemonRepository.createPokemonMember(pokemon)
+
+    override suspend fun addPokemonDominantColor(pokemonId: Int, color: Int) =
+        pokemonRepository.addPokemonDominantColor(pokemonId, color)
 }

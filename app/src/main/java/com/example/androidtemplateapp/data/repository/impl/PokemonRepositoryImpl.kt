@@ -60,4 +60,10 @@ class PokemonRepositoryImpl(
             pokemonDao.insert(pokemon.asEntity())
         }
     }
+
+    override suspend fun addPokemonDominantColor(pokemonId: Int, color: Int) {
+        withContext(Dispatchers.IO) {
+            pokemonDao.updatePokemonDominantColor(pokemonId, color)
+        }
+    }
 }

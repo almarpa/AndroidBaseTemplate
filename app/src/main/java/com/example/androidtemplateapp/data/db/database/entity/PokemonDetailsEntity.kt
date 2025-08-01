@@ -10,37 +10,37 @@ import com.example.androidtemplateapp.entity.*
 data class PokemonDetailsEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
-    var id: Int,
+    val id: Int,
     @ColumnInfo(name = "name")
-    var name: String,
+    val name: String,
     @ColumnInfo(name = "order")
-    var order: Int,
+    val order: Int,
     @ColumnInfo(name = "baseExperience")
-    var baseExperience: Int,
+    val baseExperience: Int,
     @ColumnInfo(name = "height")
-    var height: Int,
+    val height: Int,
     @ColumnInfo(name = "weight")
-    var weight: Int,
+    val weight: Int,
     @ColumnInfo(name = "imageURL")
-    var imageURL: String,
+    val imageURL: String,
     @ColumnInfo(name = "stats")
-    var stats: List<Stat>,
+    val stats: List<Stat>,
     @ColumnInfo(name = "types")
-    var types: List<TypeX>,
+    val types: List<TypeX>,
     @ColumnInfo(name = "moves")
-    var moves: List<Move>,
+    val moves: List<Move>,
     @Ignore
-    var isDefault: Boolean,
+    val isDefault: Boolean,
     @Ignore
-    var locationAreaEncounters: String,
+    val locationAreaEncounters: String,
     @Ignore
-    var species: Species,
+    val species: Species,
     @Ignore
-    var sprites: Sprites,
+    val sprites: Sprites,
     @Ignore
-    var abilities: List<Ability>,
+    val abilities: List<Ability>,
     @Ignore
-    var forms: List<Form>,
+    val forms: List<Form>,
 ) {
     constructor(
         id: Int,

@@ -14,8 +14,8 @@ data class Pokemon(
     val url: String,
     val name: String,
     val createdAt: Long = System.currentTimeMillis(),
-    var dominantColor: Int = Color.Transparent.toArgb(),
-    var isTeamMember: Boolean = false,
+    val dominantColor: Int = 0,
+    val isTeamMember: Boolean = false,
 ) : Parcelable {
 
     constructor(
